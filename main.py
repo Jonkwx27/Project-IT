@@ -1,27 +1,43 @@
 from flask import Flask, redirect, url_for, render_template, request, session
+from datetime import timedelta
 
 def create_app():
     app = Flask(__name__)
-
     return app
 
 app = Flask(__name__,template_folder='templates')
+app.secret_key = "hello"
+app.permanent_session_lifetime = timedelta(minutes=5)
 
 @app.route("/")
 def home():
     return render_template("home.html")
 
-@app.route("/user-login", methods = ["POST", "GET"])
+@app.route("/login", methods=["POST", "GET"])
 def login():
     if request.method == "POST":
+        session.permanent = True  # <--- makes the permanent session
         user = request.form["nm"]
-        return redirect(url_for("user", usr=user))
+        session["user"] = user
+        return redirect(url_for("user"))
     else:
-        return render_template("user_login.html")
+        if "user" in session:
+            return redirect(url_for("user"))
+
+        return render_template("login.html")
     
-@app.route("/<usr>")
-def user(usr):
-    return f"<h1>{usr}</h1>"
+@app.route("/user")
+def user():
+	if "user" in session:
+		user = session["user"]
+		return f"<h1>{user}</h1>"
+	else:
+		return redirect(url_for("login"))
+
+@app.route("/logout")
+def logout():
+	session.pop("user", None)
+	return redirect(url_for("login"))
 
 @app.route('/signup')
 def signup():
