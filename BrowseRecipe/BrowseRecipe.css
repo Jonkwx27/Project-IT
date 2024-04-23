@@ -1,71 +1,114 @@
-.BrowseRecipes {
-    text-align: center;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    background-color:goldenrod;
-}
 
 .BrowseRecipes {
-    width: 100%;
-    height: 70px;
+    text-align: center;
+    font-family: 'Bebas Neue', sans-serif;
+    background-color: #f8aa35;
+    height: 50px;
     color: rgb(0, 0, 0);
-    padding: 50px;
+    padding: 100px;
     padding-top: 5px;
     text-align: center;
-    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif ;
-    font-size: 25px;
+    font-size: 30px;
     position: relative;
+    border-top: 10px solid black;
+    border-bottom: 10px solid black;
 }
 
 ul {
     text-align: center;
     display: flex;
-    width: 100%;
+    padding-top: 10px;
   }
   
 li {
-    color: rgb(255, 255, 255);
-    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    font-size: 24px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
     font-weight: 300;
     text-transform: uppercase;
     display: inline-block;
     width: 100%;  
-    
   }
 
 li:hover {
   background-color:rgb(250, 235, 215);
 }
 
-h2 {
-  color:black;
-  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  font-size: 28px;
+.button {
+  border: none;
+  color: rgb(0, 0, 0);
+}
+
+.return {
+  border: none;
+  border-radius: 5px;
+  background-color: #ffc368;
+  color: black;
+  font-size: 22px;
   font-weight: 300;
   display: inline-block;
-  width: 85px;
+  width: 80px;
   position: absolute;
-  top: 30px;
-  left: 80px;
-  border: 3px solid #ece3ae;
+  top: 75px;
+  left: 120px;
+  cursor: pointer;
+  text-decoration: none;
+  padding-left: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.return:hover {
+  background-color: #ffd18d;
 }
 
 .photos {
   display: flex;
   justify-content: space-between;
-  padding-left: 45px;
-  padding-right: 45px;
-  align-content: center;
-  width: 100%;
+  padding: 10px;
+  text-align: center;
 }
 
 .photo {
   flex: 0 1 30%;
-  border: 2px solid #ece3ae;
-  width: 100%;
+  border: 5px solid #ece3ae;
+  padding: 10px;
 }
 
 .photo img {
   max-width: 100%;
-  height: 100%;
+  height: auto;
+}
+
+.Name {
+  font-size: 24px;
+  font-weight: bold;
+  background-color: #f8aa35;
+  padding-top: 5px;
+  margin-top: 5px;
+}
+
+.Details {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  background-color: #ece3ae;
+  padding-top: 10px;
+}
+
+.photos2 {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 10px;
+  padding-right: 10px;
+  text-align: center;
+}
+
+.photo2 {
+  flex: 0 1 30%;
+  border: 5px solid #ece3ae;
+  padding: 10px;
+}
+
+.photo2 img {
+  max-width: 100%;
+  height: auto;
 }
