@@ -66,17 +66,30 @@ li:hover {
   justify-content: space-between;
   padding: 10px;
   text-align: center;
+  background-color:#ece3ae;
+  border: 3px solid black;
+  border-right: 3px solid black;
 }
 
 .photo {
   flex: 0 1 30%;
   border: 5px solid #ece3ae;
   padding: 10px;
+  border-right: 3px solid black;
+}
+
+.photos:last-child {
+  border-right: none;
+}
+
+.photo:last-child {
+  border-right: none;
 }
 
 .photo img {
   max-width: 100%;
   height: auto;
+  background-color:#ece3ae;
 }
 
 .Name {
@@ -90,25 +103,33 @@ li:hover {
 .Details {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 20px;
-  background-color: #ece3ae;
+  background-color:#ece3ae;
   padding-top: 10px;
 }
 
 .photos2 {
   display: flex;
   justify-content: space-between;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding: 10px;
   text-align: center;
+  background-color:#ece3ae;
+  border: 3px solid black;
+  border-top: none;
 }
 
 .photo2 {
   flex: 0 1 30%;
   border: 5px solid #ece3ae;
   padding: 10px;
+  border-right: 3px solid black;
+}
+
+.photo2:last-child {
+  border-right: none;
 }
 
 .photo2 img {
   max-width: 100%;
   height: auto;
+  background-color:#ece3ae;
 }
