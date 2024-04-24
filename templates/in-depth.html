@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recipe Details</title>
+</head>
+<body>
+    <h1>{{ recipe.title }}</h1>
+    <img src="{{ recipe.photo_url }}" alt="Recipe Photo">
+    <p>Submitted by: {{ recipe.submitted_by }}</p>
+    <p>Date: {{ recipe.date }}</p>
+    <h2>Description:</h2>
+    <p>{{ recipe.description }}</p>
+    <h2>Ingredients:</h2>
+    <p>{{ recipe.ingredients }}</p>
+    <h2>Steps:</h2>
+    <p>{{ recipe.steps }}</p>
+</body>
+</html>
+
