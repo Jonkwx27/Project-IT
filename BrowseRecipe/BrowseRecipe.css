@@ -1,23 +1,9 @@
 
-.BrowseRecipes {
-    text-align: center;
-    font-family: 'Bebas Neue', sans-serif;
-    background-color: #f8aa35;
-    height: 50px;
-    color: rgb(0, 0, 0);
-    padding: 100px;
-    padding-top: 5px;
-    text-align: center;
-    font-size: 30px;
-    position: relative;
-    border-top: 10px solid black;
-    border-bottom: 10px solid black;
-}
-
 ul {
     text-align: center;
     display: flex;
-    padding-top: 10px;
+    padding-top: 5px;
+    padding-left: 0px;
   }
   
 li {
@@ -26,7 +12,7 @@ li {
     font-weight: 300;
     text-transform: uppercase;
     display: inline-block;
-    width: 100%;  
+    width: 100%; 
   }
 
 li:hover {
@@ -38,23 +24,41 @@ li:hover {
   color: rgb(0, 0, 0);
 }
 
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  bottom: 10px;
+  background-color: #f8aa35;
+  border-top: 10px solid #000;
+  border-bottom: 10px solid #000;
+  margin-bottom: 20px;
+  padding: 5px 10px;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 55px;
+  color: rgb(0, 0, 0);
+  margin-top: 45px;
+}
+
 .return {
-  border: none;
+  padding: 5px 10px;
   border-radius: 5px;
   background-color: #ffc368;
   color: black;
   font-size: 22px;
   font-weight: 300;
-  display: inline-block;
-  width: 80px;
-  position: absolute;
-  top: 75px;
-  left: 120px;
   cursor: pointer;
   text-decoration: none;
-  padding-left: 20px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  left: 20px;
 }
 
 .return:hover {
@@ -64,7 +68,6 @@ li:hover {
 .photos {
   display: flex;
   justify-content: space-between;
-  padding: 10px;
   text-align: center;
   background-color:#ece3ae;
   border: 3px solid black;
@@ -76,6 +79,8 @@ li:hover {
   border: 5px solid #ece3ae;
   padding: 10px;
   border-right: 3px solid black;
+  align-items: center;
+  justify-content: center;
 }
 
 .photos:last-child {
@@ -90,10 +95,12 @@ li:hover {
   max-width: 100%;
   height: auto;
   background-color:#ece3ae;
+  align-items: center;
+  justify-content: center;
 }
 
 .Name {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: bold;
   background-color: #f8aa35;
   padding-top: 5px;
@@ -101,7 +108,7 @@ li:hover {
 }
 
 .Details {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   font-size: 20px;
   background-color:#ece3ae;
   padding-top: 10px;
@@ -110,7 +117,6 @@ li:hover {
 .photos2 {
   display: flex;
   justify-content: space-between;
-  padding: 10px;
   text-align: center;
   background-color:#ece3ae;
   border: 3px solid black;
@@ -122,6 +128,8 @@ li:hover {
   border: 5px solid #ece3ae;
   padding: 10px;
   border-right: 3px solid black;
+  align-items: center;
+  justify-content: center;
 }
 
 .photo2:last-child {
@@ -132,4 +140,5 @@ li:hover {
   max-width: 100%;
   height: auto;
   background-color:#ece3ae;
+  
 }
