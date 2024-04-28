@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from models import Recipe, db
+from models import Recipe, db, Comment
 
 def create_app():
     app = Flask(__name__)
@@ -29,7 +29,8 @@ def login():
 @app.route('/recipes')
 def recipe_details():
     recipe = Recipe.query.first()
-    return render_template('in-depth.html', recipe=recipe)
+    comments = Comment.query.all()  
+    return render_template('in-depth.html', recipe=recipe, comments=comments)
 
 if __name__ == '__main__':
     app.run(debug=True)
