@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="RecipeSubmission.css" type="text/css" rel="stylesheet" />
+        <title>Recipe Submission</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+
+        <div class="header">
+            <div class="logo-container">
+                <img style="height: 50px;" src="{{ url_for('static', filename='Logo_CookiQ.jpeg') }}" alt="Logo_CookiQ">
+            </div>
+            <h1 class="title">Recipe Submission</h1>
+            <a href="#" class="return">Return</a>
+        </div>
+
+        <div class="input-container">
+            <div class="circle">
+                <p>Add Image</p>
+            </div>
+            <div class="input-fields">
+                <input type="text" placeholder="Enter recipe name">
+                <input type="text" placeholder="Enter recipe description" class="description">
+            </div>
+        </div>
+
+        <div class="ingredient"><h2>Ingredients:</h2>
+            <input type="text" class="ingredient-input" placeholder="Ingredient 1">
+            <input type="text" class="ingredient-input" placeholder="Ingredient 2">
+            <input type="text" class="ingredient-input" placeholder="Ingredient 3">
+            <input type="text" class="ingredient-input" placeholder="Ingredient 4">
+            <input type="text" class="ingredient-input" placeholder="Ingredient 5">
+            <input type="text" class="ingredient-input" placeholder="Ingredient 6">
+        </div>
+
+        <div class="input-container">
+            <label for="recipe-description" class="Step"><h2>Step:</h2></label>
+            <textarea class="steptext" name="step" placeholder="Enter the Step"></textarea>
+        </div>
+
+    </body>
+
+</html>
