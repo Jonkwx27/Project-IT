@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <style>
+        body {
+          background-color: #ece3ae; 
+        }
+        .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        bottom: 10px;
+        background-color: #f8aa35;
+        border-top: 10px solid #000;
+        border-bottom: 10px solid #000;
+        margin-bottom: 20px;
+        padding: 5px 10px;
+        }
+        .logo-container {
+        display: flex;
+        align-items: center;
+        margin-top: 30px;
+        }
+        .title {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 55px;
+        color: rgb(0, 0, 0);
+        margin-top: 45px;
+        }
+        .MainButton {
+            padding: 5px 10px;
+            border-radius: 5px;
+            background-color: #c28855;
+            color: #fff;
+            font-size: 22px;
+            font-weight: 300;
+            cursor: pointer;
+            text-decoration: none;
+            left: 20px;
+            }
+        .MainButton:hover{
+            background-color: #98714f;
+        }
+        .form-container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            margin-top: 20px;
+        }
+        form label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        form input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        form button {
+            width: 100%;
+            padding: 10px;
+            background-color: #f8aa35;
+            border: none;
+            border-radius: 5px;
+            color: #010101;
+            font-size: 20px;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        form button:hover {
+            background-color: #e08b00;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo-container">
+            <img style="height: 50px; padding-bottom: 30px;" src="{{ url_for('static', filename='Logo_CookiQ.jpeg') }}" alt="Logo_CookiQ">
+        </div>
+        <h1 class="title">Sign Up</h1>
+        <a href="/" class="MainButton">Return to Main</a>
+    </div>
+      
+    <div class="form-container">
+      <form method="post" action="{{ url_for('signup') }}">
+          <label for="name">Name</label>
+          <input type="text" name="name" placeholder="Name" required>
+          <label for="email">Email</label>
+          <input type="email" name="email" placeholder="Email" required>
+          <label for="username">Username</label>
+          <input type="text" name="username" placeholder="Username" required>
+          <label for="age">Age</label>
+          <input type="number" name="age" placeholder="Age" required>
+          <label for="password">Password</label>
+          <input type="password" name="password" placeholder="Password" required>
+          <button type="submit">Submit</button>
+      </form>
+    </div>
+</body>
+</html>
