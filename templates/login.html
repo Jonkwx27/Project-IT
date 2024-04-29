@@ -12,22 +12,42 @@
             background-color: #ece3ae; 
         }
         .header {
-            padding: 10px;
-            background-color: #f8aa35; 
-            border-top: 10px solid #000; 
-            border-bottom: 10px solid #000; 
-            margin-bottom: 20px;
-            position:relative
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        bottom: 10px;
+        background-color: #f8aa35;
+        border-top: 10px solid #000;
+        border-bottom: 10px solid #000;
+        margin-bottom: 20px;
+        padding: 5px 10px;
         }
-
-        .text1 h1 {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 40px;
-            color: #1b1b1b; 
-            text-align: center;
-            background-color: #f8aa35;  
-            margin-bottom: 20px;
+        .logo-container {
+        display: flex;
+        align-items: center;
+        margin-top: 30px;
         }
+        .title {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 55px;
+        color: rgb(0, 0, 0);
+        margin-top: 45px;
+        }
+        .MainButton {
+            padding: 5px 10px;
+            border-radius: 5px;
+            background-color: #c28855;
+            color: #fff;
+            font-size: 22px;
+            font-weight: 300;
+            cursor: pointer;
+            text-decoration: none;
+            left: 20px;
+            }
+        .MainButton:hover{
+            background-color: #98714f;
+        }
+        
         .form-container {
             max-width: 400px;
             margin: 0 auto;
@@ -66,33 +86,17 @@
         form button:hover {
             background-color: #e08b00;
         }
-        .HomeButton {
-            color: #fff;
-            position: absolute;
-            top: 20px; 
-            right: 30px; 
-            padding: 5px 10px; 
-            border-radius: 5px;
-            text-align: center;
-            background: #c28855;
-            text-decoration: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            z-index: 1;
-            }
-            .HomeButton:hover{
-            background-color: #98714f;
-        }
     </style>
 </head>
 <body>
     <div class="header">
-        <img style="height: 50px;" src="{{ url_for('static', filename='Logo_CookiQ.jpeg') }}" alt="Logo_CookiQ">
-        <a href="/" class="HomeButton">Return to Home</a>
+        <div class="logo-container">
+            <img style="height: 50px; padding-bottom: 30px;" src="{{ url_for('static', filename='Logo_CookiQ.jpeg') }}" alt="Logo_CookiQ">
+        </div>
+        <h1 class="title">Login</h1>
+        <a href="/" class="MainButton">Return to Main</a>
     </div>
-    <div class="text1">
-        <h1>Login</h1>
-    </div>
+
     <div class="form-container">
         <form method="post" action="{{ url_for('login') }}">
             <label for="email">Email</label>

@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="BrowseRecipe.css" type="text/css" rel="stylesheet" />
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='BrowseRecipe.css') }}">
         <title>Browse Recipe-Soup</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,20 +14,20 @@
 
         <div class="header">
             <div class="logo-container">
-                <img style="height: 50px;" src="{{ url_for('static', filename='Logo_CookiQ.jpeg') }}" alt="Logo_CookiQ">
+                <img style="height: 50px; padding-bottom: 30px;" src="{{ url_for('static', filename='Logo_CookiQ.jpeg') }}" alt="Logo_CookiQ">
             </div>
             <h1 class="title">Browse Recipe</h1>
-            <a href="#" class="return">Return</a>
+            <a href="{{ url_for('user', user_id=user.id) }}" class="HomeButton">Return to Home</a>
         </div>
 
         <div class="classification">
             <ul>
-                <li><a href="BrowseBreakfast.html" class="button">Breakfast</a></li>
-                <li><a href="BrowseLunch.html" class="button">Lunch</a></li>
-                <li><a href="BrowseDinner.html" class="button">Dinner</a></li>
-                <li><a href="BrowseDessert.html" class="button">Dessert</a></li>
-                <li><a href="BrowseSoup.html" class="button">Soup</a></li>
-                <li><a href="BrowseBeverage.html" class="button">Beverage</a></li>
+                <li><a href="browsebreakfast" class="button">Breakfast</a></li>
+                <li><a href="browselunch" class="button">Lunch</a></li>
+                <li><a href="browsedinner" class="button">Dinner</a></li>
+                <li><a href="browsedessert" class="button">Dessert</a></li>
+                <li><a href="browsesoup" class="button">Soup</a></li>
+                <li><a href="browsebeverage" class="button">Beverage</a></li>
             </ul>
         </div>
 

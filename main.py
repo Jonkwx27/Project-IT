@@ -78,13 +78,65 @@ def login():
 
 @app.route('/user/<int:user_id>/')
 def user(user_id):
+    if "user_id" not in session or session["user_id"] != user_id:
+        return redirect(url_for("login"))
+    
     user = User.query.get_or_404(user_id)
     return render_template('user.html', user=user)
+
+@app.route("/user/<int:user_id>/browsebreakfast")
+def browsebreakfast(user_id):
+    if "user_id" not in session or session["user_id"] != user_id:
+        return redirect(url_for("login"))
+    
+    user = User.query.get_or_404(user_id)
+    return render_template("BrowseBreakfast.html", user=user)
+
+@app.route("/user/<int:user_id>/browsebeverage")
+def browsebeverage(user_id):
+    if "user_id" not in session or session["user_id"] != user_id:
+        return redirect(url_for("login"))
+    
+    user = User.query.get_or_404(user_id)
+    return render_template("BrowseBeverage.html", user=user)
+
+@app.route("/user/<int:user_id>/browsedessert")
+def browsedessert(user_id):
+    if "user_id" not in session or session["user_id"] != user_id:
+        return redirect(url_for("login"))
+    
+    user = User.query.get_or_404(user_id)
+    return render_template("BrowseDessert.html", user=user)
+
+@app.route("/user/<int:user_id>/browsedinner")
+def browsedinner(user_id):
+    if "user_id" not in session or session["user_id"] != user_id:
+        return redirect(url_for("login"))
+    
+    user = User.query.get_or_404(user_id)
+    return render_template("BrowseDinner.html", user=user)
+
+@app.route("/user/<int:user_id>/browselunch")
+def browselunch(user_id):
+    if "user_id" not in session or session["user_id"] != user_id:
+        return redirect(url_for("login"))
+    
+    user = User.query.get_or_404(user_id)
+    return render_template("BrowseLunch.html", user=user)
+
+@app.route("/user/<int:user_id>/browsesoup")
+def browsesoup(user_id):
+    if "user_id" not in session or session["user_id"] != user_id:
+        return redirect(url_for("login"))
+    
+    user = User.query.get_or_404(user_id)
+    return render_template("BrowseSoup.html", user=user)
 
 @app.route("/logout")
 def logout():
 	session.pop("user_id", None)
 	return redirect(url_for("login"))
+
 
 if __name__ == "__main__":
 	with app.app_context():
