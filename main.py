@@ -132,6 +132,14 @@ def browsesoup(user_id):
     user = User.query.get_or_404(user_id)
     return render_template("BrowseSoup.html", user=user)
 
+@app.route("/user/<int:user_id>/recipesubmission")
+def recipesubmission(user_id):
+    if "user_id" not in session or session["user_id"] != user_id:
+        return redirect(url_for("login"))
+    
+    user = User.query.get_or_404(user_id)
+    return render_template("RecipeSubmission.html", user=user)
+
 @app.route("/logout")
 def logout():
 	session.pop("user_id", None)
