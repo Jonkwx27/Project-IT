@@ -200,6 +200,7 @@
         <form action="/submit_comment" method="post">
             <input type="text" name="name" placeholder="Your Name" class="input-field">
             <textarea name="comment" placeholder="Enter your comment here" class="input-field"></textarea>
+            <input type="hidden" name="recipe_id" value="{{ recipe.id }}">
             <div class="rating">
                 <input type="radio" id="star5" name="rating" value="5">
                 <label for="star5"></label>

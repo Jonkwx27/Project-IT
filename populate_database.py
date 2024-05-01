@@ -33,12 +33,12 @@ def populate_database():
             db.session.rollback()
 
         comments = [
-            {'name': 'Jonathan', 'comment': 'This spaghetti is so nice', 'rating': 1},
-            {'name': 'Meor', 'comment': 'This spaghetti is so bad', 'rating': 5},
+            {'name': 'Jonathan', 'comment': 'This spaghetti is so nice', 'rating': 1, 'recipe_id': recipe.id},
+            {'name': 'Meor', 'comment': 'This spaghetti is so bad', 'rating': 5, 'recipe_id': recipe.id},
         ]
         
         for comment_data in comments:
-            new_comment = Comment(name=comment_data['name'], comment=comment_data['comment'], rating=comment_data['rating'])
+            new_comment = Comment(name=comment_data['name'], comment=comment_data['comment'], rating=comment_data['rating'], recipe_id=comment_data['recipe_id'])
             db.session.add(new_comment)
 
         try:
