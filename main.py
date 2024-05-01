@@ -183,7 +183,7 @@ def logout():
 	session.pop("user_id", None)
 	return redirect(url_for("login"))
 
-@app.route("/admin/logout")
+@app.route("/adminlogout")
 def adminlogout():
 	session.pop("admin_id", None)
 	return redirect(url_for("adminlogin"))
@@ -192,3 +192,20 @@ if __name__ == "__main__":
 	with app.app_context():
 		db.create_all()
 		app.run(debug=True)
+
+
+# @app.route('/signupadmin', methods=('GET', 'POST'))
+# def signupadmin():
+#     if request.method == 'POST':
+#         email_admin = request.form['email_admin']
+#         name_admin = request.form['name_admin']
+#         password_admin = request.form['password_admin']
+#         admin = Admin(email_admin=email_admin,
+# 					name_admin=name_admin,
+# 					password_admin=password_admin)
+#         db.session.add(admin)
+#         db.session.commit()
+
+#         return redirect(url_for('home'))
+
+#     return render_template("signupadmin.html")
