@@ -20,15 +20,15 @@
             <a href="{{ url_for('user', user_id=user.id) }}" class="HomeButton">Return to Home</a>
         </div>
 
-        <div class="input-container">
-            <div class="circle">
-                <p>Add Image</p>
-            </div>
+        <div class="form-container">
+            <h2>Submit Your Recipe</h2>
+            <form action="#" method="post">
             <div class="input-fields">
-                <input type="text" placeholder="Enter recipe name">
-                <input type="text" placeholder="Enter recipe description" class="description">
+                <label for="recipe_name">Recipe Name:</label><br>
+                <input type="text" id="recipe_name" name="recipe_name" required><br><br>
+                <label for="description">Description:</label><br>
+                <textarea id="description" name="description" required></textarea><br><br>
             </div>
-        </div>
 
         <div class="ingredient"><h2>Ingredients:</h2>
             <input type="text" class="ingredient-input" placeholder="Ingredient 1">
@@ -83,8 +83,10 @@
             <label for="star1_3"></label>
         </div>
 
-        <a href="#" class="Submit">Submit</a>
+        <input type="submit" value="Submit" class="Submit">
+    </form>
+</div>
 
-    </body>
+</body>
 
 </html>

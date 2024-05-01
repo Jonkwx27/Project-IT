@@ -37,7 +37,20 @@ class Admin(db.Model):
 
     def __repr__(self):
         return f'<Admin {self.name_admin}>'
-    
+
+class Recipe(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    difficulty = db.Column(db.Integer, nullable=False)
+    time_required = db.Column(db.Integer, nullable=False)
+    taste = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = db.relationship('User', backref='recipes')
+
+    def __repr__(self):
+        return f'<Recipe {self.name}>'
+
 @app.route("/")
 def home():
     return render_template("home.html")
@@ -170,10 +183,27 @@ def browsesoup(user_id):
     user = User.query.get_or_404(user_id)
     return render_template("BrowseSoup.html", user=user)
 
-@app.route("/user/<int:user_id>/recipesubmission")
+@app.route("/user/<int:user_id>/recipesubmission", methods=["GET", "POST"])
 def recipesubmission(user_id):
     if "user_id" not in session or session["user_id"] != user_id:
         return redirect(url_for("login"))
+    
+    if request.method == "POST":
+        name = request.form['recipe_name']
+        description = request.form['description']
+        difficulty = int(request.form['rating1'])
+        time_required = int(request.form['rating2'])
+        taste = int(request.form['rating3'])
+        recipe = Recipe(name=name,
+                        description=description,
+                        difficulty=difficulty,
+                        time_required=time_required,
+                        taste=taste,
+                        user_id=user_id)
+        db.session.add(recipe)
+        db.session.commit()
+        
+        return redirect(url_for('user', user_id=user_id))
     
     user = User.query.get_or_404(user_id)
     return render_template("RecipeSubmission.html", user=user)
