@@ -14,7 +14,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-app.permanent_session_lifetime = timedelta(minutes=5)
+app.permanent_session_lifetime = timedelta(minutes=100)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -29,6 +29,15 @@ class User(db.Model):
     def __repr__(self):
         return f'<User {self.name}>'
 
+class Admin(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name_admin = db.Column(db.String(100), nullable=False)
+    email_admin = db.Column(db.String(80), unique=True, nullable=False)
+    password_admin = db.Column(db.String(100), nullable=False)
+
+    def __repr__(self):
+        return f'<Admin {self.name_admin}>'
+    
 @app.route("/")
 def home():
     return render_template("home.html")
@@ -75,6 +84,27 @@ def login():
 
         return render_template("login.html")
 
+@app.route("/adminlogin", methods=["POST", "GET"])
+def adminlogin():
+    if request.method == "POST":
+        session.permanent = True
+        email_admin = request.form["email_admin"]
+        name_admin = request.form["name_admin"]
+        password_admin = request.form["password_admin"]
+
+        # Check if the admin exists in the database
+        found_admin = Admin.query.filter_by(email_admin=email_admin, name_admin=name_admin).first()
+
+        if found_admin and found_admin.password_admin == password_admin:
+            session["admin_id"] = found_admin.id
+            return redirect(url_for("admin", admin_id=found_admin.id))
+        else:
+            return redirect(url_for("adminlogin"))
+    else:
+        if "admin_id" in session:
+            return redirect(url_for("admin", admin_id=session["admin_id"]))
+
+        return render_template("admin_login.html")
 
 @app.route('/user/<int:user_id>/')
 def user(user_id):
@@ -83,6 +113,14 @@ def user(user_id):
     
     user = User.query.get_or_404(user_id)
     return render_template('user.html', user=user)
+
+@app.route('/admin/<int:admin_id>/')
+def admin(admin_id):
+    if "admin_id" not in session or session["admin_id"] != admin_id:
+        return redirect(url_for("adminlogin"))
+    
+    admin = Admin.query.get_or_404(admin_id)
+    return render_template('admin.html', admin=admin)
 
 @app.route("/user/<int:user_id>/browsebreakfast")
 def browsebreakfast(user_id):
@@ -145,8 +183,29 @@ def logout():
 	session.pop("user_id", None)
 	return redirect(url_for("login"))
 
+@app.route("/adminlogout")
+def adminlogout():
+	session.pop("admin_id", None)
+	return redirect(url_for("adminlogin"))
 
 if __name__ == "__main__":
 	with app.app_context():
 		db.create_all()
 		app.run(debug=True)
+
+
+# @app.route('/signupadmin', methods=('GET', 'POST'))
+# def signupadmin():
+#     if request.method == 'POST':
+#         email_admin = request.form['email_admin']
+#         name_admin = request.form['name_admin']
+#         password_admin = request.form['password_admin']
+#         admin = Admin(email_admin=email_admin,
+# 					name_admin=name_admin,
+# 					password_admin=password_admin)
+#         db.session.add(admin)
+#         db.session.commit()
+
+#         return redirect(url_for('home'))
+
+#     return render_template("signupadmin.html")
