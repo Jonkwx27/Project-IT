@@ -37,7 +37,23 @@ class Admin(db.Model):
 
     def __repr__(self):
         return f'<Admin {self.name_admin}>'
-    
+
+class Recipe(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    recipe_name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    ingredients = db.Column(db.Text, nullable=False)
+    steps = db.Column(db.Text, nullable=False)
+    difficulty = db.Column(db.Integer, nullable=False)
+    time_required = db.Column(db.Integer, nullable=False)
+    taste = db.Column(db.Integer, nullable=False)
+    submitted_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = db.relationship('User', backref=db.backref('recipe_submissions', lazy=True))
+
+    def __repr__(self):
+        return f'<RecipeSubmission {self.recipe_name}>'
+
 @app.route("/")
 def home():
     return render_template("home.html")
@@ -170,12 +186,40 @@ def browsesoup(user_id):
     user = User.query.get_or_404(user_id)
     return render_template("BrowseSoup.html", user=user)
 
-@app.route("/user/<int:user_id>/recipesubmission")
+@app.route("/user/<int:user_id>/recipesubmission", methods=["GET", "POST"])
 def recipesubmission(user_id):
     if "user_id" not in session or session["user_id"] != user_id:
         return redirect(url_for("login"))
-    
+
+    if request.method == "POST":
+        recipe_name = request.form["recipe_name"]
+        description = request.form["description"]
+        ingredients = request.form["ingredients"]
+        steps = request.form["steps"]
+        difficulty = int(request.form.get("rating1", 1))
+        time_required = int(request.form.get("rating2", 1))
+        taste = int(request.form.get("rating3", 1))
+
+        # Create a new Recipe object
+        recipe = Recipe(
+            recipe_name=recipe_name,
+            description=description,
+            ingredients=ingredients,
+            steps=steps,
+            difficulty=difficulty,
+            time_required=time_required,
+            taste=taste,
+            user_id=user_id
+        )
+
+        # Add the recipe to the database session and commit changes
+        db.session.add(recipe)
+        db.session.commit()
+
+        # Redirect to a success page or home page
+        return redirect(url_for('user', user_id=user_id))
     user = User.query.get_or_404(user_id)
+    # Render the RecipeSubmission.html page for GET requests
     return render_template("RecipeSubmission.html", user=user)
 
 @app.route("/logout")

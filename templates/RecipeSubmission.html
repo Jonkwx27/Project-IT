@@ -20,30 +20,69 @@
             <a href="{{ url_for('user', user_id=user.id) }}" class="HomeButton">Return to Home</a>
         </div>
 
-        <div class="input-container">
-            <div class="circle">
-                <p>Add Image</p>
+        <div class="form-container">
+            <form action="#" method="post">
+                <div class="input-fields">
+                    <h2>Submit Your Recipe</h2>
+                    <label for="recipe_name">Recipe Name:</label><br>
+                    <input type="text" id="recipe_name" name="recipe_name" required><br><br>
+                    <label for="description">Description:</label><br>
+                    <textarea id="description" name="description" required></textarea><br><br>
+                </div>
+        
+                <div class="input-container">
+                    <label for="ingredients" class="ingredients"><h2>Ingredients:</h2></label>
+                    <textarea class="ingredienttext" name="ingredients" placeholder="Enter the Ingredients" required></textarea><br><br>
+                </div>
+        
+                <div class="input-container">
+                    <label for="step" class="steps"><h2>Steps:</h2></label>
+                    <textarea class="steptext" name="steps" placeholder="Enter the Steps" required></textarea><br><br>
+                </div>
+
+            <div class="rating1"><h2>Difficulty</h2>
+                <input type="radio" id="star5_1" name="rating1" value="5">
+                <label for="star5_1"></label>
+                <input type="radio" id="star4_1" name="rating1" value="4">
+                <label for="star4_1"></label>
+                <input type="radio" id="star3_1" name="rating1" value="3">
+                <label for="star3_1"></label>
+                <input type="radio" id="star2_1" name="rating1" value="2">
+                <label for="star2_1"></label>
+                <input type="radio" id="star1_1" name="rating1" value="1">
+                <label for="star1_1"></label>
             </div>
-            <div class="input-fields">
-                <input type="text" placeholder="Enter recipe name">
-                <input type="text" placeholder="Enter recipe description" class="description">
-            </div>
+
+        <div class="rating2"><h2>Time Required</h2>
+            <input type="radio" id="star5_2" name="rating2" value="5">
+            <label for="star5_2"></label>
+            <input type="radio" id="star4_2" name="rating2" value="4">
+            <label for="star4_2"></label>
+            <input type="radio" id="star3_2" name="rating2" value="3">
+            <label for="star3_2"></label>
+            <input type="radio" id="star2_2" name="rating2" value="2">
+            <label for="star2_2"></label>
+            <input type="radio" id="star1_2" name="rating2" value="1">
+            <label for="star1_2"></label>
         </div>
 
-        <div class="ingredient"><h2>Ingredients:</h2>
-            <input type="text" class="ingredient-input" placeholder="Ingredient 1">
-            <input type="text" class="ingredient-input" placeholder="Ingredient 2">
-            <input type="text" class="ingredient-input" placeholder="Ingredient 3">
-            <input type="text" class="ingredient-input" placeholder="Ingredient 4">
-            <input type="text" class="ingredient-input" placeholder="Ingredient 5">
-            <input type="text" class="ingredient-input" placeholder="Ingredient 6">
+        <div class="rating3"><h2>Taste</h2>
+            <input type="radio" id="star5_3" name="rating3" value="5">
+            <label for="star5_3"></label>
+            <input type="radio" id="star4_3" name="rating3" value="4">
+            <label for="star4_3"></label>
+            <input type="radio" id="star3_3" name="rating3" value="3">
+            <label for="star3_3"></label>
+            <input type="radio" id="star2_3" name="rating3" value="2">
+            <label for="star2_3"></label>
+            <input type="radio" id="star1_3" name="rating3" value="1">
+            <label for="star1_3"></label>
         </div>
 
-        <div class="input-container">
-            <label for="recipe-description" class="Step"><h2>Step:</h2></label>
-            <textarea class="steptext" name="step" placeholder="Enter the Step"></textarea>
-        </div>
+        <input type="submit" value="Submit" class="Submit">
+    </form>
+</div>
 
-    </body>
+</body>
 
 </html>
