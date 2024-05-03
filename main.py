@@ -2,6 +2,7 @@ import os
 from flask import Flask, redirect, url_for, render_template, request, session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import timedelta
+from models import Recipe, db, Comment
 
 from sqlalchemy.sql import func
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -13,6 +14,15 @@ app.config['SQLALCHEMY_DATABASE_URI'] =\
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+
+def create_app():
+    app = Flask(__name__)
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mydatabase.db'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    db.init_app(app)
+
+    with app.app_context():
+        db.create_all()
 
 app.permanent_session_lifetime = timedelta(minutes=100)
 
@@ -69,7 +79,6 @@ def login():
         email = request.form["email"]
         username = request.form["username"]
         password = request.form["password"]
-
         # Check if the user exists in the database
         found_user = User.query.filter_by(email=email, username=username).first()
 
@@ -187,6 +196,30 @@ def logout():
 def adminlogout():
 	session.pop("admin_id", None)
 	return redirect(url_for("adminlogin"))
+
+@app.route('/recipes')
+def recipe_details():
+    recipe = Recipe.query.first()
+    comments = Comment.query.all()  
+    return render_template('in-depth.html', recipe=recipe, comments=comments)
+
+@app.route('/submit_comment', methods=['POST'])
+def submit_comment():
+    if request.method == 'POST':
+        name = request.form['name']
+        comment_text = request.form['comment']
+        rating = request.form['rating']
+        recipe_id = request.form['recipe_id']  
+        comment = Comment(name=name, comment=comment_text, rating=rating, recipe_id=recipe_id)
+        
+        try:
+            db.session.add(comment)
+            db.session.commit()
+            return redirect(url_for('recipe_details'))
+        except Exception as e:
+            print(f"Error occurred: {str(e)}")
+            db.session.rollback()
+            return "Error occurred while submitting the comment"
 
 if __name__ == "__main__":
 	with app.app_context():
