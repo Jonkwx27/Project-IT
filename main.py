@@ -2,6 +2,8 @@ import os
 from flask import Flask, redirect, url_for, render_template, request, session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import timedelta
+from flask_migrate import Migrate
+
 
 from sqlalchemy.sql import func
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -16,6 +18,7 @@ db = SQLAlchemy(app)
 
 app.permanent_session_lifetime = timedelta(minutes=100)
 
+migrate=Migrate(app, db)
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -40,16 +43,20 @@ class Admin(db.Model):
 
 class Recipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
+    recipe_name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
+    ingredients = db.Column(db.Text, nullable=False)
+    steps = db.Column(db.Text, nullable=False)
     difficulty = db.Column(db.Integer, nullable=False)
     time_required = db.Column(db.Integer, nullable=False)
     taste = db.Column(db.Integer, nullable=False)
+    submitted_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
+    approved = db.Column(db.Boolean, default=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    user = db.relationship('User', backref='recipes')
+    user = db.relationship('User', backref=db.backref('recipe_submissions', lazy=True))
 
     def __repr__(self):
-        return f'<Recipe {self.name}>'
+        return f'<RecipeSubmission {self.recipe_name}>'
 
 @app.route("/")
 def home():
@@ -187,25 +194,36 @@ def browsesoup(user_id):
 def recipesubmission(user_id):
     if "user_id" not in session or session["user_id"] != user_id:
         return redirect(url_for("login"))
-    
+
     if request.method == "POST":
-        name = request.form['recipe_name']
-        description = request.form['description']
-        difficulty = int(request.form['rating1'])
-        time_required = int(request.form['rating2'])
-        taste = int(request.form['rating3'])
-        recipe = Recipe(name=name,
-                        description=description,
-                        difficulty=difficulty,
-                        time_required=time_required,
-                        taste=taste,
-                        user_id=user_id)
+        recipe_name = request.form["recipe_name"]
+        description = request.form["description"]
+        ingredients = request.form["ingredients"]
+        steps = request.form["steps"]
+        difficulty = int(request.form.get("rating1", 1))
+        time_required = int(request.form.get("rating2", 1))
+        taste = int(request.form.get("rating3", 1))
+
+        # Create a new Recipe object
+        recipe = Recipe(
+            recipe_name=recipe_name,
+            description=description,
+            ingredients=ingredients,
+            steps=steps,
+            difficulty=difficulty,
+            time_required=time_required,
+            taste=taste,
+            user_id=user_id
+        )
+
+        # Add the recipe to the database session and commit changes
         db.session.add(recipe)
         db.session.commit()
-        
+
+        # Redirect to a success page or home page
         return redirect(url_for('user', user_id=user_id))
-    
     user = User.query.get_or_404(user_id)
+    # Render the RecipeSubmission.html page for GET requests
     return render_template("RecipeSubmission.html", user=user)
 
 @app.route("/logout")
