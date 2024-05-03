@@ -2,6 +2,8 @@ import os
 from flask import Flask, redirect, url_for, render_template, request, session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import timedelta
+from flask_migrate import Migrate
+
 
 from sqlalchemy.sql import func
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -16,6 +18,7 @@ db = SQLAlchemy(app)
 
 app.permanent_session_lifetime = timedelta(minutes=100)
 
+migrate=Migrate(app, db)
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
