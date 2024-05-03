@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="BrowseRecipe.css" type="text/css" rel="stylesheet" />
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='BrowseRecipe.css') }}">
         <title>Browse Recipe-Dinner</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,20 +14,20 @@
 
         <div class="header">
             <div class="logo-container">
-                <img style="height: 50px;" src="{{ url_for('static', filename='Logo_CookiQ.jpeg') }}" alt="Logo_CookiQ">
+                <img style="height: 50px; padding-bottom: 30px;" src="{{ url_for('static', filename='Logo_CookiQ.jpeg') }}" alt="Logo_CookiQ">
             </div>
             <h1 class="title">Browse Recipe</h1>
-            <a href="#" class="return">Return</a>
+            <a href="{{ url_for('user', user_id=user.id) }}" class="HomeButton">Return to Home</a>
         </div>
 
         <div class="classification">
             <ul>
-                <li><a href="BrowseBreakfast.html" class="button">Breakfast</a></li>
-                <li><a href="BrowseLunch.html" class="button">Lunch</a></li>
-                <li><a href="BrowseDinner.html" class="button">Dinner</a></li>
-                <li><a href="BrowseDessert.html" class="button">Dessert</a></li>
-                <li><a href="BrowseSoup.html" class="button">Soup</a></li>
-                <li><a href="BrowseBeverage.html" class="button">Beverage</a></li>
+                <li><a href="browsebreakfast" class="button">Breakfast</a></li>
+                <li><a href="browselunch" class="button">Lunch</a></li>
+                <li><a href="browsedinner" class="button">Dinner</a></li>
+                <li><a href="browsedessert" class="button">Dessert</a></li>
+                <li><a href="browsesoup" class="button">Soup</a></li>
+                <li><a href="browsebeverage" class="button">Beverage</a></li>
             </ul>
         </div>
 
@@ -50,7 +50,7 @@
             </div>
 
             <div class="photo">
-                <img src="https://cdn.momsdish.com/wp-content/uploads/2021/06/Ribeye-Steak-Recipe08-500x500.jpg">
+                <img src="https://www.foxvalleyfoodie.com/wp-content/uploads/2019/07/steak-butter-500x500.jpg">
                 <div class="Name">Grilled Steak</div>
                 <div class="Details">Grilled steak is a succulent and savory dish featuring tender cuts of beef seasoned with herbs and spices, then
                      cooked to perfection on a hot grill. The smoky charred exterior gives way to a juicy and flavorful interior, making it a satisfying
@@ -58,8 +58,8 @@
             </div>
 
             <div class="photo">
-                <img src="https://cdn.momsdish.com/wp-content/uploads/2021/04/Chicken-Fajitas-012-640x640.jpg">
-                <div class="Name">Chihken Fajitas</div>
+                <img src="https://www.tasteofhome.com/wp-content/uploads/2018/01/Flavorful-Chicken-Fajitas_EXPS_GHBZ18_12540_B08_15_8b.jpg">
+                <div class="Name">Chicken Fajitas</div>
                 <div class="Details">Chicken fajitas are a zesty and flavorful Tex-Mex dish featuring tender strips of seasoned chicken cooked with 
                     onions and bell peppers. Served sizzling hot, they're perfect for assembling your own custom wraps with warm tortillas, sour cream, 
                     guacamole, and salsa, offering a delicious and interactive dining experience.</div>

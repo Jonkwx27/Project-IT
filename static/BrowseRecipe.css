@@ -48,21 +48,19 @@ li:hover {
   color: rgb(0, 0, 0);
   margin-top: 45px;
 }
-
-.return {
+.HomeButton {
   padding: 5px 10px;
   border-radius: 5px;
-  background-color: #ffc368;
-  color: black;
+  background-color: #c28855;
+  color: #fff;
   font-size: 22px;
   font-weight: 300;
   cursor: pointer;
   text-decoration: none;
   left: 20px;
-}
-
-.return:hover {
-  background-color: #ffd18d;
+  }
+.HomeButton:hover{
+  background-color: #98714f;
 }
 
 .photos {

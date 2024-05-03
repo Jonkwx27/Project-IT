@@ -20,10 +20,10 @@
             position:relative
             }
             .Admin_Log {
+            color: #fff;
             position: absolute;
             top: 20px; 
             right: 30px; 
-            border: 2px solid #000000; 
             padding: 5px 10px; 
             border-radius: 5px;
             text-align: center;
@@ -102,7 +102,7 @@
     <body>
         <div class="header">
             <img style="height: 50px;" src="{{ url_for('static', filename='Logo_CookiQ.jpeg') }}" alt="Logo_CookiQ">
-            <a href="/recipes" class="Admin_Log">Log In For Admin</a>
+            <a href="adminlogin" class="Admin_Log">Log In For Admin</a>
         </div>
         <div class="text1">
             <h1>Make Cooking Easier with CookiQ!</h1>
@@ -128,8 +128,8 @@
             </div>
         </div>
         <div class="buttons">
-            <a href="#" class="button">Sign Up</a>
-            <a href="#" class="button">Log In</a>
+            <a href="signup" class="button">Sign Up</a>
+            <a href = "login" class="button">Log In</a>
         </div>
     </body>
 </html>
