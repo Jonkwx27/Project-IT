@@ -48,6 +48,7 @@ class Recipe(db.Model):
     time_required = db.Column(db.Integer, nullable=False)
     taste = db.Column(db.Integer, nullable=False)
     submitted_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
+    approved = db.Column(db.Boolean, default=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = db.relationship('User', backref=db.backref('recipe_submissions', lazy=True))
 
