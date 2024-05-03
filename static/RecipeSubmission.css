@@ -22,6 +22,7 @@
     color: rgb(0, 0, 0);
     margin-top: 45px;
   }
+
 .HomeButton {
     padding: 5px 10px;
     border-radius: 5px;
@@ -37,13 +38,16 @@
     background-color: #98714f;
 }
 
-
 .input-container {
     display: flex;
     align-items: flex-start;
     background-color: #ece1ae;
-    border: 3px solid black;
-    border-bottom: none;
+    border-top: 3px solid #000;
+    margin-top: 20px;
+}
+
+.input-container.description {
+    border-bottom: 3px solid #000;
 }
 
 .circle {
@@ -61,6 +65,26 @@
     justify-content: center;
 }
 
+.form-container {
+    border: 3px solid black;
+    background-color: #ece1ae; 
+}
+
+.form-container input[type="text"],
+.form-container textarea {
+
+    border: 2px solid #ffd18d; 
+    border-radius: 5px; 
+    margin-top: 10px;
+    width: 95%; 
+    box-sizing: border-box; 
+}
+
+.form-container h2,
+.form-container label {
+    color: black; 
+}
+
 .input-fields {
     display: flex;
     flex-direction: column;
@@ -68,18 +92,22 @@
     margin-top: 30px;
 }
 
+.input-fields input[type="text"] {
+    height: 40px;
+}
+
 .input-container .input-fields input[type="text"] {
     height: 35px;
-    width: 300px;
+    width: 200px;
     font-size: 16px;
     border: 2px solid #ffd18d;
     border-radius: 5px;
     margin-top: 10px;
 }
 
-.input-container .input-fields input[type="text"].description {
+.input-container .input-fields input[type="textarea"].description {
     height: 90px;
-    width: 800px;
+    width: 200px;
     font-size: 16px;
     border: 2px solid #ffd18d;
     border-radius: 5px;
@@ -87,23 +115,39 @@
     margin-bottom: 20px;
 }
 
-.ingredient {
-    background-color: #ece1ae;
-    border: 3px solid black;
-    border-bottom: 0;
-    padding-bottom: 20px;
-    padding-left: 20px;
-}
-
-.ingredient-input {
-    width: 500px;
-    height: 28px;
+.input-container .input-fields input[type="textarea"].ingredients {
+    height: 90px;
+    width: 200px;
     font-size: 16px;
     border: 2px solid #ffd18d;
     border-radius: 5px;
-    margin-bottom: 10px;
-    padding: 5px;
-    margin-left: 30px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.ingredients {
+    padding-left: 20px;
+    padding-right: 15px;
+    padding-top: 20px;
+}
+
+.input-container .ingredienttext {
+    margin-top: 40px;
+    width: 85%;
+}
+
+.input-container .steptext {
+    margin-top: 40px;
+    width: 90%;
+}
+
+.ingredienttext {
+    margin-top: 35px;
+    width: 200px;
+    height: 300px;
+    border: 2px solid #ffd18d;
+    margin-bottom: 40px;
+    margin-top: 20px;
 }
 
 .Step {
@@ -114,7 +158,7 @@
 
 .steptext {
     margin-top: 35px;
-    width: 1000px;
+    width: 200px;
     height: 300px;
     border: 2px solid #ffd18d;
     margin-bottom: 40px;
@@ -125,7 +169,6 @@
     direction: rtl;
     text-align: center;
     background-color: #ece1ae;
-    border: 3px solid #000000;
     border-bottom: none;
     padding: 10px;
     padding-top: 50px;
@@ -169,7 +212,6 @@
     direction: rtl;
     text-align: center;
     background-color: #ece1ae;
-    border: 3px solid #000000;
     border-top: none;
     border-bottom: none;
     padding: 10px;
@@ -213,7 +255,6 @@
     direction: rtl;
     text-align: center;
     background-color: #ece1ae;
-    border: 3px solid #000000;
     border-top: none;
     padding: 10px;
     padding-bottom: 80px;
@@ -255,11 +296,11 @@
 .Submit {
     display: block;
     width: 100px;
-    margin: 0 auto;
+    margin: auto auto;
     text-align: center;
     background-color: #ffc368;
     color: black;
-    font-size: 22px;
+    font-size: 18px;
     font-weight: 300;
     cursor: pointer;
     text-decoration: none;
@@ -267,4 +308,5 @@
     border-radius: 5px;
     margin-top: 30px;
     border: 2px solid #000;
+    margin-bottom: 30px;
 }
