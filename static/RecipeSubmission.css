@@ -313,3 +313,50 @@
     border: 2px solid #000;
     margin-bottom: 20px;
 }
+
+#recipe_name {
+    width: 450px; /* Adjust the width as needed */
+    height: 35px;
+}
+
+/* Adjust the width for description textarea */
+#description {
+    width: 900px; /* Adjust the width as needed */
+}
+
+.image-upload {
+    margin-bottom: 20px;
+}
+
+#recipe_image {
+    border: 3px solid #ffd18d;
+    padding: 10px;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+#preview-image {
+    display: none;
+    max-width: 100%;
+    margin-top: 10px;
+}
+
+.image-upload label {
+    font-size: 18px;
+    color: black;
+}
+
+.image-upload label,
+.image-upload input[type="file"] {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.image-upload input[type="file"] {
+    cursor: pointer;
+}
+
+/* Show the preview image when an image is selected */
+#recipe_image:focus + #preview-image {
+    display: block;
+}

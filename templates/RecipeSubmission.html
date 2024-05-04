@@ -21,9 +21,14 @@
         </div>
 
         <div class="form-container">
-            <form action="#" method="post">
+            <form action="#" method="post" enctype="multipart/form-data">
                 <div class="input-fields">
                     <h2>Submit Your Recipe</h2>
+                    <div class="image-upload">
+                        <label for="recipe_image">Upload Image:</label>
+                        <input type="file" id="recipe_image" name="recipe_image" accept="image/*">
+                        <img id="preview-image" src="#" alt="Preview Image">
+                    </div>
                     <label for="recipe_name">Recipe Name:</label><br>
                     <input type="text" id="recipe_name" name="recipe_name" required><br><br>
                     <label for="description">Description:</label><br>
@@ -31,7 +36,7 @@
                 </div>
         
                 <div class="input-container">
-                    <label for="ingredients" class="ingredients"><h2>Ingredients:</h2></label>
+                    <label for="ingredients" class="ingredients"><h2>Ingredients:</h2></label><br><br>
                     <textarea class="ingredienttext" name="ingredients" placeholder="Enter the Ingredients" required></textarea><br><br>
                 </div>
         

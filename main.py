@@ -3,6 +3,8 @@ from flask import Flask, redirect, url_for, render_template, request, session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import timedelta
 from flask_migrate import Migrate
+from flask import request
+from flask import send_file
 
 
 from sqlalchemy.sql import func
@@ -53,6 +55,7 @@ class Recipe(db.Model):
     submitted_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = db.relationship('User', backref=db.backref('recipe_submissions', lazy=True))
+    image_data = db.Column(db.BLOB)
 
     def __repr__(self):
         return f'<RecipeSubmission {self.recipe_name}>'
@@ -202,6 +205,7 @@ def recipesubmission(user_id):
         difficulty = int(request.form.get("rating1", 1))
         time_required = int(request.form.get("rating2", 1))
         taste = int(request.form.get("rating3", 1))
+        image_data = request.files["recipe_image"].read()
 
         # Create a new Recipe object
         recipe = Recipe(
@@ -212,6 +216,7 @@ def recipesubmission(user_id):
             difficulty=difficulty,
             time_required=time_required,
             taste=taste,
+            image_data=image_data,
             user_id=user_id
         )
 
@@ -224,6 +229,11 @@ def recipesubmission(user_id):
     user = User.query.get_or_404(user_id)
     # Render the RecipeSubmission.html page for GET requests
     return render_template("RecipeSubmission.html", user=user)
+
+@app.route("/get_image/<int:recipe_id>")
+def get_image(recipe_id):
+    recipe = Recipe.query.get_or_404(recipe_id)
+    return send_file(BytesIO(recipe.image_data), mimetype='image/jpeg')
 
 @app.route("/logout")
 def logout():
