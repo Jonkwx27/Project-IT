@@ -22,6 +22,7 @@
     color: rgb(0, 0, 0);
     margin-top: 45px;
   }
+
 .HomeButton {
     padding: 5px 10px;
     border-radius: 5px;
@@ -37,13 +38,20 @@
     background-color: #98714f;
 }
 
-
 .input-container {
     display: flex;
     align-items: flex-start;
     background-color: #ece1ae;
-    border: 3px solid black;
-    border-bottom: none;
+    border-top: 3px solid #000;
+}
+
+.rating-container {
+    background-color: #ece1ae;
+    border-top: 3px solid #000;
+}
+
+.input-container.description {
+    border-bottom: 3px solid #000;
 }
 
 .circle {
@@ -58,6 +66,31 @@
     text-align: center;
     font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     line-height: 150px;
+    justify-content: center;
+}
+
+.form-container {
+    border: 3px solid black;
+    padding: 10px; /* Add padding for spacing */
+    background-color: #ece1ae; /* Match the background color */
+}
+
+/* Adjust the styles for input fields and textareas within the form container */
+.form-container input[type="text"],
+.form-container textarea {
+    /* Your existing input and textarea styles */
+    border: 2px solid #ffd18d; /* Adjust to match the other borders */
+    border-radius: 5px; /* Add border radius for rounded corners */
+    margin-top: 10px;
+    width: 100%; /* Make input fields and textareas span full width */
+    box-sizing: border-box; /* Include padding and border in the width */
+}
+
+/* Additional styling for labels or headings inside the form container */
+.form-container h2,
+.form-container label {
+    /* Your existing label and heading styles */
+    color: black; /* Adjust text color to match */
 }
 
 .input-fields {
@@ -68,15 +101,16 @@
 }
 
 .input-container .input-fields input[type="text"] {
-    height: 35px;
+    height: 50px !important;
     width: 300px;
     font-size: 16px;
     border: 2px solid #ffd18d;
     border-radius: 5px;
     margin-top: 10px;
+    padding-left: 15px;
 }
 
-.input-container .input-fields input[type="text"].description {
+.input-container .input-fields input[type="textarea"].description {
     height: 90px;
     width: 800px;
     font-size: 16px;
@@ -86,23 +120,37 @@
     margin-bottom: 20px;
 }
 
-.ingredient {
-    background-color: #ece1ae;
-    border: 3px solid black;
-    border-bottom: 0;
-    padding-bottom: 20px;
-    padding-left: 20px;
-}
-
-.ingredient-input {
-    width: 500px;
-    height: 28px;
+.input-container .input-fields input[type="textarea"].ingredient {
+    height: 90px;
+    width: 800px;
     font-size: 16px;
     border: 2px solid #ffd18d;
     border-radius: 5px;
-    margin-bottom: 10px;
-    padding: 5px;
-    margin-left: 30px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.ingredient {
+    padding-left: 20px;
+    padding-right: 15px;
+    padding-top: 20px;
+}
+
+.ingredienttext {
+    margin-top: 35px;
+    width: 80%;
+    height: 300px;
+    border: 2px solid #ffd18d;
+    margin-bottom: 40px;
+}
+
+.input-container .ingredienttext {
+    margin-top: 20px; /* Add space above the ingredients text box */
+    width: 88%;
+}
+
+.input-container .steptext {
+    margin-top: 20px; /* Add space above the ingredients text box */
+    width: 90%;
 }
 
 .Step {
@@ -113,7 +161,7 @@
 
 .steptext {
     margin-top: 35px;
-    width: 1000px;
+    width:  80%;
     height: 300px;
     border: 2px solid #ffd18d;
     margin-bottom: 40px;
@@ -124,7 +172,6 @@
     direction: rtl;
     text-align: center;
     background-color: #ece1ae;
-    border: 3px solid #000000;
     border-bottom: none;
     padding: 10px;
     padding-top: 50px;
@@ -168,7 +215,6 @@
     direction: rtl;
     text-align: center;
     background-color: #ece1ae;
-    border: 3px solid #000000;
     border-top: none;
     border-bottom: none;
     padding: 10px;
@@ -212,7 +258,6 @@
     direction: rtl;
     text-align: center;
     background-color: #ece1ae;
-    border: 3px solid #000000;
     border-top: none;
     padding: 10px;
     padding-bottom: 80px;
@@ -254,11 +299,11 @@
 .Submit {
     display: block;
     width: 100px;
-    margin: 0 auto;
+    margin: auto auto;
     text-align: center;
     background-color: #ffc368;
     color: black;
-    font-size: 22px;
+    font-size: 18px;
     font-weight: 300;
     cursor: pointer;
     text-decoration: none;
@@ -266,4 +311,52 @@
     border-radius: 5px;
     margin-top: 30px;
     border: 2px solid #000;
+    margin-bottom: 20px;
+}
+
+#recipe_name {
+    width: 450px; /* Adjust the width as needed */
+    height: 35px;
+}
+
+/* Adjust the width for description textarea */
+#description {
+    width: 900px; /* Adjust the width as needed */
+}
+
+.image-upload {
+    margin-bottom: 20px;
+}
+
+#recipe_image {
+    border: 3px solid #ffd18d;
+    padding: 10px;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+#preview-image {
+    display: none;
+    max-width: 100%;
+    margin-top: 10px;
+}
+
+.image-upload label {
+    font-size: 18px;
+    color: black;
+}
+
+.image-upload label,
+.image-upload input[type="file"] {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.image-upload input[type="file"] {
+    cursor: pointer;
+}
+
+/* Show the preview image when an image is selected */
+#recipe_image:focus + #preview-image {
+    display: block;
 }
