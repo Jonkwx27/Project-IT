@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pending Recipe Submissions</title>
+</head>
+<body>
+    <h1>Pending Recipe Submissions</h1>
+    <table border="1">
+        <tr>
+            <th>Recipe Name</th>
+            <th>Description</th>
+            <th>Ingredients</th>
+            <th>Steps</th>
+            <th>Difficulty</th>
+            <th>Time Required</th>
+            <th>Taste</th>
+            <th>Image</th>
+            <th>Submitted At</th>
+            <th>Submitted By</th>
+            <th>Actions</th>
+        </tr>
+        {% for recipe in recipes %}
+        <tr>
+            <td>{{ recipe.recipe_name }}</td>
+            <td>{{ recipe.description }}</td>
+            <td>{{ recipe.ingredients }}</td>
+            <td>{{ recipe.steps }}</td>
+            <td>{{ recipe.difficulty }}</td>
+            <td>{{ recipe.time_required }}</td>
+            <td>{{ recipe.taste }}</td>
+            <td>
+                <!-- Displaying the image -->
+                <img src="/static/{{recipe.image_path}}" alt="Recipe Image" style="max-width: 100px;">
+            </td>
+            <td>{{ recipe.submitted_at }}</td>
+            <td>{{ recipe.submitted_by }}</td>
+            <td>
+                <form method="post" action="{{ url_for('approve_recipe', admin_id=admin_id, recipe_id=recipe.id) }}">
+                    <button type="submit">Approve</button>
+                </form>                
+                <form method="post" action="{{ url_for('reject_recipe', admin_id=admin_id, recipe_id=recipe.id) }}">
+                    <button type="submit">Reject</button>
+                </form>
+                
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
