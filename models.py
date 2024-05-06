@@ -19,6 +19,7 @@ class Comment(db.Model):
     name = db.Column(db.String(100), nullable=False)
     comment = db.Column(db.Text, nullable=False)
     rating = db.Column(db.Integer, nullable=False)
+    image_url = db.Column(db.String(255))
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), nullable=False)
 
     def __repr__(self):

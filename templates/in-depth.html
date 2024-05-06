@@ -165,6 +165,12 @@
             padding: 10px; 
             margin-bottom: 10px; 
         }
+        .comment-section img {
+            max-width: 200px; /* Adjust the max-width as needed */
+            height: auto; /* Maintain aspect ratio */
+            border: 2px solid #000; /* Fixed border size */
+            padding: 5px; /* Padding around the image */
+        }
     </style>
 </head>
 <body>
@@ -197,9 +203,10 @@
     <div class="comment-box">
         <h2>Drop A Comment!</h2>
         <p>There is no failure. Only feedback.” - Robert Allen</p>
-        <form action="/submit_comment" method="post">
+        <form action="/submit_comment" method="post" enctype="multipart/form-data">
             <input type="text" name="name" placeholder="Your Name" class="input-field">
             <textarea name="comment" placeholder="Enter your comment here" class="input-field"></textarea>
+            <input type="file" name="image" accept="image/*">
             <input type="hidden" name="recipe_id" value="{{ recipe.id }}">
             <div class="rating">
                 <input type="radio" id="star5" name="rating" value="5">
@@ -230,6 +237,9 @@
                         &#9734;
                     {% endfor %}
                 </p>
+                {% if comment.image_url %}
+                    <img src="{{ comment.image_url }}" alt="Comment Image">
+                {% endif %}
                 <p>{{ comment.comment }}</p>
             </div>
         </div>

@@ -1,16 +1,21 @@
 import os
-from flask import Flask, redirect, url_for, render_template, request, session
+from flask import Flask, redirect, url_for, render_template, request, session, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from datetime import timedelta
 from models import Recipe, db, Comment
+from werkzeug.utils import secure_filename
 
 from sqlalchemy.sql import func
 basedir = os.path.abspath(os.path.dirname(__file__))
+
+UPLOAD_FOLDER = 'uploads' 
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 app = Flask(__name__, template_folder="templates")
 app.secret_key = "hello"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['UPLOAD_FOLDER'] = os.path.join(basedir, 'uploads')
 db.init_app(app)  
 
 app.permanent_session_lifetime = timedelta(minutes=100)
@@ -199,7 +204,19 @@ def submit_comment():
         comment_text = request.form['comment']
         rating = request.form['rating']
         recipe_id = request.form['recipe_id']  
-        comment = Comment(name=name, comment=comment_text, rating=rating, recipe_id=recipe_id)
+
+        if 'image' in request.files:
+            image = request.files['image']
+            if image.filename != '':
+                filename = secure_filename(image.filename)
+                image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                image_url = url_for('uploaded_file', filename=filename)
+            else:
+                image_url = None
+        else:
+            image_url = None
+
+        comment = Comment(name=name, comment=comment_text, rating=rating, recipe_id=recipe_id, image_url=image_url)
         
         try:
             db.session.add(comment)
@@ -209,6 +226,10 @@ def submit_comment():
             print(f"Error occurred: {str(e)}")
             db.session.rollback()
             return "Error occurred while submitting the comment"
+        
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 if __name__ == "__main__":
 	with app.app_context():

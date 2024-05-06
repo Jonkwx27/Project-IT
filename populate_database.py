@@ -1,6 +1,5 @@
 from datetime import datetime
 from main import db, Recipe, Comment, app
-from flask import Flask
 
 def populate_database():
     with app.app_context():
@@ -34,13 +33,13 @@ def populate_database():
             return
         
         comments = [
-            {'name': 'Jonathan', 'comment': 'This spaghetti is so nice', 'rating': 1},
-            {'name': 'Meor', 'comment': 'This spaghetti is so bad', 'rating': 5},
+            {'name': 'Jonathan', 'comment': 'This spaghetti is so nice', 'rating': 1, 'image_url': None}, 
+            {'name': 'Meor', 'comment': 'This spaghetti is so bad', 'rating': 5, 'image_url': None},
         ]
         
         for comment_data in comments:
             new_comment = Comment(name=comment_data['name'], comment=comment_data['comment'], rating=comment_data['rating'])
-            recipe.comments.append(new_comment)  # Associate the comment with the recipe
+            recipe.comments.append(new_comment)
             db.session.add(new_comment)
 
         try:
