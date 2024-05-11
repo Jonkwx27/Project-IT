@@ -42,7 +42,7 @@
                 <p>{{ recipe.description }}</p>
                 <!-- Displaying the image -->
                 <img src="/static/{{ recipe.image_path }}" alt="Recipe Image" style="max-width: 100px;">
-                <a href="#">View Recipe</a> <!-- Add link to view recipe details -->
+                <a href="{{ url_for('recipe', user_id=user.id, recipe_id=recipe.id) }}">View Recipe</a>
             </div>
             {% endfor %}
         </div>

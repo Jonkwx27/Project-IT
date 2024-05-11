@@ -1,11 +1,10 @@
 import os
 from flask import Flask, redirect, url_for, render_template, request, session, flash, send_from_directory
-from flask_sqlalchemy import SQLAlchemy
 from datetime import timedelta
 from flask_migrate import Migrate
 from werkzeug.utils import secure_filename
-from models import Recipe, db, Comment
-from sqlalchemy.sql import func
+from models import Recipe, db, User, Admin, Comment
+
 
 UPLOAD_FOLDER = 'uploads'  # Directory to store uploaded images
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -20,58 +19,15 @@ app.secret_key = "hello"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-
-db = SQLAlchemy(app)
-app.config['UPLOAD_FOLDER'] = os.path.join(basedir, 'uploads')
+#db = SQLAlchemy(app)
+# app.config['UPLOAD_FOLDER'] = os.path.join(basedir, 'uploads')
 db.init_app(app)  
 
 app.permanent_session_lifetime = timedelta(minutes=100)
 
 migrate=Migrate(app, db)
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(80), unique=True, nullable=False)
-    username = db.Column(db.String(100), unique=True, nullable=False)
-    age = db.Column(db.Integer)
-    password = db.Column(db.String(100), nullable=False)
-    created_at = db.Column(db.DateTime(timezone=True),
-                           server_default=func.now())
 
-    def __repr__(self):
-        return f'<User {self.name}>'
-
-class Admin(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name_admin = db.Column(db.String(100), nullable=False)
-    email_admin = db.Column(db.String(80), unique=True, nullable=False)
-    password_admin = db.Column(db.String(100), nullable=False)
-
-    def __repr__(self):
-        return f'<Admin {self.name_admin}>'
-
-# Define the Recipe model with the image_path field
-class Recipe(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    recipe_name = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.Text, nullable=False)
-    ingredients = db.Column(db.Text, nullable=False)
-    steps = db.Column(db.Text, nullable=False)
-    difficulty = db.Column(db.Integer, nullable=False)
-    time_required = db.Column(db.Integer, nullable=False)
-    taste = db.Column(db.Integer, nullable=False)
-    submitted_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
-    approved = db.Column(db.Boolean, default=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    user = db.relationship('User', backref=db.backref('recipe_submissions', lazy=True))
-    image_path = db.Column(db.String(255))  # Path to the image file
-    submitted_by = db.Column(db.String(100), nullable=False)
-    category = db.Column(db.String(50), nullable=False)
-
-    def __repr__(self):
-        return f'<RecipeSubmission {self.recipe_name}>'
 
 
 # Check if the filename extension is allowed
@@ -151,53 +107,56 @@ def browse_recipe(user_id):
     
     return render_template("browse_recipe.html", recipes=recipes, categories=categories, selected_category=selected_category, user=user)
 
-@app.route("/user/<int:user_id>/browsebreakfast")
-def browsebreakfast(user_id):
+@app.route("/user/<int:user_id>/recipe/<int:recipe_id>")
+def recipe(user_id,recipe_id):
     if "user_id" not in session or session["user_id"] != user_id:
         return redirect(url_for("login"))
     
     user = User.query.get_or_404(user_id)
-    return render_template("BrowseBreakfast.html", user=user)
+    recipe = Recipe.query.get_or_404(recipe_id)
 
-@app.route("/user/<int:user_id>/browsebeverage")
-def browsebeverage(user_id):
-    if "user_id" not in session or session["user_id"] != user_id:
-        return redirect(url_for("login"))
-    
-    user = User.query.get_or_404(user_id)
-    return render_template("BrowseBeverage.html", user=user)
+    comments = Comment.query.all()
 
-@app.route("/user/<int:user_id>/browsedessert")
-def browsedessert(user_id):
-    if "user_id" not in session or session["user_id"] != user_id:
-        return redirect(url_for("login"))
-    
-    user = User.query.get_or_404(user_id)
-    return render_template("BrowseDessert.html", user=user)
+    return render_template("recipe.html", user=user, recipe=recipe, comments=comments)
 
-@app.route("/user/<int:user_id>/browsedinner")
-def browsedinner(user_id):
-    if "user_id" not in session or session["user_id"] != user_id:
-        return redirect(url_for("login"))
-    
-    user = User.query.get_or_404(user_id)
-    return render_template("BrowseDinner.html", user=user)
+# @app.route('/recipes')
+# def recipe_details():
+#     recipe = Recipe.query.first()
+#     comments = Comment.query.all()  
+#     return render_template('in-depth.html', recipe=recipe, comments=comments)
 
-@app.route("/user/<int:user_id>/browselunch")
-def browselunch(user_id):
-    if "user_id" not in session or session["user_id"] != user_id:
-        return redirect(url_for("login"))
-    
-    user = User.query.get_or_404(user_id)
-    return render_template("BrowseLunch.html", user=user)
+@app.route('/submit_comment', methods=['POST'])
+def submit_comment():
+    if request.method == 'POST':
+        comment_text = request.form['comment']
+        rating = request.form['rating']
+        recipe_id = request.form['recipe_id']  
 
-@app.route("/user/<int:user_id>/browsesoup")
-def browsesoup(user_id):
-    if "user_id" not in session or session["user_id"] != user_id:
-        return redirect(url_for("login"))
-    
-    user = User.query.get_or_404(user_id)
-    return render_template("BrowseSoup.html", user=user)
+        if 'image' in request.files:
+            image = request.files['image']
+            if image.filename != '':
+                filename = secure_filename(image.filename)
+                image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                image_url = url_for('uploaded_file', filename=filename)
+            else:
+                image_url = None
+        else:
+            image_url = None
+
+        comment = Comment(comment=comment_text, rating=rating, recipe_id=recipe_id, image_url=image_url)
+        
+        try:
+            db.session.add(comment)
+            db.session.commit()
+            return redirect(url_for('recipe_details'))
+        except Exception as e:
+            print(f"Error occurred: {str(e)}")
+            db.session.rollback()
+            return "Error occurred while submitting the comment"
+        
+# @app.route('/uploads/<filename>')
+# def uploaded_file(filename):
+#     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 @app.route("/user/<int:user_id>/recipesubmission", methods=["GET", "POST"])
 def recipesubmission(user_id):
@@ -303,8 +262,6 @@ def admin(admin_id):
 def pending_submissions(admin_id):
     if "admin_id" not in session or session["admin_id"] != admin_id:
         return redirect(url_for("adminlogin"))
-    
-    admin = Admin.query.get_or_404(admin_id)
 
     # Query pending recipe submissions
     pending_recipes = Recipe.query.filter_by(approved=False).all()
@@ -316,8 +273,6 @@ def approve_recipe(admin_id, recipe_id):
     if "admin_id" not in session or session["admin_id"] != admin_id:
         return redirect(url_for("adminlogin"))
     
-    admin = Admin.query.get_or_404(admin_id)
-
     # Find the recipe by ID
     recipe = Recipe.query.get_or_404(recipe_id)
   
@@ -352,45 +307,6 @@ def adminlogout():
 	session.pop("admin_id", None)
 	return redirect(url_for("adminlogin"))
 
-@app.route('/recipes')
-def recipe_details():
-    recipe = Recipe.query.first()
-    comments = Comment.query.all()  
-    return render_template('in-depth.html', recipe=recipe, comments=comments)
-
-@app.route('/submit_comment', methods=['POST'])
-def submit_comment():
-    if request.method == 'POST':
-        name = request.form['name']
-        comment_text = request.form['comment']
-        rating = request.form['rating']
-        recipe_id = request.form['recipe_id']  
-
-        if 'image' in request.files:
-            image = request.files['image']
-            if image.filename != '':
-                filename = secure_filename(image.filename)
-                image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                image_url = url_for('uploaded_file', filename=filename)
-            else:
-                image_url = None
-        else:
-            image_url = None
-
-        comment = Comment(name=name, comment=comment_text, rating=rating, recipe_id=recipe_id, image_url=image_url)
-        
-        try:
-            db.session.add(comment)
-            db.session.commit()
-            return redirect(url_for('recipe_details'))
-        except Exception as e:
-            print(f"Error occurred: {str(e)}")
-            db.session.rollback()
-            return "Error occurred while submitting the comment"
-        
-@app.route('/uploads/<filename>')
-def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 if __name__ == "__main__":
 	with app.app_context():
