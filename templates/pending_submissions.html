@@ -6,7 +6,13 @@
     <title>Pending Recipe Submissions</title>
 </head>
 <body>
-    <h1>Pending Recipe Submissions</h1>
+    <div class="header">
+        <div class="logo-container">
+            <img style="height: 50px; padding-bottom: 30px;" src="{{ url_for('static', filename='Logo_CookiQ.jpeg') }}" alt="Logo_CookiQ">
+        </div>
+        <h1 class="title">Pending Recipe Submission</h1>
+        
+    </div>
     <table border="1">
         <tr>
             <th>Recipe Name</th>
@@ -17,6 +23,7 @@
             <th>Time Required</th>
             <th>Taste</th>
             <th>Image</th>
+            <th>Category</th>
             <th>Submitted At</th>
             <th>Submitted By</th>
             <th>Actions</th>
@@ -34,6 +41,7 @@
                 <!-- Displaying the image -->
                 <img src="/static/{{recipe.image_path}}" alt="Recipe Image" style="max-width: 100px;">
             </td>
+            <td>{{ recipe.category }}</td>
             <td>{{ recipe.submitted_at }}</td>
             <td>{{ recipe.submitted_by }}</td>
             <td>
@@ -43,7 +51,6 @@
                 <form method="post" action="{{ url_for('reject_recipe', admin_id=admin_id, recipe_id=recipe.id) }}">
                     <button type="submit">Reject</button>
                 </form>
-                
             </td>
         </tr>
         {% endfor %}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='BrowseRecipe.css') }}">
+    <title>Browse Recipe</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="header">
+        <div class="logo-container">
+            <img style="height: 50px; padding-bottom: 30px;" src="{{ url_for('static', filename='Logo_CookiQ.jpeg') }}" alt="Logo_CookiQ">
+        </div>
+        <h1 class="title">Browse Recipe</h1>
+        <a href="{{ url_for('user', user_id=user.id) }}" class="HomeButton">Return to Home</a>
+    </div>
+
+    <div class="category-selection">
+        <form method="GET" action="{{ url_for('browse_recipe', user_id=user.id) }}">
+            <label for="category">Select Category:</label>
+            <select name="category" id="category">
+                <option value="Breakfast">Breakfast</option>
+                <option value="Lunch">Lunch</option>
+                <option value="Dinner">Dinner</option>
+                <option value="Beverage">Beverage</option>
+                <option value="Dessert">Dessert</option>               
+                <option value="Soup">Soup</option>
+            </select>
+            <button type="submit">Browse</button>
+        </form>
+    </div>
+
+    <div class="recipes">
+        <h2>{{ selected_category.capitalize() }} Recipes</h2>
+        <div class="recipe-list">
+            {% for recipe in recipes %}
+            <div class="recipe-card">
+                <h3>{{ recipe.recipe_name }}</h3>
+                <p>{{ recipe.description }}</p>
+                <!-- Displaying the image -->
+                <img src="/static/{{ recipe.image_path }}" alt="Recipe Image" style="max-width: 100px;">
+                <a href="#">View Recipe</a> <!-- Add link to view recipe details -->
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

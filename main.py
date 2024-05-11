@@ -4,7 +4,6 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import timedelta
 from flask_migrate import Migrate
 from werkzeug.utils import secure_filename
-from sqlalchemy import delete
 from sqlalchemy.sql import func
 
 UPLOAD_FOLDER = 'uploads'  # Directory to store uploaded images
@@ -64,9 +63,11 @@ class Recipe(db.Model):
     user = db.relationship('User', backref=db.backref('recipe_submissions', lazy=True))
     image_path = db.Column(db.String(255))  # Path to the image file
     submitted_by = db.Column(db.String(100), nullable=False)
+    category = db.Column(db.String(50), nullable=False)
 
     def __repr__(self):
         return f'<RecipeSubmission {self.recipe_name}>'
+
 
 # Check if the filename extension is allowed
 def allowed_file(filename):
@@ -128,6 +129,23 @@ def user(user_id):
     
     user = User.query.get_or_404(user_id)
     return render_template('user.html', user=user)
+
+@app.route("/user/<int:user_id>/browse_recipe")
+def browse_recipe(user_id):
+    if "user_id" not in session or session["user_id"] != user_id:
+        return redirect(url_for("login"))
+    
+    user = User.query.get_or_404(user_id)
+
+    categories = ["Breakfast", "Lunch", "Dinner", "Dessert", "Beverage", "Soup"]
+    selected_category = request.args.get("category", "All")
+    
+    if selected_category == "All":
+        recipes = Recipe.query.all()
+    else:
+        recipes = Recipe.query.filter_by(category=selected_category).all()
+    
+    return render_template("browse_recipe.html", recipes=recipes, categories=categories, selected_category=selected_category, user=user)
 
 @app.route("/user/<int:user_id>/browsebreakfast")
 def browsebreakfast(user_id):
@@ -192,6 +210,7 @@ def recipesubmission(user_id):
         taste = int(request.form.get("rating3", 1))
         user = User.query.get_or_404(user_id)
         submitted_by = f"{user.username} (ID: {user.id})"
+        category = request.form["category"]
 
         if "recipe_image" in request.files:
             recipe_image = request.files["recipe_image"]
@@ -222,7 +241,8 @@ def recipesubmission(user_id):
             taste=taste,
             image_path=image_path_relative,
             user_id=user_id,
-            submitted_by=submitted_by  
+            submitted_by=submitted_by, 
+            category=category
         )
 
         # Add the recipe to the database session and commit changes
@@ -280,6 +300,8 @@ def pending_submissions(admin_id):
     if "admin_id" not in session or session["admin_id"] != admin_id:
         return redirect(url_for("adminlogin"))
     
+    admin = Admin.query.get_or_404(admin_id)
+
     # Query pending recipe submissions
     pending_recipes = Recipe.query.filter_by(approved=False).all()
     
@@ -290,6 +312,8 @@ def approve_recipe(admin_id, recipe_id):
     if "admin_id" not in session or session["admin_id"] != admin_id:
         return redirect(url_for("adminlogin"))
     
+    admin = Admin.query.get_or_404(admin_id)
+
     # Find the recipe by ID
     recipe = Recipe.query.get_or_404(recipe_id)
   
@@ -304,6 +328,8 @@ def reject_recipe(admin_id, recipe_id):
     if "admin_id" not in session or session["admin_id"] != admin_id:
         return redirect(url_for("adminlogin"))
     
+    admin = Admin.query.get_or_404(admin_id)
+
     # Find the recipe by ID
     recipe = Recipe.query.get_or_404(recipe_id)
     db.session.delete(recipe)
@@ -326,20 +352,3 @@ if __name__ == "__main__":
 	with app.app_context():
 		db.create_all()
 		app.run(debug=True)
-
-
-# @app.route('/signupadmin', methods=('GET', 'POST'))
-# def signupadmin():
-#     if request.method == 'POST':
-#         email_admin = request.form['email_admin']
-#         name_admin = request.form['name_admin']
-#         password_admin = request.form['password_admin']
-#         admin = Admin(email_admin=email_admin,
-# 					name_admin=name_admin,
-# 					password_admin=password_admin)
-#         db.session.add(admin)
-#         db.session.commit()
-
-#         return redirect(url_for('home'))
-
-#     return render_template("signupadmin.html")
