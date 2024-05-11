@@ -6,6 +6,7 @@ from flask_migrate import Migrate
 from werkzeug.utils import secure_filename
 from sqlalchemy import delete
 from sqlalchemy.sql import func
+from flask import request
 
 UPLOAD_FOLDER = 'uploads'  # Directory to store uploaded images
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -64,6 +65,7 @@ class Recipe(db.Model):
     user = db.relationship('User', backref=db.backref('recipe_submissions', lazy=True))
     image_path = db.Column(db.String(255))  # Path to the image file
     submitted_by = db.Column(db.String(100), nullable=False)
+    pinned_date = db.Column(db.Date)
 
     def __repr__(self):
         return f'<RecipeSubmission {self.recipe_name}>'
@@ -234,6 +236,16 @@ def recipesubmission(user_id):
     user = User.query.get_or_404(user_id)
     return render_template("RecipeSubmission.html", user=user)
 
+@app.route("/favouritedrecipe/<int:recipe_id>", methods=["POST"])
+def save_pinned_date(recipe_id):
+    pinned_date_str = request.form.get("date", None)
+    pinned_date = datetime.strptime(pinned_date_str, "%Y-%m-%d") if pinned_date_str else None
+    recipe = Recipe.query.get_or_404(recipe_id)
+    recipe.pinned_date = pinned_date
+
+    db.session.commit()
+
+    return redirect(url_for('favorited_recipe_page', recipe_id=recipe_id))
 
 @app.route("/logout")
 def logout():
