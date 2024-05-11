@@ -10,6 +10,9 @@ def populate_database():
             description='A classic Italian pasta dish with meat sauce.',
             ingredients='Spaghetti, ground beef, tomatoes, onion, garlic, olive oil, salt, pepper, Parmesan cheese',
             photo_url='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-6sTwopNQNhq2yuW8gitQ2oAzPEbEjRccdN0w_c2qKw&s',
+            taste=4,
+            time_required=3, 
+            difficulty=3 
         )
 
         steps = [

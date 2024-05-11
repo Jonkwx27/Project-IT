@@ -166,11 +166,45 @@
             margin-bottom: 10px; 
         }
         .comment-section img {
-            max-width: 200px; /* Adjust the max-width as needed */
-            height: auto; /* Maintain aspect ratio */
-            border: 2px solid #000; /* Fixed border size */
-            padding: 5px; /* Padding around the image */
+            max-width: 200px; 
+            height: auto; 
+            border: 2px solid #000;
+            padding: 5px;
         }
+        .timer-container {
+            border: 2px solid #333;
+            padding: 10px;
+            text-align: center;
+            font-family: 'Bebas Neue', sans-serif;
+        }
+        .timer-container p {
+            font-size: 40px;
+            margin-top: 5px;
+            margin-bottom: 5px; 
+        }
+        .timer-container h2{
+            margin-bottom: 5px;
+            margin-top: 5px;
+        }
+        .timer-container button {
+            width: 80px; 
+            height: 30px;
+            background-color: #f8aa35; 
+            transition: background-color 0.3s;
+            font-size: 15px;
+        }
+        .timer-container button:hover{
+            background-color: #d67f7f;
+        }
+        .timer-container input{
+            margin-top: 3px;
+            margin-bottom: 15px;
+            width: 100px; 
+            font-size: 16px;
+            border-radius: 5px; 
+            text-align: center;
+        }
+
     </style>
 </head>
 <body>
@@ -181,8 +215,34 @@
     <h1 class="recipe-title">{{ recipe.title }}</h1> 
     <div class="recipe-photo-container">
         <img class="recipe-photo" src="{{ recipe.photo_url }}" alt="Recipe Photo">
-        <p class="submitted-by-date">Submitted by: {{ recipe.submitted_by }}</p>
-        <p class="submitted-by-date">Date: {{ recipe.date }}</p>
+        <div  class="submitted-by-date">
+            <p>Submitted by: {{ recipe.submitted_by }}</p>
+            <p>Date: {{ recipe.date }}</p>
+            <p>Taste: 
+                {% for i in range(recipe.taste) %}
+                    &#9733; 
+                {% endfor %}
+                {% for i in range(5 - recipe.taste) %}
+                    &#9734;
+                {% endfor %}
+            </p>
+            <p>Time Required: 
+                {% for i in range(recipe.time_required) %}
+                    &#9733; 
+                {% endfor %}
+                {% for i in range(5 - recipe.time_required) %}
+                    &#9734;
+                {% endfor %}
+            </p>
+            <p>Difficulty: 
+                {% for i in range(recipe.difficulty) %}
+                    &#9733; 
+                {% endfor %}
+                {% for i in range(5 - recipe.difficulty) %}
+                    &#9734;
+                {% endfor %}
+            </p>
+        </div>
     </div>
     <div class="recipe-details">
         <h2>Description:</h2>
@@ -199,6 +259,21 @@
                 <li><input type="checkbox" id="step{{ loop.index }}" name="step{{ loop.index }}"><label for="step{{ loop.index }}">{{ step }}</label></li>
             {% endfor %}
         </ul>
+    </div>
+    <div class="timer-container">
+        <h2>Timer</h2>
+        <p id="timer">00:00:00</p>
+        <audio id="timeupAudio" src="{{ url_for('static', filename='alarm.mp3') }}"></audio>
+        <div>
+            <input type="number" id="hours" min="0" placeholder="Hours">
+            <input type="number" id="minutes" min="0" max="59" placeholder="Minutes">
+            <input type="number" id="seconds" min="0" max="59" placeholder="Seconds">
+        </div>
+        <div>
+            <button onclick="startCountdown()">Start</button>
+            <button onclick="stopCountdown()">Stop</button>
+            <button onclick="resetCountdown()">Reset</button>
+        </div>
     </div>
     <div class="comment-box">
         <h2>Drop A Comment!</h2>
@@ -245,5 +320,50 @@
         </div>
         {% endfor %}
     </div>
+    <script>
+        var timerElement = document.getElementById("timer");
+        var hoursInput = document.getElementById("hours");
+        var minutesInput = document.getElementById("minutes");
+        var secondsInput = document.getElementById("seconds");
+        var totalSeconds = 0;
+        var countdownInterval;
+
+        function startCountdown() {
+            stopCountdown();
+            var hours = parseInt(hoursInput.value) || 0;
+            var minutes = parseInt(minutesInput.value) || 0;
+            var seconds = parseInt(secondsInput.value) || 0;
+            totalSeconds = hours * 3600 + minutes * 60 + seconds;
+            countdownInterval = setInterval(function () {
+                totalSeconds--;
+                if (totalSeconds <= 0) {
+                    clearInterval(countdownInterval);
+                    timerElement.textContent = "Time's up!";
+                    timeupAudio.play();
+                } else {
+                    var hours = Math.floor(totalSeconds / 3600);
+                    var remainingSeconds = totalSeconds % 3600;
+                    var minutes = Math.floor(remainingSeconds / 60);
+                    var seconds = remainingSeconds % 60;
+                    timerElement.textContent =
+                        (hours < 10 ? "0" + hours : hours) + ":" +
+                        (minutes < 10 ? "0" + minutes : minutes) + ":" +
+                        (seconds < 10 ? "0" + seconds : seconds);
+                }
+            }, 1000);
+        }
+        function stopCountdown() {
+            clearInterval(countdownInterval);
+        }
+        function resetCountdown() {
+            clearInterval(countdownInterval);
+            totalSeconds = 0;
+            timerElement.textContent = "00:00:00";
+            hoursInput.value = "";
+            minutesInput.value = "";
+            secondsInput.value = "";
+            timeupAudio.pause();
+        }
+    </script>
 </body>
 </html>
