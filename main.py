@@ -1,5 +1,5 @@
 import os
-from flask import Flask, redirect, url_for, render_template, request, session, flash, send_from_directory
+from flask import Flask, redirect, url_for, render_template, request, session, flash
 from datetime import timedelta
 from flask_migrate import Migrate
 from werkzeug.utils import secure_filename
@@ -19,16 +19,12 @@ app.secret_key = "hello"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-#db = SQLAlchemy(app)
-# app.config['UPLOAD_FOLDER'] = os.path.join(basedir, 'uploads')
+#app.config['UPLOAD_FOLDER'] = os.path.join(basedir, 'uploads')
 db.init_app(app)  
 
 app.permanent_session_lifetime = timedelta(minutes=100)
 
 migrate=Migrate(app, db)
-
-
-
 
 # Check if the filename extension is allowed
 def allowed_file(filename):
@@ -115,48 +111,47 @@ def recipe(user_id,recipe_id):
     user = User.query.get_or_404(user_id)
     recipe = Recipe.query.get_or_404(recipe_id)
 
-    comments = Comment.query.all()
+    comments = Comment.query.filter_by(recipe_id=recipe_id).all()
 
     return render_template("recipe.html", user=user, recipe=recipe, comments=comments)
 
-# @app.route('/recipes')
-# def recipe_details():
-#     recipe = Recipe.query.first()
-#     comments = Comment.query.all()  
-#     return render_template('in-depth.html', recipe=recipe, comments=comments)
+@app.route('/user/<int:user_id>/submit_comment/<int:recipe_id>', methods=['POST'])
+def submit_comment(user_id, recipe_id):
+    if "user_id" not in session or session["user_id"] != user_id:
+        return redirect(url_for("login"))
 
-@app.route('/submit_comment', methods=['POST'])
-def submit_comment():
     if request.method == 'POST':
-        comment_text = request.form['comment']
+        comment = request.form['comment']
         rating = request.form['rating']
         recipe_id = request.form['recipe_id']  
+        user = User.query.get_or_404(user_id)
+        submitted_by = f"{user.username} (ID: {user.id})"
 
         if 'image' in request.files:
             image = request.files['image']
-            if image.filename != '':
+            if image.filename == '':
+                flash('No selected file')
+                return redirect(request.url)
+            if image and allowed_file(image.filename):
                 filename = secure_filename(image.filename)
-                image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                image_url = url_for('uploaded_file', filename=filename)
+                image_url= os.path.join(app.root_path, 'static/uploads', filename)
+                image.save(image_url)
+                image_url_relative = 'uploads/' + filename
             else:
-                image_url = None
+                flash('Invalid file type')
+                return redirect(request.url)
         else:
-            image_url = None
+            image_url_relative = None
 
-        comment = Comment(comment=comment_text, rating=rating, recipe_id=recipe_id, image_url=image_url)
+        comment = Comment(comment=comment, rating=rating, submitted_by=submitted_by ,recipe_id=recipe_id, image_url=image_url_relative, user_id=user_id)
         
-        try:
-            db.session.add(comment)
-            db.session.commit()
-            return redirect(url_for('recipe_details'))
-        except Exception as e:
-            print(f"Error occurred: {str(e)}")
-            db.session.rollback()
-            return "Error occurred while submitting the comment"
+
+        db.session.add(comment)
+        db.session.commit()
+        return redirect(url_for('recipe', user_id=session["user_id"], recipe_id=recipe_id))
         
-# @app.route('/uploads/<filename>')
-# def uploaded_file(filename):
-#     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+    user = User.query.get_or_404(user_id)
+    return render_template("RecipeSubmission.html", user=user)
 
 @app.route("/user/<int:user_id>/recipesubmission", methods=["GET", "POST"])
 def recipesubmission(user_id):
@@ -168,9 +163,9 @@ def recipesubmission(user_id):
         description = request.form["description"]
         ingredients = request.form["ingredients"]
         steps = request.form["steps"]
+        serving_size = int(request.form.get("serving_size", 1))
         difficulty = int(request.form.get("rating1", 1))
         time_required = int(request.form.get("rating2", 1))
-        taste = int(request.form.get("rating3", 1))
         user = User.query.get_or_404(user_id)
         submitted_by = f"{user.username} (ID: {user.id})"
         category = request.form["category"]
@@ -199,9 +194,9 @@ def recipesubmission(user_id):
             description=description,
             ingredients=ingredients,
             steps=steps,
+            serving_size = serving_size,
             difficulty=difficulty,
             time_required=time_required,
-            taste=taste,
             image_path=image_path_relative,
             user_id=user_id,
             submitted_by=submitted_by, 

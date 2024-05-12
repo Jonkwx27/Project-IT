@@ -180,7 +180,7 @@
     </div>
     <h1 class="recipe-title">{{ recipe.recipe_name }}</h1>
     <div class="recipe-photo-container">
-        <img src="{{ url_for('static', filename=recipe.image_path) }}" class="recipe-photo" alt="Recipe Photo">
+        <img src="{{ url_for('static', filename=recipe.image_path) }}" class="recipe-photo" alt="Recipe Photo" style="max-width: 200px;">
         <p class="submitted-by-date">Submitted by: {{ recipe.submitted_by }}</p>
         <p class="submitted-by-date">Submitted at: {{ recipe.submitted_at }}</p>
     </div>
@@ -195,20 +195,21 @@
     <div class="recipe-details">
         <h2>Steps:</h2>
         <ul>
-            {% for step in recipe.steps.split('\n') %}
+            {% for step in recipe.steps.split('. ') %}
                 <li><input type="checkbox" id="step{{ loop.index }}" name="step{{ loop.index }}"><label for="step{{ loop.index }}">{{ recipe.steps }}</label></li>
             {% endfor %}
         </ul>
     </div>
+    <p>Serving Size: {{ recipe.serving_size }}</p>
     <p>Difficulty: {{ recipe.difficulty }}</p>
     <p>Time Required: {{ recipe.time_required }}</p>
-    <p>Taste: {{ recipe.taste }}</p>
     <div class="comment-box">
         <h2>Drop A Comment!</h2>
         <p>There is no failure. Only feedback.” - Robert Allen</p>
-        <form action="/submit_comment" method="post" enctype="multipart/form-data">
+        <form action="{{ url_for('submit_comment', user_id=user.id, recipe_id=recipe.id) }}" method="post" enctype="multipart/form-data">
             <textarea name="comment" placeholder="Enter your comment here" class="input-field"></textarea>
-            <input type="file" name="image" accept="image/*">
+            <label for="image">Upload Image:</label>
+            <input type="file" name="image" accept="image/*" required>
             <input type="hidden" name="recipe_id" value="{{ recipe.id }}">
             <div class="rating">
                 <input type="radio" id="star5" name="rating" value="5">
@@ -230,6 +231,7 @@
         {% for comment in comments %}
         <div class="comment">
             <div class="comment-content">
+                <p>{{ comment.submitted_by }}</p>
                 <p>Rating: 
                     {% for i in range(comment.rating) %}
                         &#9733; 
@@ -239,7 +241,7 @@
                     {% endfor %}
                 </p>
                 {% if comment.image_url %}
-                    <img src="{{ comment.image_url }}" alt="Comment Image">
+                    <img src="/static/{{ comment.image_url }}" alt="Comment Image">
                 {% endif %}
                 <p>{{ comment.comment }}</p>
             </div>

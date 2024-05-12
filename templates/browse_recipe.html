@@ -22,6 +22,7 @@
         <form method="GET" action="{{ url_for('browse_recipe', user_id=user.id) }}">
             <label for="category">Select Category:</label>
             <select name="category" id="category">
+                <option value="All">All</option>
                 <option value="Breakfast">Breakfast</option>
                 <option value="Lunch">Lunch</option>
                 <option value="Dinner">Dinner</option>

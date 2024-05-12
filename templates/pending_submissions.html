@@ -19,9 +19,9 @@
             <th>Description</th>
             <th>Ingredients</th>
             <th>Steps</th>
+            <th>Serving Size</th>
             <th>Difficulty</th>
             <th>Time Required</th>
-            <th>Taste</th>
             <th>Image</th>
             <th>Category</th>
             <th>Submitted At</th>
@@ -34,9 +34,9 @@
             <td>{{ recipe.description }}</td>
             <td>{{ recipe.ingredients }}</td>
             <td>{{ recipe.steps }}</td>
+            <td>{{ recipe.serving_size }}</td>
             <td>{{ recipe.difficulty }}</td>
-            <td>{{ recipe.time_required }}</td>
-            <td>{{ recipe.taste }}</td>
+            <td>{{ recipe.time_required }}</td>           
             <td>
                 <!-- Displaying the image -->
                 <img src="/static/{{recipe.image_path}}" alt="Recipe Image" style="max-width: 100px;">
