@@ -18,10 +18,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = os.path.join(basedir, 'uploads')
 db.init_app(app)  
 
-    return app
-
-app = create_app()
-
 app.permanent_session_lifetime = timedelta(minutes=100)
 
 class User(db.Model):
