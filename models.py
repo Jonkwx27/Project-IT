@@ -9,6 +9,9 @@ class Recipe(db.Model):
     ingredients = db.Column(db.Text, nullable=False)
     steps = db.Column(db.Text, nullable=False)
     photo_url = db.Column(db.String(255), nullable=False)
+    taste = db.Column(db.Integer, nullable=False) 
+    time_required = db.Column(db.Integer, nullable=False) 
+    difficulty = db.Column(db.Integer, nullable=False) 
     comments = db.relationship('Comment', backref='recipe', lazy=True)
 
     def __repr__(self):
@@ -19,6 +22,7 @@ class Comment(db.Model):
     name = db.Column(db.String(100), nullable=False)
     comment = db.Column(db.Text, nullable=False)
     rating = db.Column(db.Integer, nullable=False)
+    image_url = db.Column(db.String(255))
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), nullable=False)
 
     def __repr__(self):
