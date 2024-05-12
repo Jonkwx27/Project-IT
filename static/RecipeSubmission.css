@@ -71,26 +71,26 @@
 
 .form-container {
     border: 3px solid black;
-    padding: 10px; /* Add padding for spacing */
-    background-color: #ece1ae; /* Match the background color */
+    padding: 10px;
+    background-color: #ece1ae; 
 }
 
-/* Adjust the styles for input fields and textareas within the form container */
+
 .form-container input[type="text"],
 .form-container textarea {
-    /* Your existing input and textarea styles */
-    border: 2px solid #ffd18d; /* Adjust to match the other borders */
-    border-radius: 5px; /* Add border radius for rounded corners */
+
+    border: 2px solid #ffd18d;
+    border-radius: 5px; 
     margin-top: 10px;
-    width: 100%; /* Make input fields and textareas span full width */
-    box-sizing: border-box; /* Include padding and border in the width */
+    width: 100%; 
+    box-sizing: border-box; 
 }
 
-/* Additional styling for labels or headings inside the form container */
+
 .form-container h2,
 .form-container label {
-    /* Your existing label and heading styles */
-    color: black; /* Adjust text color to match */
+ 
+    color: black; 
 }
 
 .input-fields {
@@ -144,12 +144,12 @@
 }
 
 .input-container .ingredienttext {
-    margin-top: 20px; /* Add space above the ingredients text box */
+    margin-top: 20px; 
     width: 88%;
 }
 
 .input-container .steptext {
-    margin-top: 20px; /* Add space above the ingredients text box */
+    margin-top: 20px; 
     width: 90%;
 }
 
@@ -168,6 +168,7 @@
 }
 
 .rating1 {
+    font-family: 'Bebas Neue', sans-serif; 
     unicode-bidi: bidi-override;
     direction: rtl;
     text-align: center;
@@ -211,6 +212,7 @@
 }
 
 .rating2 {
+    font-family: 'Bebas Neue', sans-serif; 
     unicode-bidi: bidi-override;
     direction: rtl;
     text-align: center;
@@ -253,49 +255,6 @@
     content: "\2605";
 }
 
-.rating3 {
-    unicode-bidi: bidi-override;
-    direction: rtl;
-    text-align: center;
-    background-color: #ece1ae;
-    border-top: none;
-    padding: 10px;
-    padding-bottom: 80px;
-}
-
-.rating3 > input {
-    display: none;
-}
-
-.rating3 > label {
-    display: inline-block;
-    padding: 5px;
-    font-size: 40px;
-    color: #ffffff;
-}
-
-.rating3 > label:before {
-    content: "\2605";
-}
-
-.rating3 > input:checked ~ label {
-    color: #fffb00;
-}
-
-.rating3 > input:checked ~ label:before {
-    content: "\2605";
-}
-
-.rating3 > label:hover,
-.rating3 > label:hover ~ label {
-    color: #fffb00;
-}
-
-.rating3 > label:hover:before,
-.rating3 > label:hover ~ label:before {
-    content: "\2605";
-}
-
 .Submit {
     display: block;
     width: 100px;
@@ -315,13 +274,13 @@
 }
 
 #recipe_name {
-    width: 450px; /* Adjust the width as needed */
+    width: 450px; 
     height: 35px;
 }
 
-/* Adjust the width for description textarea */
+
 #description {
-    width: 900px; /* Adjust the width as needed */
+    width: 900px;
 }
 
 .image-upload {
@@ -356,7 +315,95 @@
     cursor: pointer;
 }
 
-/* Show the preview image when an image is selected */
+
 #recipe_image:focus + #preview-image {
     display: block;
 }
+.category-selection {
+    margin-bottom: 20px; 
+  }
+  
+  .category-selection form {
+    display: flex;
+    align-items: center;
+  }
+  
+  .category-selection label {
+    
+    font-size: 18px;
+    margin-right: 10px; 
+  }
+  
+  .category-selection select {
+    font-family: 'Bebas Neue', sans-serif; 
+    font-size: 16px; 
+    padding: 5px; 
+    border: 1px solid #000; 
+    border-radius: 5px;
+  }
+  
+  .category-selection button {
+    padding: 8px 16px; 
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: 'Bebas Neue', sans-serif; 
+    font-size: 16px; 
+    background-color: #c28855; 
+    color: #fff; 
+    transition: background-color 0.3s; 
+  }
+  
+  .category-selection button:hover {
+    background-color: #98714f; 
+  }
+
+.input-container {
+    font-family: 'Bebas Neue', sans-serif; 
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    margin-top: 20px; 
+}
+
+
+.input-container input[type="range"] {
+    -webkit-appearance: none;
+    width: 40%; 
+    height: 10px; 
+    background: #fff; 
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+
+.input-container input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px; 
+    height: 16px;
+    background: #c28855; 
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.input-container input[type="range"]::-moz-range-thumb {
+    width: 16px; 
+    height: 16px; 
+    background: #c28855; 
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+
+#serving_size_value {
+    font-family: 'Bebas Neue', sans-serif; 
+    font-size: 18px; 
+    color: #000; 
+    margin-top: 5px; 
+}
+

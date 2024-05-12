@@ -1,12 +1,11 @@
 import os
-from flask import Flask, redirect, url_for, render_template, request, session, flash
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, redirect, url_for, render_template, request, session, flash, request
 from datetime import timedelta, datetime
 from flask_migrate import Migrate
 from werkzeug.utils import secure_filename
-from sqlalchemy import delete
 from sqlalchemy.sql import func
-from flask import request
+from models import Recipe, db, User, Admin, Comment
+
 
 UPLOAD_FOLDER = 'uploads'  # Directory to store uploaded images
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -15,60 +14,14 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__, template_folder="templates")
 app.secret_key = "hello"
-app.config['SQLALCHEMY_DATABASE_URI'] =\
-        'sqlite:///' + os.path.join(basedir, 'database.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-
-db = SQLAlchemy(app)
+db.init_app(app)  
 
 app.permanent_session_lifetime = timedelta(minutes=100)
 
 migrate=Migrate(app, db)
-
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(80), unique=True, nullable=False)
-    username = db.Column(db.String(100), unique=True, nullable=False)
-    age = db.Column(db.Integer)
-    password = db.Column(db.String(100), nullable=False)
-    created_at = db.Column(db.DateTime(timezone=True),
-                           server_default=func.now())
-
-    def __repr__(self):
-        return f'<User {self.name}>'
-
-class Admin(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name_admin = db.Column(db.String(100), nullable=False)
-    email_admin = db.Column(db.String(80), unique=True, nullable=False)
-    password_admin = db.Column(db.String(100), nullable=False)
-
-    def __repr__(self):
-        return f'<Admin {self.name_admin}>'
-
-# Define the Recipe model with the image_path field
-class Recipe(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    recipe_name = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.Text, nullable=False)
-    ingredients = db.Column(db.Text, nullable=False)
-    steps = db.Column(db.Text, nullable=False)
-    difficulty = db.Column(db.Integer, nullable=False)
-    time_required = db.Column(db.Integer, nullable=False)
-    taste = db.Column(db.Integer, nullable=False)
-    submitted_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
-    approved = db.Column(db.Boolean, default=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    user = db.relationship('User', backref=db.backref('recipe_submissions', lazy=True))
-    image_path = db.Column(db.String(255))  # Path to the image file
-    submitted_by = db.Column(db.String(100), nullable=False)
-    pinned_date = db.Column(db.Date)
-
-    def __repr__(self):
-        return f'<RecipeSubmission {self.recipe_name}>'
 
 # Check if the filename extension is allowed
 def allowed_file(filename):
@@ -108,7 +61,6 @@ def login():
         email = request.form["email"]
         username = request.form["username"]
         password = request.form["password"]
-
         # Check if the user exists in the database
         found_user = User.query.filter_by(email=email, username=username).first()
 
@@ -131,53 +83,71 @@ def user(user_id):
     user = User.query.get_or_404(user_id)
     return render_template('user.html', user=user)
 
-@app.route("/user/<int:user_id>/browsebreakfast")
-def browsebreakfast(user_id):
+@app.route("/user/<int:user_id>/browse_recipe")
+def browse_recipe(user_id):
     if "user_id" not in session or session["user_id"] != user_id:
         return redirect(url_for("login"))
     
     user = User.query.get_or_404(user_id)
-    return render_template("BrowseBreakfast.html", user=user)
 
-@app.route("/user/<int:user_id>/browsebeverage")
-def browsebeverage(user_id):
-    if "user_id" not in session or session["user_id"] != user_id:
-        return redirect(url_for("login"))
+    categories = ["Breakfast", "Lunch", "Dinner", "Dessert", "Beverage", "Soup"]
+    selected_category = request.args.get("category", "All")
     
-    user = User.query.get_or_404(user_id)
-    return render_template("BrowseBeverage.html", user=user)
+    if selected_category == "All":
+        recipes = Recipe.query.filter_by(approved=True).all()  
+    else:
+        recipes = Recipe.query.filter_by(category=selected_category, approved=True).all()  
+    
+    return render_template("browse_recipe.html", recipes=recipes, categories=categories, selected_category=selected_category, user=user)
 
-@app.route("/user/<int:user_id>/browsedessert")
-def browsedessert(user_id):
+@app.route("/user/<int:user_id>/recipe/<int:recipe_id>")
+def recipe(user_id,recipe_id):
     if "user_id" not in session or session["user_id"] != user_id:
         return redirect(url_for("login"))
     
     user = User.query.get_or_404(user_id)
-    return render_template("BrowseDessert.html", user=user)
+    recipe = Recipe.query.get_or_404(recipe_id)
 
-@app.route("/user/<int:user_id>/browsedinner")
-def browsedinner(user_id):
-    if "user_id" not in session or session["user_id"] != user_id:
-        return redirect(url_for("login"))
-    
-    user = User.query.get_or_404(user_id)
-    return render_template("BrowseDinner.html", user=user)
+    comments = Comment.query.filter_by(recipe_id=recipe_id).all()
 
-@app.route("/user/<int:user_id>/browselunch")
-def browselunch(user_id):
-    if "user_id" not in session or session["user_id"] != user_id:
-        return redirect(url_for("login"))
-    
-    user = User.query.get_or_404(user_id)
-    return render_template("BrowseLunch.html", user=user)
+    return render_template("recipe.html", user=user, recipe=recipe, comments=comments)
 
-@app.route("/user/<int:user_id>/browsesoup")
-def browsesoup(user_id):
+@app.route('/user/<int:user_id>/submit_comment/<int:recipe_id>', methods=['POST'])
+def submit_comment(user_id, recipe_id):
     if "user_id" not in session or session["user_id"] != user_id:
         return redirect(url_for("login"))
-    
+
+    if request.method == 'POST':
+        comment = request.form['comment']
+        rating = request.form['rating']
+        recipe_id = request.form['recipe_id']  
+        user = User.query.get_or_404(user_id)
+        submitted_by = f"{user.username} (ID: {user.id})"
+
+        if 'image' in request.files:
+            image = request.files['image']
+            if image.filename == '':
+                flash('No selected file')
+                return redirect(request.url)
+            if image and allowed_file(image.filename):
+                filename = secure_filename(image.filename)
+                image_url= os.path.join(app.root_path, 'static/uploads', filename)
+                image.save(image_url)
+                image_url_relative = 'uploads/' + filename
+            else:
+                flash('Invalid file type')
+                return redirect(request.url)
+        else:
+            image_url_relative = None
+
+        comment = Comment(comment=comment, rating=rating, submitted_by=submitted_by ,recipe_id=recipe_id, image_url=image_url_relative, user_id=user_id)
+        
+        db.session.add(comment)
+        db.session.commit()
+        return redirect(url_for('recipe', user_id=session["user_id"], recipe_id=recipe_id))
+        
     user = User.query.get_or_404(user_id)
-    return render_template("BrowseSoup.html", user=user)
+    return render_template("RecipeSubmission.html", user=user)
 
 @app.route("/user/<int:user_id>/recipesubmission", methods=["GET", "POST"])
 def recipesubmission(user_id):
@@ -189,11 +159,12 @@ def recipesubmission(user_id):
         description = request.form["description"]
         ingredients = request.form["ingredients"]
         steps = request.form["steps"]
+        serving_size = int(request.form.get("serving_size", 1))
         difficulty = int(request.form.get("rating1", 1))
         time_required = int(request.form.get("rating2", 1))
-        taste = int(request.form.get("rating3", 1))
         user = User.query.get_or_404(user_id)
         submitted_by = f"{user.username} (ID: {user.id})"
+        category = request.form["category"]
 
         if "recipe_image" in request.files:
             recipe_image = request.files["recipe_image"]
@@ -219,12 +190,13 @@ def recipesubmission(user_id):
             description=description,
             ingredients=ingredients,
             steps=steps,
+            serving_size = serving_size,
             difficulty=difficulty,
             time_required=time_required,
-            taste=taste,
             image_path=image_path_relative,
             user_id=user_id,
-            submitted_by=submitted_by  
+            submitted_by=submitted_by, 
+            category=category
         )
 
         # Add the recipe to the database session and commit changes
@@ -259,9 +231,6 @@ def logout():
 
 
 ##################################################################### Admin Route #########################################################################
-
-
-
 @app.route("/adminlogin", methods=["POST", "GET"])
 def adminlogin():
     if request.method == "POST":
@@ -296,11 +265,13 @@ def admin(admin_id):
 def pending_submissions(admin_id):
     if "admin_id" not in session or session["admin_id"] != admin_id:
         return redirect(url_for("adminlogin"))
-    
+
+    admin = Admin.query.get_or_404(admin_id)
+
     # Query pending recipe submissions
     pending_recipes = Recipe.query.filter_by(approved=False).all()
     
-    return render_template("pending_submissions.html", recipes=pending_recipes, admin_id=admin_id)
+    return render_template("pending_submissions.html", recipes=pending_recipes, admin_id=admin_id, admin=admin)
 
 @app.route("/admin/<int:admin_id>/approve_recipe/<int:recipe_id>", methods=["POST"])
 def approve_recipe(admin_id, recipe_id):
@@ -321,6 +292,8 @@ def reject_recipe(admin_id, recipe_id):
     if "admin_id" not in session or session["admin_id"] != admin_id:
         return redirect(url_for("adminlogin"))
     
+    admin = Admin.query.get_or_404(admin_id)
+
     # Find the recipe by ID
     recipe = Recipe.query.get_or_404(recipe_id)
     db.session.delete(recipe)
@@ -339,24 +312,8 @@ def adminlogout():
 	session.pop("admin_id", None)
 	return redirect(url_for("adminlogin"))
 
+
 if __name__ == "__main__":
 	with app.app_context():
 		db.create_all()
 		app.run(debug=True)
-
-
-# @app.route('/signupadmin', methods=('GET', 'POST'))
-# def signupadmin():
-#     if request.method == 'POST':
-#         email_admin = request.form['email_admin']
-#         name_admin = request.form['name_admin']
-#         password_admin = request.form['password_admin']
-#         admin = Admin(email_admin=email_admin,
-# 					name_admin=name_admin,
-# 					password_admin=password_admin)
-#         db.session.add(admin)
-#         db.session.commit()
-
-#         return redirect(url_for('home'))
-
-#     return render_template("signupadmin.html")
