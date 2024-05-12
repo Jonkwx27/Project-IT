@@ -11,15 +11,11 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-UPLOAD_FOLDER = 'uploads' 
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
-
 app = Flask(__name__, template_folder="templates")
 app.secret_key = "hello"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-#app.config['UPLOAD_FOLDER'] = os.path.join(basedir, 'uploads')
 db.init_app(app)  
 
 app.permanent_session_lifetime = timedelta(minutes=100)
@@ -97,9 +93,9 @@ def browse_recipe(user_id):
     selected_category = request.args.get("category", "All")
     
     if selected_category == "All":
-        recipes = Recipe.query.all()
+        recipes = Recipe.query.filter_by(approved=True).all()  
     else:
-        recipes = Recipe.query.filter_by(category=selected_category).all()
+        recipes = Recipe.query.filter_by(category=selected_category, approved=True).all()  
     
     return render_template("browse_recipe.html", recipes=recipes, categories=categories, selected_category=selected_category, user=user)
 
@@ -145,7 +141,6 @@ def submit_comment(user_id, recipe_id):
 
         comment = Comment(comment=comment, rating=rating, submitted_by=submitted_by ,recipe_id=recipe_id, image_url=image_url_relative, user_id=user_id)
         
-
         db.session.add(comment)
         db.session.commit()
         return redirect(url_for('recipe', user_id=session["user_id"], recipe_id=recipe_id))
@@ -220,9 +215,6 @@ def logout():
 
 
 ##################################################################### Admin Route #########################################################################
-
-
-
 @app.route("/adminlogin", methods=["POST", "GET"])
 def adminlogin():
     if request.method == "POST":
@@ -258,10 +250,12 @@ def pending_submissions(admin_id):
     if "admin_id" not in session or session["admin_id"] != admin_id:
         return redirect(url_for("adminlogin"))
 
+    admin = Admin.query.get_or_404(admin_id)
+
     # Query pending recipe submissions
     pending_recipes = Recipe.query.filter_by(approved=False).all()
     
-    return render_template("pending_submissions.html", recipes=pending_recipes, admin_id=admin_id)
+    return render_template("pending_submissions.html", recipes=pending_recipes, admin_id=admin_id, admin=admin)
 
 @app.route("/admin/<int:admin_id>/approve_recipe/<int:recipe_id>", methods=["POST"])
 def approve_recipe(admin_id, recipe_id):

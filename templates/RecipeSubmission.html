@@ -22,16 +22,16 @@
 
         <div class="form-container">
             <form action="#" method="post" enctype="multipart/form-data">
-                <div class="input-fields">
+                <div class="input-container">
                     <h2>Submit Your Recipe</h2>
                     <div class="image-upload">
                         <label for="recipe_image">Upload Image:</label>
                         <input type="file" id="recipe_image" name="recipe_image" accept="image/*" required>
                         
                     </div>
-                    <label for="recipe_name">Recipe Name:</label><br>
+                    <label for="recipe_name"><h2>Recipe Name:</h2></label><br>
                     <input type="text" id="recipe_name" name="recipe_name" required><br><br>
-                    <label for="description">Description:</label><br>
+                    <label for="description"><h2>Description:</h2></label><br>
                     <textarea id="description" name="description" required></textarea><br><br>
                 </div>
         
@@ -44,8 +44,8 @@
                     <label for="step" class="steps"><h2>Steps:</h2></label>
                     <textarea class="steptext" name="steps" placeholder="Enter the Steps" required></textarea><br><br>
                 </div>
-                <div class="input-container">
-                    <label for="category">Category:</label><br>
+                <div class="input-container category-selection">
+                    <label for="category"><h2>Category:</h2></label><br>
                     <select id="category" name="category" required>
                         <option value="Breakfast">Breakfast</option>
                         <option value="Lunch">Lunch</option>
@@ -57,7 +57,7 @@
                 </div>
                     
                 <div class="input-container">
-                    <label for="serving_size">Serving Size:</label><br>
+                    <label for="serving_size"><h2>Serving Size:</h2></label><br>
                     <input type="range" id="serving_size" name="serving_size" min="1" max="10" value="5">
                     <span id="serving_size_value">5</span>
                 </div>        

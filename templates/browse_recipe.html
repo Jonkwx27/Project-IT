@@ -36,17 +36,18 @@
 
     <div class="recipes">
         <h2>{{ selected_category.capitalize() }} Recipes</h2>
-        <div class="recipe-list">
-            {% for recipe in recipes %}
+        {% for i in range(0, recipes|length, 4) %}
+        <div class="recipe-row">
+            {% for recipe in recipes[i:i+4] %}
             <div class="recipe-card">
-                <h3>{{ recipe.recipe_name }}</h3>
-                <p>{{ recipe.description }}</p>
-                <!-- Displaying the image -->
                 <img src="/static/{{ recipe.image_path }}" alt="Recipe Image" style="max-width: 100px;">
+                <h3>{{ recipe.recipe_name }}</h3>
+                <p>{{ recipe.description }}</p>              
                 <a href="{{ url_for('recipe', user_id=user.id, recipe_id=recipe.id) }}">View Recipe</a>
             </div>
             {% endfor %}
         </div>
+        {% endfor %}
     </div>
 </body>
 </html>
