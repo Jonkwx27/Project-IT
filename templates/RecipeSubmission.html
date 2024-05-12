@@ -20,71 +20,91 @@
             <a href="{{ url_for('user', user_id=user.id) }}" class="HomeButton">Return to Home</a>
         </div>
 
-        <div class="input-container">
-            <div class="circle">
-                <p>Add Image</p>
-            </div>
-            <div class="input-fields">
-                <input type="text" placeholder="Enter recipe name">
-                <input type="text" placeholder="Enter recipe description" class="description">
-            </div>
+        <div class="form-container">
+            <form action="#" method="post" enctype="multipart/form-data">
+                <div class="input-container">
+                    <h2>Submit Your Recipe</h2>
+                    <div class="image-upload">
+                        <label for="recipe_image">Upload Image:</label>
+                        <input type="file" id="recipe_image" name="recipe_image" accept="image/*" required>
+                        
+                    </div>
+                    <label for="recipe_name"><h2>Recipe Name:</h2></label><br>
+                    <input type="text" id="recipe_name" name="recipe_name" required><br><br>
+                    <label for="description"><h2>Description:</h2></label><br>
+                    <textarea id="description" name="description" required></textarea><br><br>
+                </div>
+        
+                <div class="input-container">
+                    <label for="ingredients" class="ingredients"><h2>Ingredients:</h2></label><br><br>
+                    <textarea class="ingredienttext" name="ingredients" placeholder="Enter the Ingredients" required></textarea><br><br>
+                </div>
+        
+                <div class="input-container">
+                    <label for="step" class="steps"><h2>Steps:</h2></label>
+                    <textarea class="steptext" name="steps" placeholder="Enter the Steps" required></textarea><br><br>
+                </div>
+                <div class="input-container category-selection">
+                    <label for="category"><h2>Category:</h2></label><br>
+                    <select id="category" name="category" required>
+                        <option value="Breakfast">Breakfast</option>
+                        <option value="Lunch">Lunch</option>
+                        <option value="Dinner">Dinner</option>
+                        <option value="Beverage">Beverage</option>
+                        <option value="Dessert">Dessert</option>               
+                        <option value="Soup">Soup</option>
+                    </select><br><br>
+                </div>
+                    
+                <div class="input-container">
+                    <label for="serving_size"><h2>Serving Size:</h2></label><br>
+                    <input type="range" id="serving_size" name="serving_size" min="1" max="10" value="5">
+                    <span id="serving_size_value">5</span>
+                </div>        
+
+            <div class="rating-container">
+                <div class="rating1"><h2>Difficulty</h2>
+                    <input type="radio" id="star5_1" name="rating1" value="5">
+                    <label for="star5_1"></label>
+                    <input type="radio" id="star4_1" name="rating1" value="4">
+                    <label for="star4_1"></label>
+                    <input type="radio" id="star3_1" name="rating1" value="3">
+                    <label for="star3_1"></label>
+                    <input type="radio" id="star2_1" name="rating1" value="2">
+                    <label for="star2_1"></label>
+                    <input type="radio" id="star1_1" name="rating1" value="1">
+                    <label for="star1_1"></label>
+                </div>
+
+                <div class="rating2"><h2>Time Required</h2>
+                    <input type="radio" id="star5_2" name="rating2" value="5">
+                    <label for="star5_2"></label>
+                    <input type="radio" id="star4_2" name="rating2" value="4">
+                    <label for="star4_2"></label>
+                    <input type="radio" id="star3_2" name="rating2" value="3">
+                    <label for="star3_2"></label>
+                    <input type="radio" id="star2_2" name="rating2" value="2">
+                    <label for="star2_2"></label>
+                    <input type="radio" id="star1_2" name="rating2" value="1">
+                    <label for="star1_2"></label>
+                </div>
+            </div>           
         </div>
+        <input type="submit" value="Submit" class="Submit">
+    </form>
+</div>
+<script>
+    // Get the serving size slider element
+    var servingSizeSlider = document.getElementById("serving_size");
 
-        <div class="ingredient"><h2>Ingredients:</h2>
-            <input type="text" class="ingredient-input" placeholder="Ingredient 1">
-            <input type="text" class="ingredient-input" placeholder="Ingredient 2">
-            <input type="text" class="ingredient-input" placeholder="Ingredient 3">
-            <input type="text" class="ingredient-input" placeholder="Ingredient 4">
-            <input type="text" class="ingredient-input" placeholder="Ingredient 5">
-            <input type="text" class="ingredient-input" placeholder="Ingredient 6">
-        </div>
+    // Get the span element to display the serving size value
+    var servingSizeValueSpan = document.getElementById("serving_size_value");
 
-        <div class="input-container">
-            <label for="recipe-description" class="Step"><h2>Step:</h2></label>
-            <textarea class="steptext" name="step" placeholder="Enter the Step"></textarea>
-        </div>
-
-        <div class="rating1"><h2>Difficulties</h2>
-            <input type="radio" id="star5_1" name="rating1" value="5">
-            <label for="star5_1"></label>
-            <input type="radio" id="star4_1" name="rating1" value="4">
-            <label for="star4_1"></label>
-            <input type="radio" id="star3_1" name="rating1" value="3">
-            <label for="star3_1"></label>
-            <input type="radio" id="star2_1" name="rating1" value="2">
-            <label for="star2_1"></label>
-            <input type="radio" id="star1_1" name="rating1" value="1">
-            <label for="star1_1"></label>
-        </div>
-
-        <div class="rating2"><h2>Time Required</h2>
-            <input type="radio" id="star5_2" name="rating2" value="5">
-            <label for="star5_2"></label>
-            <input type="radio" id="star4_2" name="rating2" value="4">
-            <label for="star4_2"></label>
-            <input type="radio" id="star3_2" name="rating2" value="3">
-            <label for="star3_2"></label>
-            <input type="radio" id="star2_2" name="rating2" value="2">
-            <label for="star2_2"></label>
-            <input type="radio" id="star1_2" name="rating2" value="1">
-            <label for="star1_2"></label>
-        </div>
-
-        <div class="rating3"><h2>Taste</h2>
-            <input type="radio" id="star5_3" name="rating3" value="5">
-            <label for="star5_3"></label>
-            <input type="radio" id="star4_3" name="rating3" value="4">
-            <label for="star4_3"></label>
-            <input type="radio" id="star3_3" name="rating3" value="3">
-            <label for="star3_3"></label>
-            <input type="radio" id="star2_3" name="rating3" value="2">
-            <label for="star2_3"></label>
-            <input type="radio" id="star1_3" name="rating3" value="1">
-            <label for="star1_3"></label>
-        </div>
-
-        <a href="#" class="Submit">Submit</a>
-
-    </body>
+    // Update the value of the span element when the slider value changes
+    servingSizeSlider.addEventListener("input", function() {
+        servingSizeValueSpan.textContent = servingSizeSlider.value;
+    });
+</script>
+</body>
 
 </html>

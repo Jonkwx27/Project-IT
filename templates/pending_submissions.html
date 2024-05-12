@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='RecipeSubmission.css') }}">
+    <title>Pending Recipe Submissions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <style>
+        .pending-recipes {
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .pending-recipes th, .pending-recipes td {
+        border: 1px solid #ffd18d;
+        padding: 8px;
+        text-align: left;
+    }
+
+    .pending-recipes th {
+        background-color: #f8aa35;
+        color: black;
+        font-weight: bold;
+    }
+
+    .pending-recipes tr:nth-child(even) {
+        background-color: #ece1ae;
+    }
+
+    .pending-recipes tr:hover {
+        background-color: #ffd18d;
+    }
+
+    .recipe-image {
+        max-width: 100px;
+    }
+    .approve-button, .reject-button {
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    }
+
+    .approve-button {
+        background-color: #64a361;
+        color: #fff;
+    }
+
+    .approve-button:hover {
+        background-color: #4b834b;
+    }
+
+    .reject-button {
+        background-color: #d44949;
+        color: #fff;
+    }
+
+    .reject-button:hover {
+        background-color: #a33939;
+    }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo-container">
+            <img style="height: 50px; padding-bottom: 30px;" src="{{ url_for('static', filename='Logo_CookiQ.jpeg') }}" alt="Logo_CookiQ">
+        </div>
+        <h1 class="title">Pending Recipe Submission</h1>
+        <a href="{{ url_for('admin', admin_id=admin.id) }}" class="HomeButton">Return to Home</a>
+    </div>
+    <table class="pending-recipes">
+        <tr>
+            <th>Recipe Name</th>
+            <th>Description</th>
+            <th>Ingredients</th>
+            <th>Steps</th>
+            <th>Serving Size</th>
+            <th>Difficulty</th>
+            <th>Time Required</th>
+            <th>Image</th>
+            <th>Category</th>
+            <th>Submitted At</th>
+            <th>Submitted By</th>
+            <th>Actions</th>
+        </tr>
+        {% for recipe in recipes %}
+        <tr>
+            <td>{{ recipe.recipe_name }}</td>
+            <td>{{ recipe.description }}</td>
+            <td>{{ recipe.ingredients }}</td>
+            <td>{{ recipe.steps }}</td>
+            <td>{{ recipe.serving_size }}</td>
+            <td>{{ recipe.difficulty }}</td>
+            <td>{{ recipe.time_required }}</td>           
+            <td>
+                <!-- Displaying the image -->
+                <img src="/static/{{recipe.image_path}}" alt="Recipe Image" style="max-width: 100px;">
+            </td>
+            <td>{{ recipe.category }}</td>
+            <td>{{ recipe.submitted_at }}</td>
+            <td>{{ recipe.submitted_by }}</td>
+            <td>
+                <form method="post" action="{{ url_for('approve_recipe', admin_id=admin_id, recipe_id=recipe.id) }}">
+                    <button class='approve-button' type="submit">Approve</button>
+                </form>                
+                <form method="post" action="{{ url_for('reject_recipe', admin_id=admin_id, recipe_id=recipe.id) }}">
+                    <button class='reject-button' type="submit">Reject</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

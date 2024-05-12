@@ -63,7 +63,7 @@ li:hover {
   background-color: #98714f;
 }
 
-.photos {
+/* .photos {
   display: flex;
   justify-content: space-between;
   text-align: center;
@@ -138,5 +138,101 @@ li:hover {
   max-width: 100%;
   height: auto;
   background-color:#ece3ae;
-  
+}
+   */
+
+
+   .recipe-row {
+    display: flex;
+    justify-content: center; 
+    margin-bottom: 20px; 
+}
+
+.recipe-card {
+    width: 45%; 
+    margin: 0 10px; 
+    padding: 10px;
+    border: 1px solid #000;
+    border-radius: 5px;
+    background-color: #ece3ae; 
+    text-align: center; 
+}
+
+.recipe-card h3 {
+    margin-top: 0;
+    font-family: 'Bebas Neue', sans-serif; 
+    font-size: 20px; 
+}
+
+.recipe-card p {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    text-align: center; 
+}
+
+.recipe-card img {
+    display: block; 
+    margin: 0 auto 10px; 
+    max-width: 100%;
+    height: auto;
+}
+
+.recipe-card a {
+    display: block;
+    margin-top: 10px;
+    text-decoration: none;
+    color: #007bff; 
+}
+
+.recipe-card a:hover {
+    text-decoration: underline;
+    color: #0056b3; 
+}
+
+
+
+.category-selection {
+  margin-bottom: 20px; 
+}
+
+.category-selection form {
+  display: flex;
+  align-items: center;
+}
+
+.category-selection label {
+  font-family: 'Bebas Neue', sans-serif; 
+  font-size: 18px;
+  margin-right: 10px; 
+}
+
+.category-selection select {
+  font-family: 'Bebas Neue', sans-serif; 
+  font-size: 16px; 
+  padding: 5px; 
+  border: 1px solid #000; 
+  border-radius: 5px;
+}
+
+.category-selection button {
+  padding: 8px 16px; 
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px; 
+  background-color: #c28855; 
+  color: #fff; 
+  transition: background-color 0.3s; 
+}
+
+.category-selection button:hover {
+  background-color: #98714f; 
+}
+h2 {
+  font-family: 'Bebas Neue', sans-serif; 
+  font-size: 32px; 
+  color: #000; 
+  text-transform: uppercase; 
+  margin-bottom: 20px; 
+  text-align: center; 
 }
