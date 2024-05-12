@@ -17,7 +17,7 @@
                 <img style="height: 50px; padding-bottom: 30px;" src="{{ url_for('static', filename='Logo_CookiQ.jpeg') }}" alt="Logo_CookiQ">
             </div>
             <h1 class="title">Favourited Recipe</h1>
-            <a href="{{ url_for('user', user_id=user.id) }}" class="HomeButton">Return to Home</a>
+            <a href="{{ url_for('recipe', user_id=user.id, recipe_id=recipe.id) }}" class="HomeButton">Return to Home</a>
         </div>
 
         <div class="myfavourite">
