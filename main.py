@@ -1,7 +1,7 @@
 import os
 from flask import Flask, redirect, url_for, render_template, request, session, flash
 from flask_sqlalchemy import SQLAlchemy
-from datetime import timedelta
+from datetime import timedelta, datetime
 from flask_migrate import Migrate
 from werkzeug.utils import secure_filename
 from sqlalchemy import delete
@@ -236,8 +236,13 @@ def recipesubmission(user_id):
     user = User.query.get_or_404(user_id)
     return render_template("RecipeSubmission.html", user=user)
 
-@app.route("/favouritedrecipe/<int:recipe_id>", methods=["POST"])
-def save_pinned_date(recipe_id):
+@app.route("/user/<int:user_id>/favouritedrecipe")
+def favoritedrecipe(user_id, recipe_id):
+    if "user_id" not in session or session["user_id"] != user_id:
+        return redirect(url_for("login"))
+    
+    user = User.query.get_or_404(user_id)
+
     pinned_date_str = request.form.get("date", None)
     pinned_date = datetime.strptime(pinned_date_str, "%Y-%m-%d") if pinned_date_str else None
     recipe = Recipe.query.get_or_404(recipe_id)
@@ -245,7 +250,7 @@ def save_pinned_date(recipe_id):
 
     db.session.commit()
 
-    return redirect(url_for('favorited_recipe_page', recipe_id=recipe_id))
+    return redirect(url_for('favoritedrecipe', recipe_id=recipe_id, user_id=user_id))
 
 @app.route("/logout")
 def logout():
