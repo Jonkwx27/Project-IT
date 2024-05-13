@@ -17,7 +17,16 @@
                 <img style="height: 50px; padding-bottom: 30px;" src="{{ url_for('static', filename='Logo_CookiQ.jpeg') }}" alt="Logo_CookiQ">
             </div>
             <h1 class="title">Recipe Submission</h1>
-            <a href="{{ url_for('user', user_id=user.id) }}" class="HomeButton">Return to Home</a>
+            <a href="{{ url_for('logout') }}" class="LogOutButton">Logout</a>
+        </div>
+
+        <div class="classification">
+            <ul>
+                <li><a href="browse_recipe" class="button">Browse Recipes</a></li>
+                <li><a href="#" class="button">Favourited Recipes</a></li>
+                <li><a href="recipesubmission" class="button">Submit Recipes</a></li>
+                <li><a href="#" class="button">My Submitted Recipes</a></li>
+            </ul>
         </div>
 
         <div class="form-container">
