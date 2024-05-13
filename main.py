@@ -5,6 +5,7 @@ from flask_migrate import Migrate
 from werkzeug.utils import secure_filename
 from sqlalchemy.sql import func
 from models import Recipe, db, User, Admin, Comment, FavouriteRecipe
+from datetime import datetime
 
 
 UPLOAD_FOLDER = 'uploads'  # Directory to store uploaded images
@@ -208,23 +209,61 @@ def recipesubmission(user_id):
     user = User.query.get_or_404(user_id)
     return render_template("RecipeSubmission.html", user=user)
 
-@app.route("/user/<int:user_id>/favouritedrecipe/<int:recipe_id>", methods=["POST"])
-def favouritedrecipe(user_id, recipe_id):
+@app.route("/user/<int:user_id>/favouritedrecipe")
+def favouritedrecipe(user_id):
+    if "user_id" not in session or session["user_id"] != user_id:
+        return redirect(url_for("login"))
+    
+    user = User.query.get_or_404(user_id)
+    # Fetch favorited recipes for the user
+    favourited_recipes = Recipe.query.join(FavouriteRecipe).filter(FavouriteRecipe.user_id == user_id).all()
+    # Get the IDs of favourited recipes
+    favourited_recipe_ids = [recipe.id for recipe in favourited_recipes]
+
+    return render_template("favourited_recipe.html", user=user, favourited_recipes=favourited_recipes, favourited_recipe_ids=favourited_recipe_ids)
+
+@app.route("/user/<int:user_id>/favorite/<int:recipe_id>", methods=['POST'])
+def favorite_recipe(user_id, recipe_id):
+    if "user_id" not in session or session["user_id"] != user_id:
+        return redirect(url_for("login"))
+
+    # Check if the recipe is already favorited
+    existing_favorite = FavouriteRecipe.query.filter_by(user_id=user_id, recipe_id=recipe_id).first()
+
+    if existing_favorite:
+        # If the recipe is already favorited, unfavorite it
+        db.session.delete(existing_favorite)
+        db.session.commit()
+        flash('Recipe unfavorited successfully!', 'success')
+    else:
+        # If the recipe is not favorited, favorite it
+        new_favorite = FavouriteRecipe(user_id=user_id, recipe_id=recipe_id)
+        db.session.add(new_favorite)
+        db.session.commit()
+        flash('Recipe favorited successfully!', 'success')
+
+    # Redirect back to the recipe page
+    return redirect(url_for('recipe', user_id=user_id, recipe_id=recipe_id))
+
+@app.route("/user/<int:user_id>/favouritedrecipe/<int:recipe_id>", methods=['POST'])
+def favourited_recipe(user_id, recipe_id):
     if "user_id" not in session or session["user_id"] != user_id:
         return redirect(url_for("login"))
     
     user = User.query.get_or_404(user_id)
     recipe = Recipe.query.get_or_404(recipe_id)
 
+    # Extract pinned_date from the form data
     pinned_date_str = request.form.get("pinned_date", None)
     pinned_date = datetime.strptime(pinned_date_str, "%Y-%m-%d") if pinned_date_str else None
 
+    # Create a FavouriteRecipe object and add it to the database session
     favourite_recipe = FavouriteRecipe(user_id=user_id, recipe_id=recipe_id, pinned_date=pinned_date)
     db.session.add(favourite_recipe)
     db.session.commit()
 
+    # Redirect the user back to the recipe page
     return redirect(url_for('recipe', user_id=user_id, recipe_id=recipe_id))
-
 
 @app.route("/logout")
 def logout():
