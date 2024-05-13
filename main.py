@@ -74,14 +74,6 @@ def login():
 
         return render_template("login.html")
 
-# @app.route('/user/<int:user_id>/')
-# def user(user_id):
-#     if "user_id" not in session or session["user_id"] != user_id:
-#         return redirect(url_for("login"))
-    
-#     user = User.query.get_or_404(user_id)
-#     return render_template('user.html', user=user)
-
 @app.route("/user/<int:user_id>/browse_recipe")
 def browse_recipe(user_id):
     if "user_id" not in session or session["user_id"] != user_id:
@@ -234,14 +226,6 @@ def adminlogin():
             return redirect(url_for("pending_submissions", admin_id=session["admin_id"]))
 
         return render_template("admin_login.html")
-
-# @app.route('/admin/<int:admin_id>/')
-# def admin(admin_id):
-#     if "admin_id" not in session or session["admin_id"] != admin_id:
-#         return redirect(url_for("adminlogin"))
-    
-#     admin = Admin.query.get_or_404(admin_id)
-#     return render_template('admin.html', admin=admin)
 
 @app.route("/admin/<int:admin_id>/pending_submissions")
 def pending_submissions(admin_id):
