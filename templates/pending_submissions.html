@@ -116,7 +116,7 @@
             <li><a href="pending_submissions" class="button">Review Submitted Recipes</a></li>
             <li><a href="#" class="button">Browse Recipes</a></li>         
             <li><a href="#" class="button">Manage Users</a></li>
-            <li><a href="#" class="button">Edit Tags</a></li>
+            <li><a href="edit_categories" class="button">Edit Categories</a></li>
         </ul>
     </div>
 
@@ -148,7 +148,7 @@
                 <!-- Displaying the image -->
                 <img src="/static/{{recipe.image_path}}" alt="Recipe Image" style="max-width: 100px;">
             </td>
-            <td>{{ recipe.category }}</td>
+            <td>{{ recipe.category.name }}</td>
             <td>{{ recipe.submitted_at }}</td>
             <td>{{ recipe.submitted_by }}</td>
             <td>

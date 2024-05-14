@@ -32,12 +32,9 @@
             <label for="category">Select Category:</label>
             <select name="category" id="category">
                 <option value="All">All</option>
-                <option value="Breakfast">Breakfast</option>
-                <option value="Lunch">Lunch</option>
-                <option value="Dinner">Dinner</option>
-                <option value="Beverage">Beverage</option>
-                <option value="Dessert">Dessert</option>               
-                <option value="Soup">Soup</option>
+                {% for category in categories %}
+                <option value="{{ category.name }}">{{ category.name }}</option>
+                {% endfor %}
             </select>
             <button type="submit">Browse</button>
         </form>
