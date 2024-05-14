@@ -212,7 +212,7 @@
 <body>
     <div class="header">
         <img style="height: 50px;" src="{{ url_for('static', filename='Logo_CookiQ.jpeg') }}" alt="Logo_CookiQ">
-        <a href="{{ url_for('browse_recipe', user_id=user.id) }}" class="Return">Return to Home</a>
+        <a href="{{ url_for('browse_recipe', user_id=user.id) }}" class="Return">Return</a>
     </div>
     <h1 class="recipe-title">{{ recipe.recipe_name }}</h1>
     <div class="recipe-photo-container">
@@ -276,7 +276,7 @@
         <form action="{{ url_for('submit_comment', user_id=user.id, recipe_id=recipe.id) }}" method="post" enctype="multipart/form-data">
             <textarea name="comment" placeholder="Enter your comment here" class="input-field"></textarea>
             <label for="image">Upload Image:</label>
-            <input type="file" name="image" accept="image/*" required>
+            <input type="file" name="image" accept="image/*" >
             <input type="hidden" name="recipe_id" value="{{ recipe.id }}">
             <div class="rating">
                 <input type="radio" id="star5" name="rating" value="5">

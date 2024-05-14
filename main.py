@@ -65,22 +65,14 @@ def login():
 
         if found_user and found_user.password == password:
             session["user_id"] = found_user.id
-            return redirect(url_for("user", user_id=found_user.id))
+            return redirect(url_for("browse_recipe", user_id=found_user.id))
         else:
             return redirect(url_for("login"))
     else:
         if "user_id" in session:
-            return redirect(url_for("user", user_id=session["user_id"]))
+            return redirect(url_for("browse_recipe", user_id=session["user_id"]))
 
         return render_template("login.html")
-
-@app.route('/user/<int:user_id>/')
-def user(user_id):
-    if "user_id" not in session or session["user_id"] != user_id:
-        return redirect(url_for("login"))
-    
-    user = User.query.get_or_404(user_id)
-    return render_template('user.html', user=user)
 
 @app.route("/user/<int:user_id>/browse_recipe")
 def browse_recipe(user_id):
@@ -123,21 +115,19 @@ def submit_comment(user_id, recipe_id):
         user = User.query.get_or_404(user_id)
         submitted_by = f"{user.username} (ID: {user.id})"
 
+        image_url_relative = None
+
         if 'image' in request.files:
             image = request.files['image']
-            if image.filename == '':
-                flash('No selected file')
-                return redirect(request.url)
             if image and allowed_file(image.filename):
                 filename = secure_filename(image.filename)
                 image_url= os.path.join(app.root_path, 'static/uploads', filename)
                 image.save(image_url)
                 image_url_relative = 'uploads/' + filename
             else:
-                flash('Invalid file type')
-                return redirect(request.url)
+                image_url=None
         else:
-            image_url_relative = None
+            image_url= None
 
         comment = Comment(comment=comment, rating=rating, submitted_by=submitted_by ,recipe_id=recipe_id, image_url=image_url_relative, user_id=user_id)
         
@@ -202,7 +192,7 @@ def recipesubmission(user_id):
         db.session.add(recipe)
         db.session.commit()
 
-        return redirect(url_for('user', user_id=user_id))
+        return redirect(url_for('recipesubmission', user_id=user_id))
     
     user = User.query.get_or_404(user_id)
     return render_template("RecipeSubmission.html", user=user)
@@ -228,22 +218,14 @@ def adminlogin():
 
         if found_admin and found_admin.password_admin == password_admin:
             session["admin_id"] = found_admin.id
-            return redirect(url_for("admin", admin_id=found_admin.id))
+            return redirect(url_for("pending_submissions", admin_id=found_admin.id))
         else:
             return redirect(url_for("adminlogin"))
     else:
         if "admin_id" in session:
-            return redirect(url_for("admin", admin_id=session["admin_id"]))
+            return redirect(url_for("pending_submissions", admin_id=session["admin_id"]))
 
         return render_template("admin_login.html")
-
-@app.route('/admin/<int:admin_id>/')
-def admin(admin_id):
-    if "admin_id" not in session or session["admin_id"] != admin_id:
-        return redirect(url_for("adminlogin"))
-    
-    admin = Admin.query.get_or_404(admin_id)
-    return render_template('admin.html', admin=admin)
 
 @app.route("/admin/<int:admin_id>/pending_submissions")
 def pending_submissions(admin_id):
