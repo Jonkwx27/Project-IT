@@ -50,9 +50,16 @@
                 </div>
         
                 <div class="input-container">
-                    <label for="step" class="steps"><h2>Steps:</h2></label>
-                    <textarea class="steptext" name="steps" placeholder="Enter the Steps" required></textarea><br><br>
+                    <h2>Steps:</h2>
+                    <div id="steps-list">
+                        <div class="step-row">
+                            <textarea class="steptext" name="steps[]" placeholder="Enter the Step" required></textarea>
+                            <button type="button" onclick="this.parentElement.remove()">Remove</button>
+                        </div>
+                    </div>
+                    <button type="button" onclick="addStep()">Add Step</button>
                 </div>
+
                 <div class="input-container category-selection">
                     <label for="category"><h2>Category:</h2></label><br>
                     <select id="category" name="category" required>
@@ -113,6 +120,30 @@
     servingSizeSlider.addEventListener("input", function() {
         servingSizeValueSpan.textContent = servingSizeSlider.value;
     });
+</script>
+<script>
+    function addStep() {
+        const stepList = document.getElementById('steps-list');
+        const stepRow = document.createElement('div');
+        stepRow.className = 'step-row';
+        
+        const newStep = document.createElement('textarea');
+        newStep.className = 'steptext';
+        newStep.name = 'steps[]';
+        newStep.placeholder = 'Enter the Step';
+        newStep.required = true;
+        
+        const removeButton = document.createElement('button');
+        removeButton.type = 'button';
+        removeButton.textContent = 'Remove';
+        removeButton.onclick = function() {
+            stepList.removeChild(stepRow);
+        };
+        
+        stepRow.appendChild(newStep);
+        stepRow.appendChild(removeButton);
+        stepList.appendChild(stepRow);
+    }
 </script>
 </body>
 

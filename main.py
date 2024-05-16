@@ -147,7 +147,7 @@ def recipesubmission(user_id):
         recipe_name = request.form["recipe_name"]
         description = request.form["description"]
         ingredients = request.form["ingredients"]
-        steps = request.form["steps"]
+        steps = request.form.getlist("steps[]")
         serving_size = int(request.form.get("serving_size", 1))
         difficulty = int(request.form.get("rating1", 1))
         time_required = int(request.form.get("rating2", 1))
@@ -174,11 +174,13 @@ def recipesubmission(user_id):
         else:
             image_path_relative = None
 
+        steps_str = '\n'.join(steps)
+
         recipe = Recipe(
             recipe_name=recipe_name,
             description=description,
             ingredients=ingredients,
-            steps=steps,
+            steps=steps_str,
             serving_size = serving_size,
             difficulty=difficulty,
             time_required=time_required,
