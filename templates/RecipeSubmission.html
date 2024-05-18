@@ -54,16 +54,26 @@
                     <textarea class="steptext" name="steps" placeholder="Enter the Steps" required></textarea><br><br>
                 </div>
                 <div class="input-container category-selection">
-                    <label for="category"><h2>Category:</h2></label><br>
-                    <select id="category" name="category" required>
-                        <option value="Breakfast">Breakfast</option>
-                        <option value="Lunch">Lunch</option>
-                        <option value="Dinner">Dinner</option>
-                        <option value="Beverage">Beverage</option>
-                        <option value="Dessert">Dessert</option>               
-                        <option value="Soup">Soup</option>
+                    <label for="category"><h2>Categories:</h2></label><br>
+                    <select id="category1" name="category1">
+                        <option value="">Select Category</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
                     </select><br><br>
-                </div>
+                    <select id="category2" name="category2">
+                        <option value="">Select Category</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select><br><br>
+                    <select id="category3" name="category3">
+                        <option value="">Select Category</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select><br><br>
+                </div>                
                     
                 <div class="input-container">
                     <label for="serving_size"><h2>Serving Size:</h2></label><br>
