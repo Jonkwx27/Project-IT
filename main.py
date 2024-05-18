@@ -1,5 +1,5 @@
 import os
-from flask import Flask, redirect, url_for, render_template, request, session, flash
+from flask import Flask, redirect, url_for, render_template, request, session, flash, jsonify
 from datetime import timedelta
 from flask_migrate import Migrate
 from werkzeug.utils import secure_filename
@@ -343,7 +343,14 @@ def update_category(admin_id, category_id):
         flash("Category updated successfully", "success")
     return redirect(url_for("edit_categories",admin=admin, admin_id=admin_id))
 
+@app.route("/admin/<int:admin_id>/category_usage/<int:category_id>")
+def category_usage(admin_id, category_id):
+    if "admin_id" not in session:
+        return redirect(url_for("adminlogin"))
 
+    category = Category.query.get_or_404(category_id)
+    recipe_count = Recipe.query.filter(Recipe.categories.any(id=category_id)).count()
+    return jsonify({"recipe_count": recipe_count})
 
 @app.route("/adminlogout")
 def adminlogout():
