@@ -48,7 +48,12 @@
             <div class="recipe-card">
                 <img src="/static/{{ recipe.image_path }}" alt="Recipe Image" style="max-width: 100px;">
                 <h3>{{ recipe.recipe_name }}</h3>
-                <p>{{ recipe.description }}</p>              
+                <p>{{ recipe.description }}</p>
+                <p>Categories: 
+                    {% for category in recipe.categories %}
+                        {{ category.name }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
                 <a href="{{ url_for('recipe', user_id=user.id, recipe_id=recipe.id) }}">View Recipe</a>
             </div>
             {% endfor %}

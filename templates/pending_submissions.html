@@ -10,67 +10,70 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
     <style>
         .pending-recipes {
-        border-collapse: collapse;
-        width: 100%;
-        margin-top: 20px;
-    }
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
 
-    .pending-recipes th, .pending-recipes td {
-        border: 1px solid #ffd18d;
-        padding: 8px;
-        text-align: left;
-    }
+        .pending-recipes th, .pending-recipes td {
+            border: 1px solid #ffd18d;
+            padding: 8px;
+            text-align: left;
+        }
 
-    .pending-recipes th {
-        background-color: #f8aa35;
-        color: black;
-        font-weight: bold;
-    }
+        .pending-recipes th {
+            background-color: #f8aa35;
+            color: black;
+            font-weight: bold;
+        }
 
-    .pending-recipes tr:nth-child(even) {
-        background-color: #ece1ae;
-    }
+        .pending-recipes tr:nth-child(even) {
+            background-color: #ece1ae;
+        }
 
-    .pending-recipes tr:hover {
-        background-color: #ffd18d;
-    }
+        .pending-recipes tr:hover {
+            background-color: #ffd18d;
+        }
 
-    .recipe-image {
-        max-width: 100px;
-    }
-    .approve-button, .reject-button {
-    padding: 8px 16px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
-    font-weight: bold;
-    transition: background-color 0.3s;
-    }
+        .recipe-image {
+            max-width: 100px;
+        }
 
-    .approve-button {
-        background-color: #64a361;
-        color: #fff;
-    }
+        .approve-button, .reject-button {
+            padding: 8px 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
 
-    .approve-button:hover {
-        background-color: #4b834b;
-    }
+        .approve-button {
+            background-color: #64a361;
+            color: #fff;
+        }
 
-    .reject-button {
-        background-color: #d44949;
-        color: #fff;
-    }
+        .approve-button:hover {
+            background-color: #4b834b;
+        }
 
-    .reject-button:hover {
-        background-color: #a33939;
-    }
-    ul {
+        .reject-button {
+            background-color: #d44949;
+            color: #fff;
+        }
+
+        .reject-button:hover {
+            background-color: #a33939;
+        }
+
+        ul {
             text-align: center;
             display: flex;
             padding-top: 5px;
             padding-left: 0px;
         }
+
         li {
             font-family: 'Bebas Neue', sans-serif;
             font-size: 28px;
@@ -79,13 +82,16 @@
             display: inline-block;
             width: 100%; 
         }
+
         li:hover {
             background-color:rgb(250, 235, 215);
         }
+
         .button {
             border: none;
             color: rgb(0, 0, 0);
         }
+
         .LogOutButton {
             padding: 5px 10px;
             border-radius: 5px;
@@ -96,8 +102,9 @@
             cursor: pointer;
             text-decoration: none;
             left: 20px;
-            }
-        .LogOutButton:hover{
+        }
+
+        .LogOutButton:hover {
             background-color: #98714f;
         }
     </style>
@@ -130,7 +137,7 @@
             <th>Difficulty</th>
             <th>Time Required</th>
             <th>Image</th>
-            <th>Category</th>
+            <th>Categories</th>
             <th>Submitted At</th>
             <th>Submitted By</th>
             <th>Actions</th>
@@ -146,9 +153,14 @@
             <td>{{ recipe.time_required }}</td>           
             <td>
                 <!-- Displaying the image -->
-                <img src="/static/{{recipe.image_path}}" alt="Recipe Image" style="max-width: 100px;">
+                <img src="/static/{{recipe.image_path}}" alt="Recipe Image" class="recipe-image">
             </td>
-            <td>{{ recipe.category.name }}</td>
+            <td>
+                <!-- Loop through the categories and display them -->
+                {% for category in recipe.categories %}
+                    {{ category.name }}{% if not loop.last %}, {% endif %}
+                {% endfor %}
+            </td>
             <td>{{ recipe.submitted_at }}</td>
             <td>{{ recipe.submitted_by }}</td>
             <td>

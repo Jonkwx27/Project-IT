@@ -23,6 +23,11 @@ class Admin(db.Model):
     def __repr__(self):
         return f'<Admin {self.email_admin}>'
 
+recipe_category_association = db.Table('recipe_category_association',
+    db.Column('recipe_id', db.Integer, db.ForeignKey('recipe.id'), primary_key=True),
+    db.Column('category_id', db.Integer, db.ForeignKey('category.id'), primary_key=True)
+)
+
 class Recipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     recipe_name = db.Column(db.String(100), nullable=False)
@@ -39,8 +44,7 @@ class Recipe(db.Model):
     image_path = db.Column(db.String(255))  # Path to the image file
     submitted_by = db.Column(db.String(100), nullable=False)
     comments = db.relationship('Comment', backref=db.backref('recipe'), lazy=True)
-    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)  # Foreign key to Category
-    category = db.relationship('Category', backref=db.backref('recipes', lazy=True))
+    categories = db.relationship('Category', secondary=recipe_category_association, backref=db.backref('recipes', lazy='dynamic'))
 
     def __repr__(self):
         return f'<RecipeSubmission {self.recipe_name}>'

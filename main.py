@@ -89,15 +89,17 @@ def browse_recipe(user_id):
     if selected_category == "All":
         recipes = Recipe.query.filter_by(approved=True).all()
     else:
-        # Assuming 'Category' is the class representing your category and 'category_name' is the column name
+        # Fetch the category object
         category = Category.query.filter_by(name=selected_category).first()
         if category:
-            recipes = Recipe.query.filter(Recipe.category == category, Recipe.approved == True).all()
+            # Filter recipes that have the selected category
+            recipes = Recipe.query.filter(Recipe.categories.contains(category), Recipe.approved == True).all()
         else:
             # Handle the case when the category does not exist
             recipes = []
 
     return render_template("browse_recipe.html", recipes=recipes, categories=categories, selected_category=selected_category, user=user)
+
 
 @app.route("/user/<int:user_id>/recipe/<int:recipe_id>")
 def recipe(user_id,recipe_id):
@@ -161,7 +163,14 @@ def recipesubmission(user_id):
         time_required = int(request.form.get("rating2", 1))
         user = User.query.get_or_404(user_id)
         submitted_by = f"{user.username} (ID: {user.id})"
-        category_id = request.form['category']
+
+         # Get selected categories
+        category_ids = []
+        for category_id in [request.form['category1'], request.form['category2'], request.form['category3']]:
+            if category_id:
+                category = Category.query.get(category_id)
+                if category:
+                    category_ids.append(category)
 
         if "recipe_image" in request.files:
             recipe_image = request.files["recipe_image"]
@@ -193,7 +202,7 @@ def recipesubmission(user_id):
             image_path=image_path_relative,
             user_id=user_id,
             submitted_by=submitted_by, 
-            category_id=category_id,
+            categories=category_ids
         )
 
         # Add the recipe to the database session and commit changes
