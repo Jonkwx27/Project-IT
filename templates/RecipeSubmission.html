@@ -62,7 +62,7 @@
 
                 <div class="input-container category-selection">
                     <label for="category"><h2>Categories:</h2></label><br>
-                    <select id="category1" name="category1">
+                    <select id="category1" name="category1" required>
                         <option value="">Select Category</option>
                         {% for category in categories %}
                             <option value="{{ category.id }}">{{ category.name }}</option>
