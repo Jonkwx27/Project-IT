@@ -46,6 +46,7 @@ class Recipe(db.Model):
     comments = db.relationship('Comment', backref=db.backref('recipe'), lazy=True)
     categories = db.relationship('Category', secondary=recipe_category_association, backref=db.backref('recipes', lazy='dynamic'))
 
+
     def __repr__(self):
         return f'<RecipeSubmission {self.recipe_name}>'
     
@@ -68,3 +69,12 @@ class Category(db.Model):
 
     def __repr__(self):
         return f'<Category {self.name}>'
+    
+class FavouriteRecipe(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), nullable=False)
+    pinned_date = db.Column(db.Date)
+
+    user = db.relationship('User', backref=db.backref('favourite_recipes', lazy=True))
+    recipe = db.relationship('Recipe', backref=db.backref('favourited_by', lazy=True))
