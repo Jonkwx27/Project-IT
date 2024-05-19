@@ -150,8 +150,7 @@
 
 .input-container .steptext {
     margin-top: 20px; 
-    width: 321px;
-    height: 70px;
+    width: 90%;
 }
 
 .Step {
@@ -160,24 +159,12 @@
     padding-top: 20px;
 }
 
-.step-row {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    margin-left: 70px;
-}
-
-.step-row button{
-    margin-bottom: 30px;
-}
-
 .steptext {
     margin-top: 35px;
     width:  80%;
     height: 300px;
     border: 2px solid #ffd18d;
-    margin-bottom: 50px;
-    margin-right: 10px;
+    margin-bottom: 40px;
 }
 
 .rating1 {
