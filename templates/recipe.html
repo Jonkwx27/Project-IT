@@ -244,6 +244,14 @@
         <p>{{ recipe.description }}</p>
     </div>
     <div class="recipe-details">
+        <h2>Categories:</h2>
+        <p>
+            {% for category in recipe.categories %}
+                {{ category.name }}{% if not loop.last %}, {% endif %}
+            {% endfor %}
+        </p>
+    </div>
+    <div class="recipe-details">
         <h2>Ingredients:</h2>
         <p>{{ recipe.ingredients }}</p>
     </div>
