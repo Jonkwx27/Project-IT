@@ -101,6 +101,8 @@
         <form method="post" action="{{ url_for('adminlogin') }}">
             <label for="email_admin">Email</label>
             <input type="email" name="email_admin" placeholder="Email" required>
+            <label for="name_admin">Name</label>
+            <input type="text" name="name_admin" placeholder="Name" required>
             <label for="password_admin">Password</label>
             <input type="password" name="password_admin" placeholder="Password" required>
             <button type="submit">Submit</button>

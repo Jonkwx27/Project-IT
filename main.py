@@ -1,9 +1,9 @@
 import os
-from flask import Flask, redirect, url_for, render_template, request, session, flash, jsonify
+from flask import Flask, redirect, url_for, render_template, request, session, flash
 from datetime import timedelta
 from flask_migrate import Migrate
 from werkzeug.utils import secure_filename
-from models import Recipe, db, User, Admin, Comment, Category
+from models import Recipe, db, User, Admin, Comment
 
 
 UPLOAD_FOLDER = 'uploads'  # Directory to store uploaded images
@@ -81,25 +81,15 @@ def browse_recipe(user_id):
     
     user = User.query.get_or_404(user_id)
 
-    # Fetch all categories from the database
-    categories = Category.query.all()
-
+    categories = ["Breakfast", "Lunch", "Dinner", "Dessert", "Beverage", "Soup"]
     selected_category = request.args.get("category", "All")
     
     if selected_category == "All":
-        recipes = Recipe.query.filter_by(approved=True).all()
+        recipes = Recipe.query.filter_by(approved=True).all()  
     else:
-        # Fetch the category object
-        category = Category.query.filter_by(name=selected_category).first()
-        if category:
-            # Filter recipes that have the selected category
-            recipes = Recipe.query.filter(Recipe.categories.contains(category), Recipe.approved == True).all()
-        else:
-            # Handle the case when the category does not exist
-            recipes = []
-
+        recipes = Recipe.query.filter_by(category=selected_category, approved=True).all()  
+    
     return render_template("browse_recipe.html", recipes=recipes, categories=categories, selected_category=selected_category, user=user)
-
 
 @app.route("/user/<int:user_id>/recipe/<int:recipe_id>")
 def recipe(user_id,recipe_id):
@@ -157,20 +147,13 @@ def recipesubmission(user_id):
         recipe_name = request.form["recipe_name"]
         description = request.form["description"]
         ingredients = request.form["ingredients"]
-        steps = request.form["steps"]
+        steps = request.form.getlist("steps[]")
         serving_size = int(request.form.get("serving_size", 1))
         difficulty = int(request.form.get("rating1", 1))
         time_required = int(request.form.get("rating2", 1))
         user = User.query.get_or_404(user_id)
         submitted_by = f"{user.username} (ID: {user.id})"
-
-         # Get selected categories
-        category_ids = []
-        for category_id in [request.form['category1'], request.form['category2'], request.form['category3']]:
-            if category_id:
-                category = Category.query.get(category_id)
-                if category:
-                    category_ids.append(category)
+        category = request.form["category"]
 
         if "recipe_image" in request.files:
             recipe_image = request.files["recipe_image"]
@@ -191,18 +174,20 @@ def recipesubmission(user_id):
         else:
             image_path_relative = None
 
+        steps_str = '\n'.join(steps)
+
         recipe = Recipe(
             recipe_name=recipe_name,
             description=description,
             ingredients=ingredients,
-            steps=steps,
+            steps=steps_str,
             serving_size = serving_size,
             difficulty=difficulty,
             time_required=time_required,
             image_path=image_path_relative,
             user_id=user_id,
             submitted_by=submitted_by, 
-            categories=category_ids
+            category=category
         )
 
         # Add the recipe to the database session and commit changes
@@ -212,8 +197,7 @@ def recipesubmission(user_id):
         return redirect(url_for('recipesubmission', user_id=user_id))
     
     user = User.query.get_or_404(user_id)
-    categories = Category.query.all()
-    return render_template("RecipeSubmission.html", user=user, categories=categories)
+    return render_template("RecipeSubmission.html", user=user)
 
 
 @app.route("/logout")
@@ -228,10 +212,11 @@ def adminlogin():
     if request.method == "POST":
         session.permanent = True
         email_admin = request.form["email_admin"]
+        name_admin = request.form["name_admin"]
         password_admin = request.form["password_admin"]
 
         # Check if the admin exists in the database
-        found_admin = Admin.query.filter_by(email_admin=email_admin).first()
+        found_admin = Admin.query.filter_by(email_admin=email_admin, name_admin=name_admin).first()
 
         if found_admin and found_admin.password_admin == password_admin:
             session["admin_id"] = found_admin.id
@@ -287,70 +272,8 @@ def reject_recipe(admin_id, recipe_id):
         if os.path.exists(image_path):
             os.remove(image_path)
     
-    return redirect(url_for("pending_submissions", admin_id=admin_id, admin=admin))
+    return redirect(url_for("pending_submissions", admin_id=admin_id))
 
-
-@app.route("/admin/<int:admin_id>/edit_categories")
-def edit_categories(admin_id):
-    if "admin_id" not in session:
-        return redirect(url_for("adminlogin"))
-    admin = Admin.query.get_or_404(admin_id)
-
-    categories = Category.query.all()
-
-    return render_template("edit_categories.html", admin_id=admin_id, admin=admin, categories=categories)
-
-@app.route("/admin/<int:admin_id>/add_category", methods=["POST"])
-def add_category(admin_id):
-    if "admin_id" not in session:
-        return redirect(url_for("adminlogin"))
-    
-    admin = Admin.query.get_or_404(admin_id)
-
-    if request.method == "POST":
-        name = request.form["name"]
-        category = Category(name=name)
-        db.session.add(category)
-        db.session.commit()
-        flash("Category added successfully", "success")
-        return redirect(url_for("edit_categories",admin=admin, admin_id=admin_id))
-
-@app.route("/admin/<int:admin_id>/delete_category/<int:category_id>", methods=["POST"])
-def delete_category(admin_id,category_id):
-    if "admin_id" not in session:
-        return redirect(url_for("adminlogin"))
-    
-    admin = Admin.query.get_or_404(admin_id)
-
-    category = Category.query.get_or_404(category_id)
-    db.session.delete(category)
-    db.session.commit()
-    flash("Category deleted successfully", "success")
-    return redirect(url_for("edit_categories",admin=admin, admin_id=admin_id))
-
-@app.route("/admin/<int:admin_id>/update_category/<int:category_id>", methods=["GET", "POST"])
-def update_category(admin_id, category_id):
-    if "admin_id" not in session:
-        return redirect(url_for("adminlogin"))
-
-    admin = Admin.query.get_or_404(admin_id)
-    category = Category.query.get_or_404(category_id)
-
-    if request.method == "POST":
-        new_name = request.form["new_name"]
-        category.name = new_name
-        db.session.commit()
-        flash("Category updated successfully", "success")
-    return redirect(url_for("edit_categories",admin=admin, admin_id=admin_id))
-
-@app.route("/admin/<int:admin_id>/category_usage/<int:category_id>")
-def category_usage(admin_id, category_id):
-    if "admin_id" not in session:
-        return redirect(url_for("adminlogin"))
-
-    category = Category.query.get_or_404(category_id)
-    recipe_count = Recipe.query.filter(Recipe.categories.any(id=category_id)).count()
-    return jsonify({"recipe_count": recipe_count})
 
 @app.route("/adminlogout")
 def adminlogout():
