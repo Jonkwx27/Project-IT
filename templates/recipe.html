@@ -259,7 +259,12 @@
         <h2>Steps:</h2>
         <ul>
             {% for step in recipe.steps.split('\n') %}
-                <li><input type="checkbox" id="step{{ loop.index }}" name="step{{ loop.index }}"><label for="step{{ loop.index }}">{{ step }}</label></li>
+                {% if step %}
+                    <li>
+                        <input type="checkbox" id="step{{ loop.index }}" name="step{{ loop.index }}">
+                        <label for="step{{ loop.index }}">{{ step }}</label>
+                    </li>
+                {% endif %}
             {% endfor %}
         </ul>
     </div>
