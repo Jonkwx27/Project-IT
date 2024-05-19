@@ -102,16 +102,18 @@ def browse_recipe(user_id):
     return render_template("browse_recipe.html", recipes=recipes, categories=categories, selected_category=selected_category, user=user)
 
 @app.route("/user/<int:user_id>/recipe/<int:recipe_id>")
-def recipe(user_id,recipe_id):
+def recipe(user_id, recipe_id):
     if "user_id" not in session or session["user_id"] != user_id:
         return redirect(url_for("login"))
     
     user = User.query.get_or_404(user_id)
     recipe = Recipe.query.get_or_404(recipe_id)
-
     comments = Comment.query.filter_by(recipe_id=recipe_id).all()
 
-    return render_template("recipe.html", user=user, recipe=recipe, comments=comments)
+    # Get the source from the query parameter, default to 'browse_recipe' if not provided
+    source = request.args.get('source', 'browse_recipe')
+
+    return render_template("recipe.html", user=user, recipe=recipe, comments=comments, source=source)
 
 @app.route('/user/<int:user_id>/submit_comment/<int:recipe_id>', methods=['POST'])
 def submit_comment(user_id, recipe_id):
@@ -123,6 +125,7 @@ def submit_comment(user_id, recipe_id):
         rating = request.form['rating']
         recipe_id = request.form['recipe_id']  
         user = User.query.get_or_404(user_id)
+
         submitted_by = f"{user.username} (ID: {user.id})"
 
         if 'image' in request.files:
@@ -242,8 +245,10 @@ def favorite_recipe(user_id, recipe_id):
         db.session.commit()
         flash('Recipe favorited successfully!', 'success')
 
+    source = request.args.get('source', 'browse_recipe')
+
     # Redirect back to the recipe page
-    return redirect(url_for('recipe', user_id=user_id, recipe_id=recipe_id))
+    return redirect(url_for('recipe', user_id=user_id, recipe_id=recipe_id, source=source))
 
 @app.route("/user/<int:user_id>/favouritedrecipe/<int:recipe_id>", methods=['POST'])
 def favourited_recipe(user_id, recipe_id):

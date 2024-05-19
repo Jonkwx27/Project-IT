@@ -43,7 +43,7 @@
                 <img src="/static/{{ recipe.image_path }}" alt="Recipe Image" style="max-width: 100px;">
                 <h3>{{ recipe.recipe_name }}</h3>
                 <p>{{ recipe.description }}</p>              
-                <a href="{{ url_for('recipe', user_id=user.id, recipe_id=recipe.id) }}">View Recipe</a>
+                <a href="{{ url_for('recipe', user_id=user.id, recipe_id=recipe.id, source='browse_recipe') }}">View Recipe</a>
             </div>
             {% endfor %}
         </div>
