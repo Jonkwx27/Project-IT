@@ -229,6 +229,9 @@ def favouritedrecipe(user_id):
 def favorite_recipe(user_id, recipe_id):
     if "user_id" not in session or session["user_id"] != user_id:
         return redirect(url_for("login"))
+    
+    pinned_date_str = request.form.get("pinned_date", None)
+    pinned_date = datetime.strptime(pinned_date_str, "%Y-%m-%d") if pinned_date_str else None
 
     # Check if the recipe is already favorited
     existing_favorite = FavouriteRecipe.query.filter_by(user_id=user_id, recipe_id=recipe_id).first()

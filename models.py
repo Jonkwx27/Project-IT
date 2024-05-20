@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
 db = SQLAlchemy()
+from datetime import datetime
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -41,6 +42,7 @@ class Recipe(db.Model):
     submitted_by = db.Column(db.String(100), nullable=False)
     category = db.Column(db.String(50), nullable=False)
     comments = db.relationship('Comment', backref=db.backref('recipe'), lazy=True)
+    favourite_recipe = db.relationship('FavouriteRecipe', uselist=False, backref='recipe')
 
 
     def __repr__(self):
@@ -63,7 +65,8 @@ class FavouriteRecipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), nullable=False)
-    pinned_date = db.Column(db.Date)
+    pinned_date = db.Column(db.Date, nullable=True)
 
     user = db.relationship('User', backref=db.backref('favourite_recipes', lazy=True))
     recipe = db.relationship('Recipe', backref=db.backref('favourited_by', lazy=True))
+    recipe = db.relationship('Recipe', backref='favourite_recipe')
