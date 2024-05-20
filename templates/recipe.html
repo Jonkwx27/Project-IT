@@ -221,7 +221,7 @@
     <h1 class="recipe-title">{{ recipe.recipe_name }}</h1>
     <form action="{{ url_for('favorite_recipe', user_id=user.id, recipe_id=recipe.id, source=source) }}" method="post">
         <label for="pinned_date">Pinned Date:</label>
-        <input type="date" id="pinned_date" name="pinned_date">
+        <input type="date" id="pinned_date" name="pinned_date" value="{{ favourite_recipe.pinned_date.strftime('%Y-%m-%d') if favourite_recipe and favourite_recipe.pinned_date else '' }}">
         <button type="submit" class="submit-button">{{ 'Unfavorite' if recipe.id in favourited_recipe_ids else 'Favorite' }}</button>
     </form>
     <div class="recipe-photo-container">

@@ -5,7 +5,7 @@ from flask_migrate import Migrate
 from werkzeug.utils import secure_filename
 from models import Recipe, db, User, Admin, Comment, Category, FavouriteRecipe
 from sqlalchemy.sql import func
-from datetime import datetime
+from datetime import datetime, date
 
 
 
@@ -112,11 +112,12 @@ def recipe(user_id, recipe_id):
     user = User.query.get_or_404(user_id)
     recipe = Recipe.query.get_or_404(recipe_id)
     comments = Comment.query.filter_by(recipe_id=recipe_id).all()
-
+    favourite_recipe = FavouriteRecipe.query.filter_by(user_id=user_id, recipe_id=recipe_id).first()
+    favourited_recipe_ids = [fr.recipe_id for fr in FavouriteRecipe.query.filter_by(user_id=user_id).all()]
     # Get the source from the query parameter, default to 'browse_recipe' if not provided
     source = request.args.get('source', 'browse_recipe')
 
-    return render_template("recipe.html", user=user, recipe=recipe, comments=comments, source=source)
+    return render_template("recipe.html", user=user, recipe=recipe, favourite_recipe=favourite_recipe, favourited_recipe_ids=favourited_recipe_ids, comments=comments, source=source)
 
 @app.route('/user/<int:user_id>/submit_comment/<int:recipe_id>', methods=['POST'])
 def submit_comment(user_id, recipe_id):
@@ -244,6 +245,7 @@ def favorite_recipe(user_id, recipe_id):
     # Check if the recipe is already favorited
     existing_favorite = FavouriteRecipe.query.filter_by(user_id=user_id, recipe_id=recipe_id).first()
 
+
     if existing_favorite:
         # If the recipe is already favorited, unfavorite it
         db.session.delete(existing_favorite)
@@ -271,7 +273,8 @@ def favourited_recipe(user_id, recipe_id):
 
     # Extract pinned_date from the form data
     pinned_date_str = request.form.get("pinned_date", None)
-    pinned_date = datetime.strptime(pinned_date_str, "%Y-%m-%d") if pinned_date_str else None
+    pinned_date = datetime.strptime(pinned_date_str, "%Y-%m-%d").date() if pinned_date_str else None
+    
 
     # Create a FavouriteRecipe object and add it to the database session
     favourite_recipe = FavouriteRecipe(user_id=user_id, recipe_id=recipe_id, pinned_date=pinned_date)
