@@ -3,6 +3,7 @@ from flask import Flask, redirect, url_for, render_template, request, session, f
 from datetime import timedelta
 from flask_migrate import Migrate
 from werkzeug.utils import secure_filename
+from werkzeug.security import generate_password_hash, check_password_hash
 from models import Recipe, db, User, Admin, Comment, Category, FavouriteRecipe
 from sqlalchemy.sql import func
 from datetime import datetime, date
@@ -43,7 +44,7 @@ def signup():
         email = request.form['email']
         username = request.form['username']
         age = int(request.form['age'])
-        password = request.form['password']
+        password = generate_password_hash(request.form['password'])
         user = User(name=name,
 					email=email,
 					username=username,
@@ -66,10 +67,12 @@ def login():
         # Check if the user exists in the database
         found_user = User.query.filter_by(email=email, username=username).first()
 
-        if found_user and found_user.password == password:
+        if found_user and check_password_hash(found_user.password, password):
             session["user_id"] = found_user.id
             return redirect(url_for("browse_recipe", user_id=found_user.id))
         else:
+            # Incorrect email/username or password
+            flash("Invalid email/username or password. Please try again.", "error")
             return redirect(url_for("login"))
     else:
         if "user_id" in session:
@@ -159,8 +162,9 @@ def submit_comment(user_id, recipe_id):
 def recipesubmission(user_id):
     if "user_id" not in session or session["user_id"] != user_id:
         return redirect(url_for("login"))
-    
+
     if request.method == "POST":
+        # Handle form submission
         recipe_name = request.form["recipe_name"]
         description = request.form["description"]
         ingredients = request.form["ingredients"]
@@ -171,13 +175,9 @@ def recipesubmission(user_id):
         user = User.query.get_or_404(user_id)
         submitted_by = f"{user.username} (ID: {user.id})"
 
-         # Get selected categories
-        category_ids = []
-        for category_id in [request.form['category1'], request.form['category2'], request.form['category3']]:
-            if category_id:
-                category = Category.query.get(category_id)
-                if category:
-                    category_ids.append(category)
+        # Get selected categories
+        category_ids = request.form.getlist('categories[]')
+        categories = Category.query.filter(Category.id.in_(category_ids)).all()
 
         if "recipe_image" in request.files:
             recipe_image = request.files["recipe_image"]
@@ -186,18 +186,15 @@ def recipesubmission(user_id):
                 return redirect(request.url)
             if recipe_image and allowed_file(recipe_image.filename):
                 filename = secure_filename(recipe_image.filename)
-                # Construct the absolute path to save the image
                 image_path = os.path.join(app.root_path, 'static/uploads', filename)
-                # Save the image to the correct directory
                 recipe_image.save(image_path)
-                # Save the relative path to the image file in the database
                 image_path_relative = 'uploads/' + filename
             else:
                 flash('Invalid file type')
                 return redirect(request.url)
         else:
             image_path_relative = None
-        
+
         steps_str = '\n'.join(steps)
 
         recipe = Recipe(
@@ -205,16 +202,15 @@ def recipesubmission(user_id):
             description=description,
             ingredients=ingredients,
             steps=steps_str,
-            serving_size = serving_size,
+            serving_size=serving_size,
             difficulty=difficulty,
             time_required=time_required,
             image_path=image_path_relative,
             user_id=user_id,
             submitted_by=submitted_by, 
-            categories=category_ids
+            categories=categories
         )
 
-        # Add the recipe to the database session and commit changes
         db.session.add(recipe)
         db.session.commit()
 
@@ -223,6 +219,8 @@ def recipesubmission(user_id):
     user = User.query.get_or_404(user_id)
     categories = Category.query.all()
     return render_template("RecipeSubmission.html", user=user, categories=categories)
+
+
 
 @app.route("/user/<int:user_id>/favouritedrecipe")
 def favouritedrecipe(user_id):

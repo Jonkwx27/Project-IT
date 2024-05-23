@@ -61,26 +61,22 @@
                 </div>
 
                 <div class="input-container category-selection">
-                    <label for="category"><h2>Categories:</h2></label><br>
-                    <select id="category1" name="category1" required>
-                        <option value="">Select Category</option>
-                        {% for category in categories %}
-                            <option value="{{ category.id }}">{{ category.name }}</option>
-                        {% endfor %}
-                    </select><br><br>
-                    <select id="category2" name="category2">
-                        <option value="">Select Category</option>
-                        {% for category in categories %}
-                            <option value="{{ category.id }}">{{ category.name }}</option>
-                        {% endfor %}
-                    </select><br><br>
-                    <select id="category3" name="category3">
-                        <option value="">Select Category</option>
-                        {% for category in categories %}
-                            <option value="{{ category.id }}">{{ category.name }}</option>
-                        {% endfor %}
-                    </select><br><br>
-                </div>                
+                    <h2>Categories:</h2>
+                    <div id="categories-list">
+                        <div class="category-row">
+                            <select name="categories[]" required>
+                                <option value="">Select Category</option>
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}">{{ category.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <button type="button" onclick="this.parentElement.remove()">Remove</button>
+                        </div>
+                    </div>
+                    <button type="button" onclick="addCategory()">Add Category</button>
+                </div>
+                
+                         
                     
                 <div class="input-container">
                     <label for="serving_size"><h2>Serving Size:</h2></label><br>
@@ -130,8 +126,7 @@
     servingSizeSlider.addEventListener("input", function() {
         servingSizeValueSpan.textContent = servingSizeSlider.value;
     });
-</script>
-<script>
+
     function addStep() {
         const stepList = document.getElementById('steps-list');
         const stepRow = document.createElement('div');
@@ -154,7 +149,43 @@
         stepRow.appendChild(removeButton);
         stepList.appendChild(stepRow);
     }
+
+    function addCategory() {
+            const categoryList = document.getElementById('categories-list');
+            const categoryRow = document.createElement('div');
+            categoryRow.className = 'category-row';
+
+            const newCategory = document.createElement('select');
+            newCategory.name = 'categories[]';
+            newCategory.required = true;
+
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = 'Select Category';
+            newCategory.appendChild(defaultOption);
+
+            // Add options from the template
+            const options = document.getElementById('category-options-template').content.cloneNode(true);
+            newCategory.appendChild(options);
+
+            const removeButton = document.createElement('button');
+            removeButton.type = 'button';
+            removeButton.textContent = 'Remove';
+            removeButton.onclick = function() {
+                categoryList.removeChild(categoryRow);
+            };
+
+            categoryRow.appendChild(newCategory);
+            categoryRow.appendChild(removeButton);
+            categoryList.appendChild(categoryRow);
+        }
 </script>
+<template id="category-options-template">
+    {% for category in categories %}
+        <option value="{{ category.id }}">{{ category.name }}</option>
+    {% endfor %}
+</template>
+
 </body>
 
 </html>

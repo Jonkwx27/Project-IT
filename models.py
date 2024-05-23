@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
+from werkzeug.security import generate_password_hash, check_password_hash
 db = SQLAlchemy()
 
 class User(db.Model):
@@ -14,6 +15,12 @@ class User(db.Model):
 
     def __repr__(self):
         return f'<User {self.name}>'
+
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
 
 class Admin(db.Model):
     id = db.Column(db.Integer, primary_key=True)
