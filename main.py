@@ -237,16 +237,14 @@ def favorite_recipe(user_id, recipe_id):
     existing_favorite = FavouriteRecipe.query.filter_by(user_id=user_id, recipe_id=recipe_id).first()
 
     if existing_favorite:
-        # If the recipe is already favorited, unfavorite it
-        db.session.delete(existing_favorite)
+        existing_favorite.pinned_date = pinned_date
         db.session.commit()
-        flash('Recipe unfavorited successfully!', 'success')
+        flash('Pinned date updated successfully!', 'success')
     else:
-        # If the recipe is not favorited, favorite it
-        new_favorite = FavouriteRecipe(user_id=user_id, recipe_id=recipe_id)
+        new_favorite = FavouriteRecipe(user_id=user_id, recipe_id=recipe_id, pinned_date=pinned_date)
         db.session.add(new_favorite)
         db.session.commit()
-        flash('Recipe favorited successfully!', 'success')
+        flash('Recipe favorited successfully with pinned date!', 'success')
 
     source = request.args.get('source', 'browse_recipe')
 

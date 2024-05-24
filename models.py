@@ -67,6 +67,8 @@ class FavouriteRecipe(db.Model):
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), nullable=False)
     pinned_date = db.Column(db.Date, nullable=True)
 
-    user = db.relationship('User', backref=db.backref('favourite_recipes', lazy=True))
-    recipe = db.relationship('Recipe', backref=db.backref('favourited_by', lazy=True))
-    recipe = db.relationship('Recipe', backref='favourite_recipe')
+    def __init__(self, user_id, recipe_id, pinned_date=None):
+        self.user_id = user_id
+        self.recipe_id = recipe_id
+        self.pinned_date = pinned_date
+

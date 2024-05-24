@@ -220,7 +220,7 @@
     </div>
     <h1 class="recipe-title">{{ recipe.recipe_name }}</h1>
     <form action="{{ url_for('favorite_recipe', user_id=user.id, recipe_id=recipe.id, source=source) }}" method="post">
-        <label for="pinned_date">Pinned Date:</label>
+        <label for="pinned_date">Cook at:</label>
         <input type="date" id="pinned_date" name="pinned_date">
         <button type="submit" class="submit-button">{{ 'Unfavorite' if recipe.id in favourited_recipe_ids else 'Favorite' }}</button>
     </form>
