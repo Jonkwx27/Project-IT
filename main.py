@@ -6,6 +6,7 @@ from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import Recipe, db, User, Admin, Comment, Category, FavouriteRecipe
 from sqlalchemy.sql import func
+from sqlalchemy import or_
 from datetime import datetime, date
 
 
@@ -88,23 +89,26 @@ def browse_recipe(user_id):
     user = User.query.get_or_404(user_id)
 
     # Fetch all categories from the database
-    categories = Category.query.all()
+    categories = Category.query.order_by(Category.name).all()  # Sort categories alphabetically
 
     selected_category = request.args.get("category", "All")
-    
-    if selected_category == "All":
-        recipes = Recipe.query.filter_by(approved=True).all()
-    else:
-        # Fetch the category object
+    search_query = request.args.get("search_query", "")
+
+    query = Recipe.query.filter_by(approved=True)
+
+    if selected_category != "All":
         category = Category.query.filter_by(name=selected_category).first()
         if category:
-            # Filter recipes that have the selected category
-            recipes = Recipe.query.filter(Recipe.categories.contains(category), Recipe.approved == True).all()
-        else:
-            # Handle the case when the category does not exist
-            recipes = []
+            query = query.filter(Recipe.categories.contains(category))
+    
+    if search_query:
+        query = query.filter(Recipe.recipe_name.ilike(f"%{search_query}%"))
 
-    return render_template("browse_recipe.html", recipes=recipes, categories=categories, selected_category=selected_category, user=user)
+    recipes = query.all()
+
+    return render_template("browse_recipe.html", recipes=recipes, categories=categories, selected_category=selected_category, search_query=search_query, user=user)
+
+
 
 
 @app.route("/user/<int:user_id>/recipe/<int:recipe_id>")
@@ -217,7 +221,7 @@ def recipesubmission(user_id):
         return redirect(url_for('recipesubmission', user_id=user_id))
     
     user = User.query.get_or_404(user_id)
-    categories = Category.query.all()
+    categories = Category.query.order_by(Category.name).all()  # Sort categories alphabetically
     return render_template("RecipeSubmission.html", user=user, categories=categories)
 
 
@@ -239,49 +243,31 @@ def favouritedrecipe(user_id):
 def favorite_recipe(user_id, recipe_id):
     if "user_id" not in session or session["user_id"] != user_id:
         return redirect(url_for("login"))
-    
-    pinned_date_str = request.form.get("pinned_date", None)
-    pinned_date = datetime.strptime(pinned_date_str, "%Y-%m-%d") if pinned_date_str else None
 
     # Check if the recipe is already favorited
     existing_favorite = FavouriteRecipe.query.filter_by(user_id=user_id, recipe_id=recipe_id).first()
 
 
     if existing_favorite:
-        existing_favorite.pinned_date = pinned_date
+        # If the recipe is already favorited, unfavorite it
+        db.session.delete(existing_favorite)
         db.session.commit()
-        flash('Pinned date updated successfully!', 'success')
+        flash('Recipe unfavorited successfully!', 'success')
     else:
-        new_favorite = FavouriteRecipe(user_id=user_id, recipe_id=recipe_id, pinned_date=pinned_date)
+        if request.method == "POST":
+            # Extract pinned_date from the form data
+            cook_on_str = request.form.get("cook_on", None)
+            cook_on = datetime.strptime(cook_on_str, "%Y-%m-%d").date() if cook_on_str else None
+            # If the recipe is not favorited, favorite it
+            new_favorite = FavouriteRecipe(user_id=user_id, recipe_id=recipe_id, cook_on=cook_on)
         db.session.add(new_favorite)
         db.session.commit()
-        flash('Recipe favorited successfully with pinned date!', 'success')
+        flash('Recipe favorited successfully!', 'success')
 
     source = request.args.get('source', 'browse_recipe')
 
     # Redirect back to the recipe page
     return redirect(url_for('recipe', user_id=user_id, recipe_id=recipe_id, source=source))
-
-@app.route("/user/<int:user_id>/favouritedrecipe/<int:recipe_id>", methods=['POST'])
-def favourited_recipe(user_id, recipe_id):
-    if "user_id" not in session or session["user_id"] != user_id:
-        return redirect(url_for("login"))
-    
-    user = User.query.get_or_404(user_id)
-    recipe = Recipe.query.get_or_404(recipe_id)
-
-    # Extract pinned_date from the form data
-    pinned_date_str = request.form.get("pinned_date", None)
-    pinned_date = datetime.strptime(pinned_date_str, "%Y-%m-%d").date() if pinned_date_str else None
-    
-
-    # Create a FavouriteRecipe object and add it to the database session
-    favourite_recipe = FavouriteRecipe(user_id=user_id, recipe_id=recipe_id, pinned_date=pinned_date)
-    db.session.add(favourite_recipe)
-    db.session.commit()
-
-    # Redirect the user back to the recipe page
-    return redirect(url_for('recipe', user_id=user_id, recipe_id=recipe_id))
 
 @app.route("/logout")
 def logout():
@@ -363,7 +349,12 @@ def edit_categories(admin_id):
         return redirect(url_for("adminlogin"))
     admin = Admin.query.get_or_404(admin_id)
 
-    categories = Category.query.all()
+    # Fetch all categories
+    if "search" in request.args:
+        search_term = request.args["search"]
+        categories = Category.query.filter(or_(Category.name.like(f"%{search_term}%"))).all()
+    else:
+        categories = Category.query.order_by(Category.name).all()
 
     return render_template("edit_categories.html", admin_id=admin_id, admin=admin, categories=categories)
 
@@ -418,6 +409,36 @@ def category_usage(admin_id, category_id):
     category = Category.query.get_or_404(category_id)
     recipe_count = Recipe.query.filter(Recipe.categories.any(id=category_id)).count()
     return jsonify({"recipe_count": recipe_count})
+
+@app.route("/admin/<int:admin_id>/manage_users")
+def manage_users(admin_id):
+    if "admin_id" not in session:
+        return redirect(url_for("adminlogin"))
+    
+    admin = Admin.query.get_or_404(admin_id)
+
+    search_query = request.args.get('search_query', '').strip()
+    
+    if search_query:
+        users = User.query.filter(User.username.contains(search_query)).all()
+    else:
+        users = User.query.all()
+
+    return render_template("manage_users.html", admin_id=admin_id, admin=admin, users=users, search_query=search_query)
+
+@app.route("/admin/<int:admin_id>/delete_user/<int:user_id>", methods=["POST"])
+def delete_user(admin_id, user_id):
+    if "admin_id" not in session or session["admin_id"] != admin_id:
+        return redirect(url_for("adminlogin"))
+
+    admin = Admin.query.get_or_404(admin_id)
+    user = User.query.get_or_404(user_id)
+    db.session.delete(user)
+    db.session.commit()
+    flash("User deleted successfully", "success")
+    return redirect(url_for("manage_users", admin_id=admin_id))
+
+
 
 @app.route("/adminlogout")
 def adminlogout():
