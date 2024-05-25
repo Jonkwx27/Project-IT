@@ -127,7 +127,7 @@ body {
 }
 .submit-button {
     padding: 10px 20px;
-    background: #ece3ae; 
+    background-color: #c28855; 
     border: 2px solid #000000; 
     border-radius: 5px;
     cursor: pointer;
@@ -138,7 +138,7 @@ body {
     z-index: 1;
 }
 .submit-button:hover {
-    background-color: #d67f7f;
+    background-color: #98714f;
 }
 .comment-section {
     background-color: #f8aa35; 
