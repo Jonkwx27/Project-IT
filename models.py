@@ -81,7 +81,7 @@ class FavouriteRecipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), nullable=False)
-    pinned_date = db.Column(db.Date)
+    cook_on = db.Column(db.Date)
 
     def __repr__(self):
         return f"FavouriteRecipe('{self.user_id}', '{self.recipe_id}')"

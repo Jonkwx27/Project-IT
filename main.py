@@ -254,8 +254,12 @@ def favorite_recipe(user_id, recipe_id):
         db.session.commit()
         flash('Recipe unfavorited successfully!', 'success')
     else:
-        # If the recipe is not favorited, favorite it
-        new_favorite = FavouriteRecipe(user_id=user_id, recipe_id=recipe_id)
+        if request.method == "POST":
+            # Extract pinned_date from the form data
+            cook_on_str = request.form.get("cook_on", None)
+            cook_on = datetime.strptime(cook_on_str, "%Y-%m-%d").date() if cook_on_str else None
+            # If the recipe is not favorited, favorite it
+            new_favorite = FavouriteRecipe(user_id=user_id, recipe_id=recipe_id, cook_on=cook_on)
         db.session.add(new_favorite)
         db.session.commit()
         flash('Recipe favorited successfully!', 'success')
@@ -264,27 +268,6 @@ def favorite_recipe(user_id, recipe_id):
 
     # Redirect back to the recipe page
     return redirect(url_for('recipe', user_id=user_id, recipe_id=recipe_id, source=source))
-
-@app.route("/user/<int:user_id>/favouritedrecipe/<int:recipe_id>", methods=['POST'])
-def favourited_recipe(user_id, recipe_id):
-    if "user_id" not in session or session["user_id"] != user_id:
-        return redirect(url_for("login"))
-    
-    user = User.query.get_or_404(user_id)
-    recipe = Recipe.query.get_or_404(recipe_id)
-
-    # Extract pinned_date from the form data
-    pinned_date_str = request.form.get("pinned_date", None)
-    pinned_date = datetime.strptime(pinned_date_str, "%Y-%m-%d").date() if pinned_date_str else None
-    
-
-    # Create a FavouriteRecipe object and add it to the database session
-    favourite_recipe = FavouriteRecipe(user_id=user_id, recipe_id=recipe_id, pinned_date=pinned_date)
-    db.session.add(favourite_recipe)
-    db.session.commit()
-
-    # Redirect the user back to the recipe page
-    return redirect(url_for('recipe', user_id=user_id, recipe_id=recipe_id))
 
 @app.route("/logout")
 def logout():
@@ -429,13 +412,19 @@ def category_usage(admin_id, category_id):
 
 @app.route("/admin/<int:admin_id>/manage_users")
 def manage_users(admin_id):
-    if "admin_id" not in session or session["admin_id"] != admin_id:
+    if "admin_id" not in session:
         return redirect(url_for("adminlogin"))
     
     admin = Admin.query.get_or_404(admin_id)
-    users = User.query.all()
 
-    return render_template("manage_users.html", admin=admin, users=users)
+    search_query = request.args.get('search_query', '').strip()
+    
+    if search_query:
+        users = User.query.filter(User.username.contains(search_query)).all()
+    else:
+        users = User.query.all()
+
+    return render_template("manage_users.html", admin_id=admin_id, admin=admin, users=users, search_query=search_query)
 
 @app.route("/admin/<int:admin_id>/delete_user/<int:user_id>", methods=["POST"])
 def delete_user(admin_id, user_id):
