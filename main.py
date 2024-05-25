@@ -418,6 +418,30 @@ def category_usage(admin_id, category_id):
     recipe_count = Recipe.query.filter(Recipe.categories.any(id=category_id)).count()
     return jsonify({"recipe_count": recipe_count})
 
+@app.route("/admin/<int:admin_id>/manage_users")
+def manage_users(admin_id):
+    if "admin_id" not in session or session["admin_id"] != admin_id:
+        return redirect(url_for("adminlogin"))
+    
+    admin = Admin.query.get_or_404(admin_id)
+    users = User.query.all()
+
+    return render_template("manage_users.html", admin=admin, users=users)
+
+@app.route("/admin/<int:admin_id>/delete_user/<int:user_id>", methods=["POST"])
+def delete_user(admin_id, user_id):
+    if "admin_id" not in session or session["admin_id"] != admin_id:
+        return redirect(url_for("adminlogin"))
+
+    admin = Admin.query.get_or_404(admin_id)
+    user = User.query.get_or_404(user_id)
+    db.session.delete(user)
+    db.session.commit()
+    flash("User deleted successfully", "success")
+    return redirect(url_for("manage_users", admin_id=admin_id))
+
+
+
 @app.route("/adminlogout")
 def adminlogout():
 	session.pop("admin_id", None)
