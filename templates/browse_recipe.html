@@ -15,7 +15,16 @@
             <img style="height: 50px; padding-bottom: 30px;" src="{{ url_for('static', filename='Logo_CookiQ.jpeg') }}" alt="Logo_CookiQ">
         </div>
         <h1 class="title">Browse Recipe</h1>
-        <a href="{{ url_for('user', user_id=user.id) }}" class="HomeButton">Return to Home</a>
+        <a href="{{ url_for('logout') }}" class="LogOutButton">Logout</a>
+    </div>
+
+    <div class="classification">
+        <ul>
+            <li><a href="browse_recipe" class="button">Browse Recipes</a></li>
+            <li><a href="favouritedrecipe" class="button">Favourited Recipes</a></li>
+            <li><a href="recipesubmission" class="button">Submit Recipes</a></li>
+            <li><a href="#" class="button">My Submitted Recipes</a></li>
+        </ul>
     </div>
 
     <div class="category-selection">
@@ -23,12 +32,9 @@
             <label for="category">Select Category:</label>
             <select name="category" id="category">
                 <option value="All">All</option>
-                <option value="Breakfast">Breakfast</option>
-                <option value="Lunch">Lunch</option>
-                <option value="Dinner">Dinner</option>
-                <option value="Beverage">Beverage</option>
-                <option value="Dessert">Dessert</option>               
-                <option value="Soup">Soup</option>
+                {% for category in categories %}
+                <option value="{{ category.name }}">{{ category.name }}</option>
+                {% endfor %}
             </select>
             <button type="submit">Browse</button>
         </form>
@@ -42,7 +48,13 @@
             <div class="recipe-card">
                 <img src="/static/{{ recipe.image_path }}" alt="Recipe Image" style="max-width: 100px;">
                 <h3>{{ recipe.recipe_name }}</h3>
-                <p>{{ recipe.description }}</p>              
+                <p>{{ recipe.description }}</p>
+                <p>Categories: 
+                    {% for category in recipe.categories %}
+                        {{ category.name }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+                <p>Submitted by: {{ recipe.submitted_by }}</p>
                 <a href="{{ url_for('recipe', user_id=user.id, recipe_id=recipe.id, source='browse_recipe') }}">View Recipe</a>
             </div>
             {% endfor %}

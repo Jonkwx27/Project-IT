@@ -220,8 +220,8 @@
     </div>
     <h1 class="recipe-title">{{ recipe.recipe_name }}</h1>
     <form action="{{ url_for('favorite_recipe', user_id=user.id, recipe_id=recipe.id, source=source) }}" method="post">
-        <label for="pinned_date">Cook at:</label>
-        <input type="date" id="pinned_date" name="pinned_date">
+        <label for="pinned_date">Pinned Date:</label>
+        <input type="date" id="pinned_date" name="pinned_date" value="{{ favourite_recipe.pinned_date.strftime('%Y-%m-%d') if favourite_recipe and favourite_recipe.pinned_date else '' }}">
         <button type="submit" class="submit-button">{{ 'Unfavorite' if recipe.id in favourited_recipe_ids else 'Favorite' }}</button>
     </form>
     <div class="recipe-photo-container">
@@ -253,6 +253,14 @@
         <p>{{ recipe.description }}</p>
     </div>
     <div class="recipe-details">
+        <h2>Categories:</h2>
+        <p>
+            {% for category in recipe.categories %}
+                {{ category.name }}{% if not loop.last %}, {% endif %}
+            {% endfor %}
+        </p>
+    </div>
+    <div class="recipe-details">
         <h2>Ingredients:</h2>
         <p>{{ recipe.ingredients }}</p>
     </div>
@@ -260,7 +268,12 @@
         <h2>Steps:</h2>
         <ul>
             {% for step in recipe.steps.split('\n') %}
-                <li><input type="checkbox" id="step{{ loop.index }}" name="step{{ loop.index }}"><label for="step{{ loop.index }}">{{ step }}</label></li>
+                {% if step %}
+                    <li>
+                        <input type="checkbox" id="step{{ loop.index }}" name="step{{ loop.index }}">
+                        <label for="step{{ loop.index }}">{{ step }}</label>
+                    </li>
+                {% endif %}
             {% endfor %}
         </ul>
     </div>
@@ -285,7 +298,7 @@
         <form action="{{ url_for('submit_comment', user_id=user.id, recipe_id=recipe.id) }}" method="post" enctype="multipart/form-data">
             <textarea name="comment" placeholder="Enter your comment here" class="input-field"></textarea>
             <label for="image">Upload Image:</label>
-            <input type="file" name="image" accept="image/*" required>
+            <input type="file" name="image" accept="image/*" >
             <input type="hidden" name="recipe_id" value="{{ recipe.id }}">
             <div class="rating">
                 <input type="radio" id="star5" name="rating" value="5">

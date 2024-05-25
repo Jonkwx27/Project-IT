@@ -150,7 +150,8 @@
 
 .input-container .steptext {
     margin-top: 20px; 
-    width: 90%;
+    width: 321px;
+    height: 70px;
 }
 
 .Step {
@@ -159,12 +160,24 @@
     padding-top: 20px;
 }
 
+.step-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    margin-left: 70px;
+}
+
+.step-row button{
+    margin-bottom: 30px;
+}
+
 .steptext {
     margin-top: 35px;
     width:  80%;
     height: 300px;
     border: 2px solid #ffd18d;
-    margin-bottom: 40px;
+    margin-bottom: 50px;
+    margin-right: 10px;
 }
 
 .rating1 {
@@ -343,7 +356,8 @@
   }
   
   .category-selection button {
-    padding: 8px 16px; 
+    padding: 10px 20px;
+    margin-top: 10px;
     border: none;
     cursor: pointer;
     border-radius: 5px;
@@ -406,4 +420,36 @@
     color: #000; 
     margin-top: 5px; 
 }
+.LogOutButton {
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #c28855;
+    color: #fff;
+    font-size: 22px;
+    font-weight: 300;
+    cursor: pointer;
+    text-decoration: none;
+    left: 20px;
+    }
+.LogOutButton:hover{
+    background-color: #98714f;
+}
+ul {
+    text-align: center;
+    display: flex;
+    padding-top: 5px;
+    padding-left: 0px;
+  }
+  
+li {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    font-weight: 300;
+    text-transform: uppercase;
+    display: inline-block;
+    width: 100%; 
+  }
 
+li:hover {
+  background-color:rgb(250, 235, 215);
+}

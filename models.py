@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
+from werkzeug.security import generate_password_hash, check_password_hash
 db = SQLAlchemy()
-from datetime import datetime
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -16,14 +16,24 @@ class User(db.Model):
     def __repr__(self):
         return f'<User {self.name}>'
 
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
+
 class Admin(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name_admin = db.Column(db.String(100), nullable=False)
     email_admin = db.Column(db.String(80), unique=True, nullable=False)
     password_admin = db.Column(db.String(100), nullable=False)
 
     def __repr__(self):
-        return f'<Admin {self.name_admin}>'
+        return f'<Admin {self.email_admin}>'
+
+recipe_category_association = db.Table('recipe_category_association',
+    db.Column('recipe_id', db.Integer, db.ForeignKey('recipe.id'), primary_key=True),
+    db.Column('category_id', db.Integer, db.ForeignKey('category.id'), primary_key=True)
+)
 
 class Recipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -40,9 +50,8 @@ class Recipe(db.Model):
     user = db.relationship('User', backref=db.backref('recipe_submissions', lazy=True))
     image_path = db.Column(db.String(255))  # Path to the image file
     submitted_by = db.Column(db.String(100), nullable=False)
-    category = db.Column(db.String(50), nullable=False)
     comments = db.relationship('Comment', backref=db.backref('recipe'), lazy=True)
-    favourite_recipe = db.relationship('FavouriteRecipe', uselist=False, backref='recipe')
+    categories = db.relationship('Category', secondary=recipe_category_association, backref=db.backref('recipes', lazy='dynamic'))
 
 
     def __repr__(self):
@@ -61,14 +70,18 @@ class Comment(db.Model):
     def __repr__(self):
         return f"Comment('{self.comment}', '{self.rating}')"
     
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False, unique=True)
+
+    def __repr__(self):
+        return f'<Category {self.name}>'
+    
 class FavouriteRecipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), nullable=False)
-    pinned_date = db.Column(db.Date, nullable=True)
+    pinned_date = db.Column(db.Date)
 
-    def __init__(self, user_id, recipe_id, pinned_date=None):
-        self.user_id = user_id
-        self.recipe_id = recipe_id
-        self.pinned_date = pinned_date
-
+    user = db.relationship('User', backref=db.backref('favourite_recipes', lazy=True))
+    recipe = db.relationship('Recipe', backref=db.backref('favourited_by', lazy=True))
