@@ -81,8 +81,8 @@ def login():
 
         return render_template("login.html")
 
-@app.route("/user/<int:user_id>/browse_recipe")
-def browse_recipe(user_id):
+@app.route("/user/<int:user_id>/browse_recipes")
+def browse_recipes(user_id):
     if "user_id" not in session or session["user_id"] != user_id:
         return redirect(url_for("login"))
     
@@ -106,7 +106,7 @@ def browse_recipe(user_id):
 
     recipes = query.all()
 
-    return render_template("browse_recipe.html", recipes=recipes, categories=categories, selected_category=selected_category, search_query=search_query, user=user)
+    return render_template("browse_recipes.html", recipes=recipes, categories=categories, selected_category=selected_category, search_query=search_query, user=user)
 
 
 
@@ -341,6 +341,67 @@ def reject_recipe(admin_id, recipe_id):
             os.remove(image_path)
     
     return redirect(url_for("pending_submissions", admin_id=admin_id, admin=admin))
+
+
+@app.route("/admin/<int:admin_id>/browse_recipes", methods=["GET"])
+def admin_browse_recipes(admin_id):
+    if "admin_id" not in session or session["admin_id"] != admin_id:
+        return redirect(url_for("adminlogin"))
+
+    admin = Admin.query.get_or_404(admin_id)
+
+    categories = Category.query.order_by(Category.name).all()
+    selected_category = request.args.get("category", "All")
+    search_query = request.args.get("search_query", "")
+
+    query = Recipe.query
+
+    if selected_category != "All":
+        category = Category.query.filter_by(name=selected_category).first()
+        if category:
+            query = query.filter(Recipe.categories.contains(category))
+
+    if search_query:
+        query = query.filter(Recipe.recipe_name.ilike(f"%{search_query}%"))
+
+    recipes = query.all()
+
+    return render_template("admin_browse_recipes.html", recipes=recipes, categories=categories, selected_category=selected_category, search_query=search_query, admin=admin)
+
+@app.route("/admin/<int:admin_id>/delete_recipe/<int:recipe_id>", methods=["POST"])
+def delete_recipe(admin_id, recipe_id):
+    if "admin_id" not in session or session["admin_id"] != admin_id:
+        return redirect(url_for("adminlogin"))
+
+    admin = Admin.query.get_or_404(admin_id)
+    recipe = Recipe.query.get_or_404(recipe_id)
+
+    db.session.delete(recipe)
+    db.session.commit()
+    
+    flash("Recipe deleted successfully", "success")
+    return redirect(url_for("admin_browse_recipes", admin_id=admin_id))
+
+@app.route('/admin/<int:admin_id>/recipe/<int:recipe_id>', methods=['GET', 'POST'])
+def admin_recipe(admin_id, recipe_id):
+    # Fetch the recipe and comments from the database
+    admin = Admin.query.get_or_404(admin_id)
+    recipe = Recipe.query.get_or_404(recipe_id)
+    comments = Comment.query.filter_by(recipe_id=recipe_id).all()
+
+
+    return render_template('admin_recipe.html',admin=admin, recipe=recipe, comments=comments)
+
+
+@app.route('/admin/<int:admin_id>/comment/<int:comment_id>/delete', methods=['POST'])
+def delete_comment(comment_id):
+    comment = Comment.query.get_or_404(comment_id)
+
+    # Delete the comment from the database
+    db.session.delete(comment)
+    db.session.commit()
+    flash('Comment deleted successfully', 'success')
+    return redirect(url_for('admin_recipe', recipe_id=comment.recipe_id))
 
 
 @app.route("/admin/<int:admin_id>/edit_categories")

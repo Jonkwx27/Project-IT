@@ -49,38 +49,40 @@ class Recipe(db.Model):
     serving_size = db.Column(db.Integer, nullable=False)
     submitted_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     approved = db.Column(db.Boolean, default=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', name='fk_recipe_user'), nullable=False)
     image_path = db.Column(db.String(255))  # Path to the image file
     submitted_by = db.Column(db.String(100), nullable=False)
+    admin_id = db.Column(db.Integer, db.ForeignKey('admin.id', name='fk_recipe_admin'))
     comments = db.relationship('Comment', backref='recipe', cascade="all, delete-orphan", lazy=True)
     categories = db.relationship('Category', secondary=recipe_category_association, backref=db.backref('recipes', lazy='dynamic'))
 
     def __repr__(self):
         return f'<Recipe {self.recipe_name}>'
-    
+
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     comment = db.Column(db.Text, nullable=False)
     rating = db.Column(db.Integer, nullable=False)
     image_url = db.Column(db.String(255))
     submitted_by = db.Column(db.String(100), nullable=False)
-    recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id', name='fk_comment_recipe'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', name='fk_comment_user'), nullable=False)
+    admin_id = db.Column(db.Integer, db.ForeignKey('admin.id', name='fk_comment_admin'))
 
     def __repr__(self):
         return f"Comment('{self.comment}', '{self.rating}')"
-    
+
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
 
     def __repr__(self):
         return f'<Category {self.name}>'
-    
+
 class FavouriteRecipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', name='fk_favourite_recipe_user'), nullable=False)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id', name='fk_favourite_recipe'), nullable=False)
     cook_on = db.Column(db.Date)
 
     def __repr__(self):
