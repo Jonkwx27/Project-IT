@@ -6,6 +6,7 @@ from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import Recipe, db, User, Admin, Comment, Category, FavouriteRecipe
 from sqlalchemy.sql import func
+from sqlalchemy import or_
 from datetime import datetime, date
 
 
@@ -88,23 +89,26 @@ def browse_recipe(user_id):
     user = User.query.get_or_404(user_id)
 
     # Fetch all categories from the database
-    categories = Category.query.all()
+    categories = Category.query.order_by(Category.name).all()  # Sort categories alphabetically
 
     selected_category = request.args.get("category", "All")
-    
-    if selected_category == "All":
-        recipes = Recipe.query.filter_by(approved=True).all()
-    else:
-        # Fetch the category object
+    search_query = request.args.get("search_query", "")
+
+    query = Recipe.query.filter_by(approved=True)
+
+    if selected_category != "All":
         category = Category.query.filter_by(name=selected_category).first()
         if category:
-            # Filter recipes that have the selected category
-            recipes = Recipe.query.filter(Recipe.categories.contains(category), Recipe.approved == True).all()
-        else:
-            # Handle the case when the category does not exist
-            recipes = []
+            query = query.filter(Recipe.categories.contains(category))
+    
+    if search_query:
+        query = query.filter(Recipe.recipe_name.ilike(f"%{search_query}%"))
 
-    return render_template("browse_recipe.html", recipes=recipes, categories=categories, selected_category=selected_category, user=user)
+    recipes = query.all()
+
+    return render_template("browse_recipe.html", recipes=recipes, categories=categories, selected_category=selected_category, search_query=search_query, user=user)
+
+
 
 
 @app.route("/user/<int:user_id>/recipe/<int:recipe_id>")
@@ -217,7 +221,7 @@ def recipesubmission(user_id):
         return redirect(url_for('recipesubmission', user_id=user_id))
     
     user = User.query.get_or_404(user_id)
-    categories = Category.query.all()
+    categories = Category.query.order_by(Category.name).all()  # Sort categories alphabetically
     return render_template("RecipeSubmission.html", user=user, categories=categories)
 
 
@@ -362,7 +366,12 @@ def edit_categories(admin_id):
         return redirect(url_for("adminlogin"))
     admin = Admin.query.get_or_404(admin_id)
 
-    categories = Category.query.all()
+    # Fetch all categories
+    if "search" in request.args:
+        search_term = request.args["search"]
+        categories = Category.query.filter(or_(Category.name.like(f"%{search_term}%"))).all()
+    else:
+        categories = Category.query.order_by(Category.name).all()
 
     return render_template("edit_categories.html", admin_id=admin_id, admin=admin, categories=categories)
 

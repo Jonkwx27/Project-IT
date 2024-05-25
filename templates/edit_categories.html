@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Pending Recipe Submissions</title>
+    <title>Edit Categories</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
@@ -199,6 +199,32 @@
         .category-selection {
             font-family: 'Bebas Neue', sans-serif;  
         }
+
+        .search-bar {
+            margin-bottom: 20px; 
+        }
+        .search-bar button {
+            padding: 8px 16px; 
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 16px; 
+            background-color: #c28855; 
+            color: #fff; 
+            transition: background-color 0.3s; 
+        }
+
+        .search-bar button:hover {
+            background-color: #98714f; 
+        }
+        .search-bar input[type="text"] {
+            font-family: 'Bebas Neue', sans-serif; 
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -218,6 +244,14 @@
             <li><a href="edit_categories" class="button">Edit Categories</a></li>
         </ul>
     </div>
+
+    <div class="search-bar">
+        <form method="GET" action="{{ url_for('edit_categories', admin_id=admin.id) }}">
+            <input type="text" name="search" placeholder="Search Category...">
+            <button type="submit">Search</button>
+        </form>
+    </div>
+    
 
     <div class="category-selection">
         <form method="POST" action="{{ url_for('add_category', admin_id=admin.id) }}" class="add-category-form">
