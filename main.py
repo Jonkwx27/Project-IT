@@ -70,14 +70,14 @@ def login():
 
         if found_user and check_password_hash(found_user.password, password):
             session["user_id"] = found_user.id
-            return redirect(url_for("browse_recipe", user_id=found_user.id))
+            return redirect(url_for("browse_recipes", user_id=found_user.id))
         else:
             # Incorrect email/username or password
             flash("Invalid email/username or password. Please try again.", "error")
             return redirect(url_for("login"))
     else:
         if "user_id" in session:
-            return redirect(url_for("browse_recipe", user_id=session["user_id"]))
+            return redirect(url_for("browse_recipes", user_id=session["user_id"]))
 
         return render_template("login.html")
 
@@ -366,14 +366,13 @@ def admin_browse_recipes(admin_id):
 
     recipes = query.all()
 
-    return render_template("admin_browse_recipes.html", recipes=recipes, categories=categories, selected_category=selected_category, search_query=search_query, admin=admin)
+    return render_template("admin_browse_recipes.html", recipes=recipes, categories=categories, selected_category=selected_category, search_query=search_query, admin=admin, admin_id=admin_id)
 
 @app.route("/admin/<int:admin_id>/delete_recipe/<int:recipe_id>", methods=["POST"])
 def delete_recipe(admin_id, recipe_id):
     if "admin_id" not in session or session["admin_id"] != admin_id:
         return redirect(url_for("adminlogin"))
 
-    admin = Admin.query.get_or_404(admin_id)
     recipe = Recipe.query.get_or_404(recipe_id)
 
     db.session.delete(recipe)
@@ -393,15 +392,15 @@ def admin_recipe(admin_id, recipe_id):
     return render_template('admin_recipe.html',admin=admin, recipe=recipe, comments=comments)
 
 
-@app.route('/admin/<int:admin_id>/comment/<int:comment_id>/delete', methods=['POST'])
-def delete_comment(comment_id):
+@app.route('/admin/<int:admin_id>/delete_comment/<int:comment_id>', methods=['POST'])
+def delete_comment(admin_id,comment_id):
     comment = Comment.query.get_or_404(comment_id)
 
     # Delete the comment from the database
     db.session.delete(comment)
     db.session.commit()
     flash('Comment deleted successfully', 'success')
-    return redirect(url_for('admin_recipe', recipe_id=comment.recipe_id))
+    return redirect(url_for('admin_recipe', admin_id=admin_id, recipe_id=comment.recipe_id))
 
 
 @app.route("/admin/<int:admin_id>/edit_categories")

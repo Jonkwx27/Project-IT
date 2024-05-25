@@ -125,7 +125,7 @@ body {
 .rating > label:hover ~ label:before {
     content: "\2605";
 }
-.submit-button {
+.submit-button, .delete-button {
     padding: 10px 20px;
     background-color: #c28855; 
     border: 2px solid #000000; 
@@ -137,7 +137,7 @@ body {
     transition: background-color 0.3s;
     z-index: 1;
 }
-.submit-button:hover {
+.submit-button:hover, .delete-button:hover {
     background-color: #98714f;
 }
 .comment-section {

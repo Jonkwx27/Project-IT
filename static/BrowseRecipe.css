@@ -126,7 +126,7 @@ li:hover {
   margin-right: 5px;
 }
 
-.category-selection button, .search-bar button, .users button, .recipe-card a {
+.category-selection button, .search-bar button, .users button, .recipe-card a, .delete-button {
   padding: 8px 16px; 
   border: none;
   cursor: pointer;
@@ -138,8 +138,12 @@ li:hover {
   transition: background-color 0.3s; 
 }
 
-.category-selection button:hover, .search-bar button:hover, .users button:hover, .recipe-card a:hover {
+.category-selection button:hover, .search-bar button:hover, .users button:hover, .recipe-card a:hover, .delete-button:hover {
   background-color: #98714f; 
+}
+
+.delete-button {
+  margin-top: 5px;
 }
 
 .search-bar input[type="text"] {
