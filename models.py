@@ -32,6 +32,12 @@ class Admin(db.Model):
 
     def __repr__(self):
         return f'<Admin {self.email_admin}>'
+    
+    def set_password_admin(self, password_admin):
+        self.password_admin = generate_password_hash(password_admin)
+
+    def check_password_admin(self, password_admin):
+        return check_password_hash(self.password_admin, password_admin)
 
 recipe_category_association = db.Table('recipe_category_association',
     db.Column('recipe_id', db.Integer, db.ForeignKey('recipe.id'), primary_key=True),

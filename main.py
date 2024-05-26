@@ -7,7 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from models import Recipe, db, User, Admin, Comment, Category, FavouriteRecipe
 from sqlalchemy.sql import func
 from sqlalchemy import or_
-from datetime import datetime, date
+from datetime import datetime
 
 
 
@@ -276,26 +276,29 @@ def logout():
 
 
 ##################################################################### Admin Route #########################################################################
+
 @app.route("/adminlogin", methods=["POST", "GET"])
 def adminlogin():
     if request.method == "POST":
         session.permanent = True
         email_admin = request.form["email_admin"]
-        password_admin = request.form["password_admin"]
+        password_admin_input = request.form["password_admin"]
 
         # Check if the admin exists in the database
         found_admin = Admin.query.filter_by(email_admin=email_admin).first()
 
-        if found_admin and found_admin.password_admin == password_admin:
+        if found_admin and check_password_hash(found_admin.password_admin, password_admin_input):
             session["admin_id"] = found_admin.id
             return redirect(url_for("pending_submissions", admin_id=found_admin.id))
         else:
+            flash("Invalid email or password. Please try again.", "error")
             return redirect(url_for("adminlogin"))
     else:
         if "admin_id" in session:
             return redirect(url_for("pending_submissions", admin_id=session["admin_id"]))
 
         return render_template("admin_login.html")
+
 
 @app.route("/admin/<int:admin_id>/pending_submissions")
 def pending_submissions(admin_id):
@@ -507,6 +510,4 @@ def adminlogout():
 
 
 if __name__ == "__main__":
-	with app.app_context():
-		db.create_all()
-		app.run(debug=True)
+	app.run(debug=True)
