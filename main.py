@@ -8,7 +8,7 @@ from models import Recipe, db, User, Admin, Comment, Category, FavouriteRecipe
 from sqlalchemy.sql import func
 from sqlalchemy import or_
 from datetime import datetime, date
-
+from operator import attrgetter
 
 
 UPLOAD_FOLDER = 'uploads'  # Directory to store uploaded images
@@ -238,6 +238,19 @@ def favouritedrecipe(user_id):
     favourited_recipe_ids = [recipe.id for recipe in favourited_recipes]
 
     return render_template("favourited_recipe.html", user=user, favourited_recipes=favourited_recipes, favourited_recipe_ids=favourited_recipe_ids)
+
+@app.route("/user/<int:user_id>/favouritedrecipe/sort_by_alphabet", methods=["GET"])
+def sort_favourited_recipe_by_alphabet(user_id):
+    if "user_id" not in session or session["user_id"] != user_id:
+        return redirect(url_for("login"))
+
+    user = User.query.get_or_404(user_id)
+    favourited_recipes = Recipe.query.join(FavouriteRecipe).filter(FavouriteRecipe.user_id == user_id).all()
+
+    # Sort recipes alphabetically by recipe name
+    sorted_recipes = sorted(favourited_recipes, key=attrgetter('recipe_name'))
+
+    return render_template("favourited_recipe.html", user=user, favourited_recipes=sorted_recipes)
 
 @app.route("/user/<int:user_id>/favorite/<int:recipe_id>", methods=['POST'])
 def favorite_recipe(user_id, recipe_id):

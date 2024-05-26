@@ -20,15 +20,16 @@
 
     <div class="classification">
         <ul>
-            <li><a href="browse_recipe" class="button">Browse Recipes</a></li>
-            <li><a href="favouritedrecipe" class="button">Favourited Recipes</a></li>
-            <li><a href="recipesubmission" class="button">Submit Recipes</a></li>
+            <li><a href="{{ url_for('browse_recipe', user_id=user.id) }}" class="button">Browse Recipes</a></li>
+            <li><a href="{{ url_for('favouritedrecipe', user_id=user.id) }}" class="button">Favourited Recipes</a></li>
+            <li><a href="{{ url_for('recipesubmission', user_id=user.id) }}" class="button">Submit Recipes</a></li>
             <li><a href="#" class="button">My Submitted Recipes</a></li>
         </ul>
     </div>
 
     <div class="recipes">
         <h2>Favourited Recipes</h2>
+        <a href="{{ url_for('sort_favourited_recipe_by_alphabet', user_id=user.id) }}" class="alphabet">Sort by Alphabet</a>
         {% if favourited_recipes %}
         {% for i in range(0, favourited_recipes|length, 4) %}
         <div class="recipe-row">

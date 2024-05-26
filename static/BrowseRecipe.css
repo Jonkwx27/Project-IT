@@ -172,3 +172,20 @@ h2 {
 .LogOutButton:hover{
   background-color: #98714f;
 }
+
+.alphabet {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #f8aa35;
+  color: #000;
+  text-align: center;
+  text-decoration: none;
+  font-size: 22px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  margin-left: 20px;
+}
+
+.alphabet:hover {
+  background-color: #f1d982;
+}
