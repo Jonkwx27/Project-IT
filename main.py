@@ -217,6 +217,15 @@ def recipesubmission(user_id):
     categories = Category.query.all()
     return render_template("RecipeSubmission.html", user=user, categories=categories)
 
+@app.route("/user/<int:user_id>/submitted_recipes")
+def submitted_recipes(user_id):
+    if "user_id" not in session or session["user_id"] != user_id:
+        return redirect(url_for("login"))
+
+    user = User.query.get_or_404(user_id)
+    recipes = Recipe.query.filter_by(user_id=user_id).all()
+
+    return render_template("submitted_recipes.html", user=user, recipes=recipes)
 
 @app.route("/logout")
 def logout():
