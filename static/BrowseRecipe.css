@@ -63,92 +63,13 @@ li:hover {
   background-color: #98714f;
 }
 
-/* .photos {
-  display: flex;
-  justify-content: space-between;
-  text-align: center;
-  background-color:#ece3ae;
-  border: 3px solid black;
-  border-right: 3px solid black;
-}
-
-.photo {
-  flex: 0 1 30%;
-  border: 5px solid #ece3ae;
-  padding: 10px;
-  border-right: 3px solid black;
-  align-items: center;
-  justify-content: center;
-}
-
-.photos:last-child {
-  border-right: none;
-}
-
-.photo:last-child {
-  border-right: none;
-}
-
-.photo img {
-  max-width: 100%;
-  height: auto;
-  background-color:#ece3ae;
-  align-items: center;
-  justify-content: center;
-}
-
-.Name {
-  font-size: 28px;
-  font-weight: bold;
-  background-color: #f8aa35;
-  padding-top: 5px;
-  margin-top: 5px;
-}
-
-.Details {
-  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  font-size: 20px;
-  background-color:#ece3ae;
-  padding-top: 10px;
-}
-
-.photos2 {
-  display: flex;
-  justify-content: space-between;
-  text-align: center;
-  background-color:#ece3ae;
-  border: 3px solid black;
-  border-top: none;
-}
-
-.photo2 {
-  flex: 0 1 30%;
-  border: 5px solid #ece3ae;
-  padding: 10px;
-  border-right: 3px solid black;
-  align-items: center;
-  justify-content: center;
-}
-
-.photo2:last-child {
-  border-right: none;
-}
-
-.photo2 img {
-  max-width: 100%;
-  height: auto;
-  background-color:#ece3ae;
-}
-   */
-
-
-   .recipe-row {
+.recipe-row, .user-row {
     display: flex;
     justify-content: center; 
     margin-bottom: 20px; 
 }
 
-.recipe-card {
+.recipe-card, .user-card {
     width: 45%; 
     margin: 0 10px; 
     padding: 10px;
@@ -158,13 +79,13 @@ li:hover {
     text-align: center; 
 }
 
-.recipe-card h3 {
+.recipe-card h3, .user-card h3 {
     margin-top: 0;
     font-family: 'Bebas Neue', sans-serif; 
     font-size: 20px; 
 }
 
-.recipe-card p {
+.recipe-card p, .user-card p {
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     text-align: center; 
 }
@@ -178,19 +99,10 @@ li:hover {
 
 .recipe-card a {
     display: block;
-    margin-top: 10px;
-    text-decoration: none;
-    color: #007bff; 
+    margin-top: 10px; 
 }
 
-.recipe-card a:hover {
-    text-decoration: underline;
-    color: #0056b3; 
-}
-
-
-
-.category-selection {
+.category-selection, .search-bar {
   margin-bottom: 20px; 
 }
 
@@ -202,7 +114,7 @@ li:hover {
 .category-selection label {
   font-family: 'Bebas Neue', sans-serif; 
   font-size: 18px;
-  margin-right: 10px; 
+  margin-right: 5px; 
 }
 
 .category-selection select {
@@ -211,9 +123,10 @@ li:hover {
   padding: 5px; 
   border: 1px solid #000; 
   border-radius: 5px;
+  margin-right: 5px;
 }
 
-.category-selection button {
+.category-selection button, .search-bar button, .users button, .recipe-card a, .delete-button {
   padding: 8px 16px; 
   border: none;
   cursor: pointer;
@@ -225,9 +138,22 @@ li:hover {
   transition: background-color 0.3s; 
 }
 
-.category-selection button:hover {
+.category-selection button:hover, .search-bar button:hover, .users button:hover, .recipe-card a:hover, .delete-button:hover {
   background-color: #98714f; 
 }
+
+.delete-button {
+  margin-top: 5px;
+}
+
+.search-bar input[type="text"] {
+  font-family: 'Bebas Neue', sans-serif; 
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
 h2 {
   font-family: 'Bebas Neue', sans-serif; 
   font-size: 32px; 
