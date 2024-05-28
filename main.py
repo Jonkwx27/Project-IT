@@ -523,7 +523,7 @@ def edit_categories(admin_id):
     if search_query:
         query = query.filter(Category.name.ilike(f"%{search_query}%"))
 
-    categories = Category.query.order_by(Category.name).all()  # Sort categories alphabetically
+    categories = query.order_by(Category.name).all()  # Sort categories alphabetically
 
     return render_template("edit_categories.html", admin_id=admin_id, admin=admin, categories=categories, groups=groups, selected_group=selected_group, search_query=search_query)
 
