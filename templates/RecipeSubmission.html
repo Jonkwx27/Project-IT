@@ -63,8 +63,12 @@
                     <div class="category-row" id="first-category-row">
                         <select name="categories[]" required>
                             <option value="">Select Category</option>
-                            {% for category in categories %}
-                                <option value="{{ category.id }}">{{ category.name }}</option>
+                            {% for group in groups %}
+                                <optgroup label="{{ group.name }}">
+                                    {% for category in group.categories %}
+                                        <option value="{{ category.id }}">{{ category.name }}</option>
+                                    {% endfor %}
+                                </optgroup>
                             {% endfor %}
                         </select>
                     </div>
@@ -175,8 +179,12 @@
     }
 </script>
 <template id="category-options-template">
-    {% for category in categories %}
-        <option value="{{ category.id }}">{{ category.name }}</option>
+    {% for group in groups %}
+        <optgroup label="{{ group.name }}">
+            {% for category in group.categories %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+            {% endfor %}
+        </optgroup>
     {% endfor %}
 </template>
 </body>

@@ -71,6 +71,7 @@ class Comment(db.Model):
     rating = db.Column(db.Integer, nullable=False)
     image_url = db.Column(db.String(255))
     submitted_by = db.Column(db.String(100), nullable=False)
+    commented_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id', name='fk_comment_recipe'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', name='fk_comment_user'), nullable=False)
     admin_id = db.Column(db.Integer, db.ForeignKey('admin.id', name='fk_comment_admin'))
@@ -81,9 +82,18 @@ class Comment(db.Model):
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
+    group_id = db.Column(db.Integer, db.ForeignKey('category_group.id', name='fk_category_group'), nullable=True)
 
     def __repr__(self):
         return f'<Category {self.name}>'
+
+class CategoryGroup(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False, unique=True)
+    categories = db.relationship('Category', backref='group', lazy=True)
+
+    def __repr__(self):
+        return f'<CategoryGroup {self.name}>'
 
 class FavouriteRecipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)

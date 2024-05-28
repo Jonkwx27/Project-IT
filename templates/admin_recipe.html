@@ -101,6 +101,7 @@
         <div class="comment">
             <div class="comment-content">
                 <p>{{ comment.submitted_by }}</p>
+                <p>Commented At: {{ comment.commented_at }}</p>
                 <p>Rating: 
                     {% for i in range(comment.rating) %}
                         &#9733; 

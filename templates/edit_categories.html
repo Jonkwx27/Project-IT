@@ -3,229 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='EditCategories.css') }}">
     <title>Edit Categories</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
-    <style>
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background-color: #f8aa35;
-            border-top: 10px solid #000;
-            border-bottom: 10px solid #000;
-            margin-bottom: 20px;
-            padding: 5px 10px;
-        }
-
-        .logo-container {
-            display: flex;
-            align-items: center;
-            margin-top: 30px;
-        }
-
-        .logo {
-            height: 50px;
-            padding-bottom: 30px;
-        }
-
-        .title {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 55px;
-            color: rgb(0, 0, 0);
-            margin-top: 45px;
-        }
-
-        .LogOutButton {
-            padding: 5px 10px;
-            border-radius: 5px;
-            background-color: #c28855;
-            color: #fff;
-            font-size: 22px;
-            font-weight: 300;
-            cursor: pointer;
-            text-decoration: none;
-            left: 20px;
-        }
-
-        .LogOutButton:hover {
-            background-color: #98714f;
-        }
-
-        /* Classification */
-        .classification ul {
-            text-align: center;
-            display: flex;
-            padding-top: 5px;
-            padding-left: 0px;
-        }
-
-        .classification li {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 28px;
-            font-weight: 300;
-            text-transform: uppercase;
-            display: inline-block;
-            width: 100%; 
-        }
-
-        .classification li:hover {
-        background-color:rgb(250, 235, 215);
-        }
-
-        .button {
-            border: none;
-            color: rgb(0, 0, 0);
-        }
-
-        /* Add Category Form */
-        .category-form {
-            margin: 0 auto 20px;
-            width: 300px; /* Adjust the width as needed */
-        }
-
-        .category-form label {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 18px;
-            margin-right: 10px;
-        }
-
-        .category-form input[type="text"] {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 16px;
-            padding: 5px;
-            border: 1px solid #000;
-            border-radius: 5px;
-        }
-
-        .submit-button {
-            padding: 8px 16px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 16px;
-            background-color: #c28855;
-            color: #fff;
-            transition: background-color 0.3s;
-        }
-
-        .submit-button:hover {
-            background-color: #98714f;
-        }
-
-
-        .category-row {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        .category-card {
-            width: 22%;
-            margin: 0 10px;
-            padding: 10px;
-            border: 1px solid #000;
-            border-radius: 5px;
-            background-color: #ece3ae;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        .category-card p {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 20px;
-            margin-bottom: 10px;
-        }
-
-        .update-button,
-        .delete-button {
-            padding: 8px 16px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 16px;
-            transition: background-color 0.3s;
-            margin-top: 5px;
-        }
-
-        .update-button {
-            background-color: #4CAF50; /* Green */
-            color: white;
-        }
-
-        .update-button:hover {
-            background-color: #45a049;
-        }
-
-        .delete-button {
-            background-color: #f44336; /* Red */
-            color: white;
-        }
-
-        .delete-button:hover {
-            background-color: #da190b;
-        }
-
-        .add-category-form {
-            text-align: center; /* Center the form contents */
-            margin-bottom: 20px;
-        }
-
-        .category-input {
-            display: inline-block; /* Display input and button in the same line */
-        }
-
-        .add-category-button {
-            margin-top: 10px; /* Add margin on top to separate from the input */
-            padding: 8px 16px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 16px;
-            background-color: #c28855;
-            color: #fff;
-            transition: background-color 0.3s;
-        }
-
-        .add-category-button:hover {
-            background-color: #98714f;
-        }
-        .category-selection {
-            font-family: 'Bebas Neue', sans-serif;  
-        }
-
-        .search-bar {
-            margin-bottom: 20px; 
-        }
-        .search-bar button {
-            padding: 8px 16px; 
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 16px; 
-            background-color: #c28855; 
-            color: #fff; 
-            transition: background-color 0.3s; 
-        }
-
-        .search-bar button:hover {
-            background-color: #98714f; 
-        }
-        .search-bar input[type="text"] {
-            font-family: 'Bebas Neue', sans-serif; 
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-    </style>
 </head>
 <body>
     <div class="header">
@@ -239,45 +21,78 @@
     <div class="classification">
         <ul>
             <li><a href="pending_submissions" class="button">Review Submitted Recipes</a></li>
-            <li><a href="browse_recipes" class="button">Browse Recipes</a></li>         
+            <li><a href="browse_recipes" class="button">Browse Recipes</a></li>
             <li><a href="manage_users" class="button">Manage Users</a></li>
+            <li><a href="edit_category_groups" class="button">Edit Categories Groups</a></li>
             <li><a href="edit_categories" class="button">Edit Categories</a></li>
         </ul>
     </div>
 
     <div class="search-bar">
         <form method="GET" action="{{ url_for('edit_categories', admin_id=admin.id) }}">
-            <input type="text" name="search" placeholder="Search Category...">
+            <input type="text" name="search_query" placeholder="Search for a category..." value="{{ request.args.get('search_query', '') }}">
             <button type="submit">Search</button>
         </form>
     </div>
     
+    <div class="group-selection">
+        <form method="GET" action="{{ url_for('edit_categories', admin_id=admin.id) }}">
+            <label for="group">Select Group:</label>
+            <select name="group" id="group">
+                <option value="All">All</option>
+                {% for group in groups %}
+                <option value="{{ group.name }}" {% if group.name == selected_group %}selected{% endif %}>{{ group.name }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Browse</button>
+        </form>
+    </div>
 
     <div class="category-selection">
         <form method="POST" action="{{ url_for('add_category', admin_id=admin.id) }}" class="add-category-form">
             <label for="category">Category Name:</label>
             <div class="category-input">
                 <input type="text" id="category" name="name" required>
+                <label for="group">Group:</label>
+                <select id="group" name="group_id">
+                    <option value="">None</option>
+                    {% for group in groups %}
+                        <option value="{{ group.id }}">{{ group.name }}</option>
+                    {% endfor %}
+                </select>
                 <button type="submit" class="add-category-button">Add Category</button>
             </div>
         </form>
     </div>
+    
 
-    <div class="category-row">
-        {% for category in categories %}
+    <div class="categories">
+        <h2>{{ selected_group.capitalize() }}</h2>
+        {% for i in range(0, categories | length, 4) %}
+        <div class="category-row">
+            {% for category in categories[i:i+4] %}
             <div class="category-card">
                 <p>{{ category.name }}</p>
                 <form action="{{ url_for('update_category', admin_id=admin.id, category_id=category.id) }}" method="post">
                     <input type="text" name="new_name" value="{{ category.name }}" required>
+                    <label for="group_{{ category.id }}">Group:</label>
+                    <select id="group_{{ category.id }}" name="group_id">
+                        <option value="">None</option>
+                        {% for group in groups %}
+                            <option value="{{ group.id }}" {% if category.group_id == group.id %}selected{% endif %}>{{ group.name }}</option>
+                        {% endfor %}
+                    </select>
                     <button type="submit" class="update-button">Update</button>
                 </form>
                 <form action="{{ url_for('delete_category', admin_id=admin.id, category_id=category.id) }}" method="post">
                     <button type="button" class="delete-button" onclick="confirmDelete('{{ category.id }}', '{{ category.name }}')">Delete</button>
                 </form>
             </div>
-            {% if loop.index % 4 == 0 %}</div><div class="category-row">{% endif %}
+            {% endfor %}
+        </div>
         {% endfor %}
     </div>
+    
 
     <script>
         function confirmDelete(categoryId, categoryName) {
