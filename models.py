@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.sql import func
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
+from pytz import timezone
 
 db = SQLAlchemy()
 
@@ -11,7 +12,7 @@ class User(db.Model):
     username = db.Column(db.String(100), unique=True, nullable=False)
     age = db.Column(db.Integer)
     password = db.Column(db.String(100), nullable=False)
-    created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
+    created_at = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone('Asia/Kuala_Lumpur')))
     recipes = db.relationship('Recipe', backref='author', cascade="all, delete-orphan", lazy=True)
     comments = db.relationship('Comment', backref='commenter', cascade="all, delete-orphan", lazy=True)
     favourite_recipes = db.relationship('FavouriteRecipe', backref='user_fav', cascade="all, delete-orphan", lazy=True)
@@ -53,7 +54,7 @@ class Recipe(db.Model):
     difficulty = db.Column(db.Integer, nullable=False)
     time_required = db.Column(db.Integer, nullable=False)
     serving_size = db.Column(db.Integer, nullable=False)
-    submitted_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
+    submitted_at = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone('Asia/Kuala_Lumpur')))
     approved = db.Column(db.Boolean, default=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', name='fk_recipe_user'), nullable=False)
     image_path = db.Column(db.String(255))  # Path to the image file
@@ -71,10 +72,9 @@ class Comment(db.Model):
     rating = db.Column(db.Integer, nullable=False)
     image_url = db.Column(db.String(255))
     submitted_by = db.Column(db.String(100), nullable=False)
-    commented_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
+    commented_at = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone('Asia/Kuala_Lumpur')))
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id', name='fk_comment_recipe'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', name='fk_comment_user'), nullable=False)
-    admin_id = db.Column(db.Integer, db.ForeignKey('admin.id', name='fk_comment_admin'))
 
     def __repr__(self):
         return f"Comment('{self.comment}', '{self.rating}')"

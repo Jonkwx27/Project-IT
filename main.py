@@ -5,8 +5,6 @@ from flask_migrate import Migrate
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import Recipe, db, User, Admin, Comment, Category, CategoryGroup, FavouriteRecipe
-from sqlalchemy.sql import func
-from sqlalchemy import or_
 from datetime import datetime
 
 
