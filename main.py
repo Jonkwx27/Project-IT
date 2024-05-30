@@ -698,6 +698,32 @@ def delete_user(admin_id, user_id):
     flash("User deleted successfully", "success")
     return redirect(url_for("manage_users", admin_id=admin_id))
 
+@app.route("/admin/<int:admin_id>/warn_user/<int:user_id>", methods=["POST"])
+def warn_user(admin_id, user_id):
+    if "admin_id" not in session or session["admin_id"] != admin_id:
+        return redirect(url_for("adminlogin"))
+
+    admin = Admin.query.get_or_404(admin_id)
+    user = User.query.get_or_404(user_id)
+
+    user.number_of_warnings += 1
+
+    if user.number_of_warnings > 3:
+        db.session.delete(user)
+        db.session.commit()
+        flash("User deleted due to exceeding warnings", "danger")
+    else:
+        db.session.commit()
+        # Create a notification for the user
+        warning_message = f"You have received a warning. Total warnings: {user.number_of_warnings}. If you are already at three warnings, your account will be deleted if you receive another warning!"
+        notification = Notification(user_id=user.id, message=warning_message)
+        db.session.add(notification)
+        db.session.commit()
+        flash("Warning issued to user", "warning")
+
+    return redirect(url_for("manage_users", admin_id=admin_id))
+
+
 ############## View Reports ###################
 @app.route('/admin/<int:admin_id>/view_reports', methods=['GET'])
 def view_reports(admin_id):

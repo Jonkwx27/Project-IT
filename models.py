@@ -13,6 +13,7 @@ class User(db.Model):
     age = db.Column(db.Integer)
     password = db.Column(db.String(100), nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone('Asia/Kuala_Lumpur')))
+    number_of_warnings = db.Column(db.Integer, default=0)
     recipes = db.relationship('Recipe', backref='author', cascade="all, delete-orphan", lazy=True)
     comments = db.relationship('Comment', backref='commenter', cascade="all, delete-orphan", lazy=True)
     favourite_recipes = db.relationship('FavouriteRecipe', backref='user_fav', cascade="all, delete-orphan", lazy=True)
