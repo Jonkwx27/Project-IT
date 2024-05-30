@@ -34,19 +34,28 @@
         </ul>
     </div>
 
-    <h1>Notifications</h1>
+    <h1>Unread Notifications</h1>
     <ul>
-        {% for notification in notifications %}
+        {% for notification in unread_notifications %}
         <li>
             <p>{{ notification.message }}</p>
             <p>Date: {{ notification.timestamp.strftime('%d-%m-%Y %H:%M:%S') }}</p>
-            {% if not notification.read %}
             <form action="{{ url_for('mark_notification_as_read', notification_id=notification.id, user_id=user.id) }}" method="POST" style="display:inline;">
-                <button type="submit">Read</button>
+                <button type="submit">Mark as Read</button>
             </form>
-            {% else %}
-            <span>Read</span>
-            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+
+    <h1>Read Notifications</h1>
+    <ul>
+        {% for notification in read_notifications %}
+        <li>
+            <p>{{ notification.message }}</p>
+            <p>Date: {{ notification.timestamp.strftime('%d-%m-%Y %H:%M:%S') }}</p>
+            <form action="{{ url_for('mark_notification_as_unread', notification_id=notification.id, user_id=user.id) }}" method="POST" style="display:inline;">
+                <button type="submit">Mark as Unread</button>
+            </form>
         </li>
         {% endfor %}
     </ul>

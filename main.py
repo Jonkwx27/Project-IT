@@ -339,9 +339,10 @@ def view_notifications(user_id):
         return redirect(url_for("login"))
 
     user = User.query.get_or_404(user_id)
-    notifications = Notification.query.filter_by(user_id=user_id).order_by(Notification.timestamp.desc()).all()
+    unread_notifications = Notification.query.filter_by(user_id=user_id, read=False).order_by(Notification.timestamp.desc()).all()
+    read_notifications = Notification.query.filter_by(user_id=user_id, read=True).order_by(Notification.timestamp.desc()).all()
 
-    return render_template('notifications.html', user=user, notifications=notifications)
+    return render_template('notifications.html', user=user, unread_notifications=unread_notifications, read_notifications=read_notifications)
 
 @app.route('/user/<int:user_id>/notifications/read/<int:notification_id>', methods=['POST'])
 def mark_notification_as_read(user_id,notification_id):
@@ -353,6 +354,18 @@ def mark_notification_as_read(user_id,notification_id):
     notification.read = True
     db.session.commit()
     flash('Notification marked as read.', 'success')
+    return redirect(url_for('view_notifications', user_id=user_id, user=user))
+
+@app.route('/user/<int:user_id>/notifications/unread/<int:notification_id>', methods=['POST'])
+def mark_notification_as_unread(user_id,notification_id):
+    if "user_id" not in session or session["user_id"] != user_id:
+        return redirect(url_for("login"))
+
+    user = User.query.get_or_404(user_id)
+    notification = Notification.query.get_or_404(notification_id)
+    notification.read = False
+    db.session.commit()
+    flash('Notification marked as unread.', 'success')
     return redirect(url_for('view_notifications', user_id=user_id, user=user))
 
 ############ Logout #############
