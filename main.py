@@ -4,7 +4,7 @@ from datetime import timedelta
 from flask_migrate import Migrate
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
-from models import Recipe, db, User, Admin, Comment, Category, CategoryGroup, FavouriteRecipe
+from models import Recipe, db, User, Admin, Comment, Category, CategoryGroup, FavouriteRecipe, Report, Notification
 from datetime import datetime
 
 
@@ -178,6 +178,43 @@ def submit_comment(user_id, recipe_id):
     user = User.query.get_or_404(user_id)
     return render_template("RecipeSubmission.html", user=user)
 
+############## Report Recipes #############
+@app.route('/user/<int:user_id>/report_recipe/<int:recipe_id>', methods=['GET', 'POST'])
+def report_recipe(user_id,recipe_id):
+
+    if "user_id" not in session or session["user_id"] != user_id:
+        return redirect(url_for("login"))
+    user = User.query.get_or_404(user_id)
+
+    if request.method == 'POST':
+        report_text = request.form.get('report_text')
+        report = Report(user_id=user_id, recipe_id=recipe_id, report_text=report_text)
+        db.session.add(report)
+        db.session.commit()
+        flash('Your report has been submitted.', 'success')
+        return redirect(url_for('recipe', user_id=user_id, recipe_id=recipe_id))
+
+    return render_template('report_recipe.html', recipe_id=recipe_id, user_id=user_id, user=user)
+
+############# Report Comments ##############
+@app.route('/user/<int:user_id>/report_comment/<int:recipe_id>/<int:comment_id>', methods=['GET', 'POST'])
+def report_comment(user_id,comment_id, recipe_id):
+
+    if "user_id" not in session or session["user_id"] != user_id:
+        return redirect(url_for("login"))
+    user = User.query.get_or_404(user_id)
+
+    if request.method == 'POST':
+        report_text = request.form.get('report_text')
+        report = Report(user_id=user_id, comment_id=comment_id, report_text=report_text, recipe_id=recipe_id)
+        db.session.add(report)
+        db.session.commit()
+        flash('Your report has been submitted.', 'success')
+        return redirect(url_for('recipe', recipe_id=recipe_id, user_id=user_id))
+
+    return render_template('report_comment.html', comment_id=comment_id, user_id=user_id, user=user, recipe_id=recipe_id)
+
+
 ############## Recipe Submission ################
 @app.route("/user/<int:user_id>/recipesubmission", methods=["GET", "POST"])
 def recipesubmission(user_id):
@@ -295,6 +332,29 @@ def favorite_recipe(user_id, recipe_id):
     # Redirect back to the recipe page
     return redirect(url_for('recipe', user_id=user_id, recipe_id=recipe_id, source=source))
 
+########### View Notifications ################
+@app.route('/user/<int:user_id>/notifications')
+def view_notifications(user_id):
+    if "user_id" not in session or session["user_id"] != user_id:
+        return redirect(url_for("login"))
+
+    user = User.query.get_or_404(user_id)
+    notifications = Notification.query.filter_by(user_id=user_id).order_by(Notification.timestamp.desc()).all()
+
+    return render_template('notifications.html', user=user, notifications=notifications)
+
+@app.route('/user/<int:user_id>/notifications/read/<int:notification_id>', methods=['POST'])
+def mark_notification_as_read(user_id,notification_id):
+    if "user_id" not in session or session["user_id"] != user_id:
+        return redirect(url_for("login"))
+
+    user = User.query.get_or_404(user_id)
+    notification = Notification.query.get_or_404(notification_id)
+    notification.read = True
+    db.session.commit()
+    flash('Notification marked as read.', 'success')
+    return redirect(url_for('view_notifications', user_id=user_id, user=user))
+
 ############ Logout #############
 @app.route("/logout")
 def logout():
@@ -411,6 +471,11 @@ def delete_recipe(admin_id, recipe_id):
 
     recipe = Recipe.query.get_or_404(recipe_id)
 
+    # Create a notification for the user who submitted the recipe
+    notification_message = f"Your recipe '{recipe.recipe_name}' has been deleted by the admin."
+    notification = Notification(user_id=recipe.user_id, message=notification_message)
+    db.session.add(notification)
+
     db.session.delete(recipe)
     db.session.commit()
     # Delete the associated image file
@@ -425,18 +490,25 @@ def delete_recipe(admin_id, recipe_id):
 ########### In-Depth Recipe ############
 @app.route('/admin/<int:admin_id>/recipe/<int:recipe_id>', methods=['GET', 'POST'])
 def admin_recipe(admin_id, recipe_id):
+    if "admin_id" not in session or session["admin_id"] != admin_id:
+        return redirect(url_for("admin_login"))
     # Fetch the recipe and comments from the database
     admin = Admin.query.get_or_404(admin_id)
     recipe = Recipe.query.get_or_404(recipe_id)
     comments = Comment.query.filter_by(recipe_id=recipe_id).all()
-    
+    source = request.args.get('source', 'admin_browse_recipe')
 
-    return render_template('admin_recipe.html',admin=admin, recipe=recipe, comments=comments)
+    return render_template('admin_recipe.html',admin=admin, recipe=recipe, comments=comments, source=source)
 
 
 @app.route('/admin/<int:admin_id>/delete_comment/<int:comment_id>', methods=['POST'])
 def delete_comment(admin_id,comment_id):
     comment = Comment.query.get_or_404(comment_id)
+
+    # Create a notification for the user who submitted the comment
+    notification_message = f"Your comment on '{comment.recipe.recipe_name}' has been deleted by the admin."
+    notification = Notification(user_id=comment.user_id, message=notification_message)
+    db.session.add(notification)
 
     # Delete the comment from the database
     db.session.delete(comment)
@@ -612,6 +684,81 @@ def delete_user(admin_id, user_id):
     db.session.commit()
     flash("User deleted successfully", "success")
     return redirect(url_for("manage_users", admin_id=admin_id))
+
+############## View Reports ###################
+@app.route('/admin/<int:admin_id>/view_reports', methods=['GET'])
+def view_reports(admin_id):
+    if "admin_id" not in session:
+        return redirect(url_for("adminlogin"))
+    
+    admin = Admin.query.get_or_404(admin_id)
+    pending_reports = Report.query.filter_by(reviewed=False).order_by(Report.timestamp.desc()).all()
+    reviewed_reports = Report.query.filter_by(reviewed=True).order_by(Report.timestamp.desc()).all()
+
+    return render_template('view_reports.html', admin=admin, pending_reports=pending_reports, reviewed_reports=reviewed_reports, Comment=Comment, Recipe=Recipe)
+
+@app.route('/admin/<int:admin_id>/approve_report/<int:report_id>', methods=['POST'])
+def approve_report(admin_id, report_id):
+    if "admin_id" not in session or session["admin_id"] != admin_id:
+        return redirect(url_for("admin_login"))
+
+    report = Report.query.get_or_404(report_id)
+    report.reviewed = True
+    report.approved = True
+    report.notified = True
+    db.session.commit()
+
+    # Fetch related recipe or comment and user details
+    if report.comment_id:
+        comment = Comment.query.get(report.comment_id)
+        related_text = f"Comment: {comment.comment[:50]}..." if comment else "Comment: [Deleted]"
+        submitted_by = f"Submitted by: {comment.submitted_by}" if comment else "Submitted by: [Unknown]"
+    else:
+        recipe = Recipe.query.get(report.recipe_id)
+        related_text = f"Recipe: {recipe.recipe_name}" if recipe else "Recipe: [Deleted]"
+        submitted_by = f"Submitted by: {recipe.submitted_by}" if recipe else "Submitted by: [Unknown]"
+
+    # Create a notification for the user who submitted the report
+    report_timestamp = report.timestamp.strftime('%d-%m-%Y %H:%M:%S')
+    notification_message = f"Your report on {related_text} ({submitted_by}) at {report_timestamp} has been reviewed and approved by the admin."
+    notification = Notification(user_id=report.user_id, message=notification_message)
+    db.session.add(notification)
+    db.session.commit()
+
+    flash('Report has been approved and the user has been notified.', 'success')
+    return redirect(url_for('view_reports', admin_id=admin_id))
+
+@app.route('/admin/<int:admin_id>/reject_report/<int:report_id>', methods=['POST'])
+def reject_report(admin_id, report_id):
+    if "admin_id" not in session or session["admin_id"] != admin_id:
+        return redirect(url_for("admin_login"))
+
+    report = Report.query.get_or_404(report_id)
+    report.reviewed = True
+    report.approved = False
+    report.notified = True  # Assuming you want to notify the user even if the report is rejected
+    db.session.commit()
+
+    # Fetch related recipe or comment and user details
+    if report.comment_id:
+        comment = Comment.query.get(report.comment_id)
+        related_text = f"Comment: {comment.comment[:50]}..." if comment else "Comment: [Deleted]"
+        submitted_by = f"Submitted by: {comment.submitted_by}" if comment else "Submitted by: [Unknown]"
+    else:
+        recipe = Recipe.query.get(report.recipe_id)
+        related_text = f"Recipe: {recipe.recipe_name}" if recipe else "Recipe: [Deleted]"
+        submitted_by = f"Submitted by: {recipe.submitted_by}" if recipe else "Submitted by: [Unknown]"
+
+    # Create a notification for the user who submitted the report
+    report_timestamp = report.timestamp.strftime('%d-%m-%Y %H:%M:%S')
+    notification_message = f"Your report on {related_text} ({submitted_by}) at {report_timestamp} has been reviewed and rejected by the admin."
+    notification = Notification(user_id=report.user_id, message=notification_message)
+    db.session.add(notification)
+    db.session.commit()
+
+    flash('Report has been rejected and the user has been notified.', 'success')
+    return redirect(url_for('view_reports', admin_id=admin_id))
+
 
 ############### Logout ##################
 @app.route("/adminlogout")

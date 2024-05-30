@@ -27,6 +27,10 @@
         <button type="submit" class="submit-button">{{ 'Unfavorite' if recipe.id in favourited_recipe_ids else 'Favorite' }}</button>
     </form>
 
+    {% if recipe.user_id != user.id %}
+        <a href="{{ url_for('report_recipe', user_id=user.id, recipe_id=recipe.id) }}" class="report-button">Report Recipe</a>
+    {% endif %}
+
     <div class="recipe-photo-container">
         <img src="{{ url_for('static', filename=recipe.image_path) }}" class="recipe-photo" alt="Recipe Photo" style="max-width: 200px;">
         <div  class="submitted-by-date">
@@ -142,6 +146,9 @@
                     <img src="/static/{{ comment.image_url }}" alt="Comment Image">
                 {% endif %}
                 <p>{{ comment.comment }}</p>
+                {% if comment.user_id != user.id %}
+                    <a href="{{ url_for('report_comment', user_id=user.id, comment_id=comment.id, recipe_id=recipe.id) }}" class="report-button">Report Comment</a>
+                {% endif %}
             </div>
         </div>
         {% endfor %}

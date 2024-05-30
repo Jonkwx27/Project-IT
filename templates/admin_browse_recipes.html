@@ -20,11 +20,12 @@
 
     <div class="classification">
         <ul>
-            <li><a href="pending_submissions" class="button">Review Submitted Recipes</a></li>
-            <li><a href="browse_recipes" class="button">Browse Recipes</a></li>
-            <li><a href="manage_users" class="button">Manage Users</a></li>
-            <li><a href="edit_category_groups" class="button">Edit Categories Groups</a></li>
-            <li><a href="edit_categories" class="button">Edit Categories</a></li>
+            <li><a href="{{ url_for('pending_submissions', admin_id=admin.id) }}" class="button">Review Submitted Recipes</a></li>
+            <li><a href="{{ url_for('admin_browse_recipes', admin_id=admin.id)}}" class="button">Browse Recipes</a></li>         
+            <li><a href="{{ url_for('manage_users', admin_id=admin.id) }}" class="button">Manage Users</a></li>
+            <li><a href="{{ url_for('edit_category_groups', admin_id=admin.id)}}" class="button">Edit Categories Groups</a></li>
+            <li><a href="{{ url_for('edit_categories', admin_id=admin.id) }}" class="button">Edit Categories</a></li>
+            <li><a href="{{ url_for('view_reports', admin_id=admin.id) }}" class="button">View Reports</a></li>
         </ul>
     </div>
 
@@ -67,7 +68,7 @@
                     {% endfor %}
                 </p>
                 <p>Submitted by: {{ recipe.submitted_by }}</p>
-                <a href="{{ url_for('admin_recipe', admin_id=admin.id, recipe_id=recipe.id) }}">View Recipe</a>
+                <a href="{{ url_for('admin_recipe', admin_id=admin.id, recipe_id=recipe.id, source='admin_browse_recipe') }}">View Recipe</a>
                 <form action="{{ url_for('delete_recipe', admin_id=admin.id, recipe_id=recipe.id) }}" method="POST" style="display: inline;">
                     <button type="submit" class="delete-button" onclick="return confirm('Are you sure you want to delete this recipe?')">Delete</button>
                 </form>

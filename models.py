@@ -59,7 +59,6 @@ class Recipe(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', name='fk_recipe_user'), nullable=False)
     image_path = db.Column(db.String(255))  # Path to the image file
     submitted_by = db.Column(db.String(100), nullable=False)
-    admin_id = db.Column(db.Integer, db.ForeignKey('admin.id', name='fk_recipe_admin'))
     comments = db.relationship('Comment', backref='recipe', cascade="all, delete-orphan", lazy=True)
     categories = db.relationship('Category', secondary=recipe_category_association, backref=db.backref('recipes', lazy='dynamic'))
 
@@ -103,3 +102,27 @@ class FavouriteRecipe(db.Model):
 
     def __repr__(self):
         return f"FavouriteRecipe('{self.user_id}', '{self.recipe_id}')"
+
+class Report(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', name='fk_report_user'), nullable=False)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id', name="fk_report_recipe"), nullable=True)
+    comment_id = db.Column(db.Integer, db.ForeignKey('comment.id', name='fk_report_comment'), nullable=True)
+    report_text = db.Column(db.String(500), nullable=False)
+    reviewed = db.Column(db.Boolean, default=False)
+    approved = db.Column(db.Boolean, default=False)
+    notified = db.Column(db.Boolean, default=False)
+    timestamp = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone('Asia/Kuala_Lumpur')))
+
+    user = db.relationship('User', backref='reports')
+    recipe = db.relationship('Recipe', backref='reports')
+    comment = db.relationship('Comment', backref='reports')
+
+class Notification(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    message = db.Column(db.String(255), nullable=False)
+    timestamp = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone('Asia/Kuala_Lumpur')))
+    read = db.Column(db.Boolean, default=False)
+
+    user = db.relationship('User', backref='notifications')
