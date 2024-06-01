@@ -224,7 +224,77 @@ def recipesubmission(user_id):
     categories = Category.query.order_by(Category.name).all()  # Sort categories alphabetically
     return render_template("RecipeSubmission.html", user=user, categories=categories)
 
+@app.route("/user/<int:user_id>/submitted_recipes")
+def submitted_recipes(user_id):
+    if "user_id" not in session or session["user_id"] != user_id:
+        return redirect(url_for("login"))
 
+    user = User.query.get_or_404(user_id)
+    recipes = Recipe.query.filter_by(user_id=user_id).all()
+
+    return render_template("submitted_recipes.html", user=user, recipes=recipes)
+
+@app.route("/user/<int:user_id>/edit_recipe/<int:recipe_id>", methods=["GET", "POST"])
+def edit_recipe(user_id, recipe_id):
+    if "user_id" not in session or session["user_id"] != user_id:
+        return redirect(url_for("login"))
+
+    user = User.query.get_or_404(user_id)
+    recipe = Recipe.query.get_or_404(recipe_id)
+    categories = Category.query.all()
+
+    if request.method == "POST":
+        recipe_name = request.form["recipe_name"]
+        description = request.form["description"]
+        ingredients = request.form["ingredients"]
+        steps = request.form.getlist("steps[]")
+        serving_size = int(request.form.get("serving_size", 1))
+        difficulty = int(request.form.get("rating1", 1))
+        time_required = int(request.form.get("rating2", 1))
+        categories_selected = request.form.getlist("categories[]")
+
+        recipe.recipe_name = recipe_name
+        recipe.description = description
+        recipe.ingredients = ingredients
+        recipe.steps = '\n'.join(steps)
+        recipe.serving_size = serving_size
+        recipe.difficulty = difficulty
+        recipe.time_required = time_required
+
+        selected_category_ids = set(int(cat_id) for cat_id in categories_selected)
+        current_category_ids = set(category.id for category in recipe.categories)
+
+        new_category_ids = selected_category_ids - current_category_ids
+        for cat_id in new_category_ids:
+            category = Category.query.get_or_404(cat_id)
+            recipe.categories.append(category)
+
+        removed_category_ids = current_category_ids - selected_category_ids
+        for cat_id in removed_category_ids:
+            category = Category.query.get_or_404(cat_id)
+            recipe.categories.remove(category)
+
+        if "recipe_image" in request.files:
+            recipe_image = request.files["recipe_image"]
+            if recipe_image.filename:
+                if recipe_image and allowed_file(recipe_image.filename):
+                    filename = secure_filename(recipe_image.filename)
+
+                    if recipe.image_path:
+                        old_image_path = os.path.join(app.root_path, 'static', recipe.image_path)
+                        if os.path.exists(old_image_path):
+                            os.remove(old_image_path)
+
+                    image_path = os.path.join(app.root_path, 'static/uploads', filename)
+                    recipe_image.save(image_path)
+
+                    recipe.image_path = 'uploads/' + filename
+
+        db.session.commit()
+
+        return redirect(url_for("recipe", user_id=user_id, recipe_id=recipe_id))
+
+    return render_template("edit_recipe.html", user=user, recipe=recipe, categories=categories)
 
 @app.route("/user/<int:user_id>/favouritedrecipe")
 def favouritedrecipe(user_id):
