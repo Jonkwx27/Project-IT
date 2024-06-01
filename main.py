@@ -241,6 +241,7 @@ def edit_recipe(user_id, recipe_id):
 
     user = User.query.get_or_404(user_id)
     recipe = Recipe.query.get_or_404(recipe_id)
+    categories = Category.query.all()
 
     if request.method == "POST":
         recipe_name = request.form["recipe_name"]
@@ -250,6 +251,7 @@ def edit_recipe(user_id, recipe_id):
         serving_size = int(request.form.get("serving_size", 1))
         difficulty = int(request.form.get("rating1", 1))
         time_required = int(request.form.get("rating2", 1))
+        categories_selected = request.form.getlist("categories[]")
 
         recipe.recipe_name = recipe_name
         recipe.description = description
@@ -258,6 +260,19 @@ def edit_recipe(user_id, recipe_id):
         recipe.serving_size = serving_size
         recipe.difficulty = difficulty
         recipe.time_required = time_required
+
+        selected_category_ids = set(int(cat_id) for cat_id in categories_selected)
+        current_category_ids = set(category.id for category in recipe.categories)
+
+        new_category_ids = selected_category_ids - current_category_ids
+        for cat_id in new_category_ids:
+            category = Category.query.get_or_404(cat_id)
+            recipe.categories.append(category)
+
+        removed_category_ids = current_category_ids - selected_category_ids
+        for cat_id in removed_category_ids:
+            category = Category.query.get_or_404(cat_id)
+            recipe.categories.remove(category)
 
         if "recipe_image" in request.files:
             recipe_image = request.files["recipe_image"]
@@ -279,8 +294,7 @@ def edit_recipe(user_id, recipe_id):
 
         return redirect(url_for("recipe", user_id=user_id, recipe_id=recipe_id))
 
-    return render_template("edit_recipe.html", user=user, recipe=recipe)
-
+    return render_template("edit_recipe.html", user=user, recipe=recipe, categories=categories)
 
 @app.route("/user/<int:user_id>/favouritedrecipe")
 def favouritedrecipe(user_id):
