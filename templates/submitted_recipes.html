@@ -127,8 +127,8 @@
     </div>
     <div class="classification">
         <ul>
-            <li><a href="browse_recipe" class="button">Browse Recipes</a></li>
-            <li><a href="#" class="button">Favourited Recipes</a></li>
+            <li><a href="browse_recipes" class="button">Browse Recipes</a></li>
+            <li><a href="favouritedrecipe" class="button">Favourited Recipes</a></li>
             <li><a href="recipesubmission" class="button">Submit Recipes</a></li>
             <li><a href="submitted_recipes" class="button">My Submitted Recipes</a></li>
         </ul>
@@ -146,7 +146,7 @@
                         {{ category.name }}{% if not loop.last %}, {% endif %}
                     {% endfor %}
                 </p>
-                <a href="{{ url_for('recipe', user_id=user.id, recipe_id=recipe.id) }}">View Recipe</a>
+                <a href="{{ url_for('recipe', user_id=user.id, recipe_id=recipe.id, source='submitted_recipes') }}">View Recipe</a>
                 <a href="{{ url_for('edit_recipe', user_id=user.id, recipe_id=recipe.id) }}" class="edit_recipe">Edit Recipe</a>
             </div>
             {% endfor %}
