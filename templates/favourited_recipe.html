@@ -29,7 +29,18 @@
 
     <div class="recipes">
         <h2>Favourited Recipes</h2>
-        <a href="{{ url_for('sort_favourited_recipe_by_alphabet', user_id=user.id) }}" class="alphabet">Sort by Alphabet</a>
+        <div class="sort-selection">
+            <form method="GET" action="{{ url_for('favouritedrecipe', user_id=user.id) }}">
+                <label for="sort_by">Sort By:</label>
+                <select name="sort_by" id="sort_by">
+                    <option value="none" {% if sort_by == "none" %}selected{% endif %}>No Sort</option>
+                    <option value="alphabetical" {% if sort_by == "alphabetical" %}selected{% endif %}>Alphabetical</option>
+                    <option value="cook_on" {% if sort_by == "cook_on" %}selected{% endif %}>Cook On Date</option>
+                </select>
+                <button type="submit">Sort</button>
+            </form>
+        </div>
+
         {% if favourited_recipes %}
         {% for i in range(0, favourited_recipes|length, 4) %}
         <div class="recipe-row">
