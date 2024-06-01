@@ -176,3 +176,18 @@ h2 {
 .LogOutButton:hover{
   background-color: #98714f;
 }
+
+/* Pagination styles */
+.pagination {
+  text-align: center;
+  margin-top: 20px;
+  font-family: 'Bebas Neue', sans-serif; 
+}
+
+.pagination a, .pagination span {
+  margin: 0 5px;
+  padding: 10px 15px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 18px;
+}

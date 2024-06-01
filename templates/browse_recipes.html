@@ -73,5 +73,16 @@
         </div>
         {% endfor %}
     </div>
+
+    <div class="pagination">
+        {% if page > 1 %}
+            <a href="{{ url_for('browse_recipes', user_id=user.id, page=page-1, category=selected_category, search_query=search_query) }}">&laquo; Previous</a>
+        {% endif %}
+        <span>Page {{ page }} of {{ total_pages }}</span>
+        {% if page < total_pages %}
+            <a href="{{ url_for('browse_recipes', user_id=user.id, page=page+1, category=selected_category, search_query=search_query) }}">Next &raquo;</a>
+        {% endif %}
+    </div>
+    
 </body>
 </html>

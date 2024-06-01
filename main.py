@@ -102,6 +102,8 @@ def browse_recipes(user_id):
 
     selected_category = request.args.get("category", "All")
     search_query = request.args.get("search_query", "")
+    page = request.args.get("page", 1, type=int)
+    per_page = 20
 
     query = Recipe.query.filter_by(approved=True)
 
@@ -118,9 +120,10 @@ def browse_recipes(user_id):
     if search_query:
         query = query.filter(Recipe.recipe_name.ilike(f"%{search_query}%"))
 
-    recipes = query.all()
+    pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+    recipes = pagination.items
 
-    return render_template("browse_recipes.html", recipes=recipes, groups=groups, categories=categories, selected_category=selected_category, search_query=search_query, user=user, user_id=user_id)
+    return render_template("browse_recipes.html", recipes=recipes, groups=groups, categories=categories, selected_category=selected_category, search_query=search_query, user=user, user_id=user_id,total_pages=pagination.pages, page=page)
 
 ################### In-Depth Recipe ###################
 @app.route("/user/<int:user_id>/recipe/<int:recipe_id>")
