@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='BrowseRecipe.css') }}">
+    <title>Favourited Recipes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="header">
+        <div class="logo-container">
+            <img style="height: 50px; padding-bottom: 30px;" src="{{ url_for('static', filename='Logo_CookiQ.jpeg') }}" alt="Logo_CookiQ">
+        </div>
+        <h1 class="title">Favourited Recipes</h1>
+        <a href="{{ url_for('logout') }}" class="LogOutButton">Logout</a>
+    </div>
+
+    <div class="classification">
+        <ul>
+            <li><a href="browse_recipes" class="button">Browse Recipes</a></li>
+            <li><a href="favouritedrecipe" class="button">Favourited Recipes</a></li>
+            <li><a href="recipesubmission" class="button">Submit Recipes</a></li>
+            <li><a href="#" class="button">My Submitted Recipes</a></li>
+        </ul>
+    </div>
+
+    <div class="recipes">
+        <h2>Favourited Recipes</h2>
+        {% if favourited_recipes %}
+        {% for i in range(0, favourited_recipes|length, 4) %}
+        <div class="recipe-row">
+            {% for recipe in favourited_recipes[i:i+4] %}
+            <div class="recipe-card">
+                <img src="/static/{{ recipe.image_path }}" alt="Recipe Image" style="max-width: 100px;">
+                <h3>{{ recipe.recipe_name }}</h3>
+                <p>{{ recipe.description }}</p>
+                <p>Cook On: {{ recipe.cook_on }}</p>              
+                <a href="{{ url_for('recipe', user_id=user.id, recipe_id=recipe.id, source='favouritedrecipe') }}">View Recipe</a>
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>No favourited recipes yet.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

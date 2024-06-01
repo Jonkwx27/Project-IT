@@ -1,92 +1,82 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='RecipeSubmission.css') }}">
-        <title>Recipe Submission</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='RecipeSubmission.css') }}">
+    <title>Recipe Submission</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="header">
+        <div class="logo-container">
+            <img style="height: 50px; padding-bottom: 30px;" src="{{ url_for('static', filename='Logo_CookiQ.jpeg') }}" alt="Logo_CookiQ">
+        </div>
+        <h1 class="title">Recipe Submission</h1>
+        <a href="{{ url_for('logout') }}" class="LogOutButton">Logout</a>
+    </div>
 
-    <body>
+    <div class="classification">
+        <ul>
+            <li><a href="browse_recipes" class="button">Browse Recipes</a></li>
+            <li><a href="favouritedrecipe" class="button">Favourited Recipes</a></li>
+            <li><a href="recipesubmission" class="button">Submit Recipes</a></li>
+            <li><a href="#" class="button">My Submitted Recipes</a></li>
+        </ul>
+    </div>
 
-        <div class="header">
-            <div class="logo-container">
-                <img style="height: 50px; padding-bottom: 30px;" src="{{ url_for('static', filename='Logo_CookiQ.jpeg') }}" alt="Logo_CookiQ">
+    <div class="form-container">
+        <form action="#" method="post" enctype="multipart/form-data">
+            <div class="input-container">
+                <h2>Submit Your Recipe</h2>
+                <div class="image-upload">
+                    <label for="recipe_image">Upload Image:</label>
+                    <input type="file" id="recipe_image" name="recipe_image" accept="image/*" required>
+                </div>
+                <label for="recipe_name"><h2>Recipe Name:</h2></label><br>
+                <input type="text" id="recipe_name" name="recipe_name" required><br><br>
+                <label for="description"><h2>Description:</h2></label><br>
+                <textarea id="description" name="description" required></textarea><br><br>
             </div>
-            <h1 class="title">Recipe Submission</h1>
-            <a href="{{ url_for('logout') }}" class="LogOutButton">Logout</a>
-        </div>
 
-        <div class="classification">
-            <ul>
-                <li><a href="browse_recipe" class="button">Browse Recipes</a></li>
-                <li><a href="#" class="button">Favourited Recipes</a></li>
-                <li><a href="recipesubmission" class="button">Submit Recipes</a></li>
-                <li><a href="submitted_recipes" class="button">My Submitted Recipes</a></li>
-            </ul>
-        </div>
+            <div class="input-container">
+                <label for="ingredients" class="ingredients"><h2>Ingredients:</h2></label><br><br>
+                <textarea class="ingredienttext" name="ingredients" placeholder="Enter the Ingredients" required></textarea><br><br>
+            </div>
 
-        <div class="form-container">
-            <form action="#" method="post" enctype="multipart/form-data">
-                <div class="input-container">
-                    <h2>Submit Your Recipe</h2>
-                    <div class="image-upload">
-                        <label for="recipe_image">Upload Image:</label>
-                        <input type="file" id="recipe_image" name="recipe_image" accept="image/*" required>
-                        
+            <div class="input-container">
+                <h2>Steps:</h2>
+                <div id="steps-list">
+                    <div class="step-row">
+                        <textarea class="steptext" name="steps[]" placeholder="Enter the Step" required></textarea>
+                        <button type="button" onclick="this.parentElement.remove()">Remove</button>
                     </div>
-                    <label for="recipe_name"><h2>Recipe Name:</h2></label><br>
-                    <input type="text" id="recipe_name" name="recipe_name" required><br><br>
-                    <label for="description"><h2>Description:</h2></label><br>
-                    <textarea id="description" name="description" required></textarea><br><br>
                 </div>
-        
-                <div class="input-container">
-                    <label for="ingredients" class="ingredients"><h2>Ingredients:</h2></label><br><br>
-                    <textarea class="ingredienttext" name="ingredients" placeholder="Enter the Ingredients" required></textarea><br><br>
-                </div>
-        
-                <div class="input-container">
-                    <h2>Steps:</h2>
-                    <div id="steps-list">
-                        <div class="step-row">
-                            <textarea class="steptext" name="steps[]" placeholder="Enter the Step" required></textarea>
-                            <button type="button" onclick="this.parentElement.remove()">Remove</button>
-                        </div>
-                    </div>
-                    <button type="button" onclick="addStep()">Add Step</button>
-                </div>
+                <button type="button" onclick="addStep()">Add Step</button>
+            </div>
 
-                <div class="input-container category-selection">
-                    <label for="category"><h2>Categories:</h2></label><br>
-                    <select id="category1" name="category1">
-                        <option value="">Select Category</option>
-                        {% for category in categories %}
-                            <option value="{{ category.id }}">{{ category.name }}</option>
-                        {% endfor %}
-                    </select><br><br>
-                    <select id="category2" name="category2">
-                        <option value="">Select Category</option>
-                        {% for category in categories %}
-                            <option value="{{ category.id }}">{{ category.name }}</option>
-                        {% endfor %}
-                    </select><br><br>
-                    <select id="category3" name="category3">
-                        <option value="">Select Category</option>
-                        {% for category in categories %}
-                            <option value="{{ category.id }}">{{ category.name }}</option>
-                        {% endfor %}
-                    </select><br><br>
-                </div>                
-                    
-                <div class="input-container">
-                    <label for="serving_size"><h2>Serving Size:</h2></label><br>
-                    <input type="range" id="serving_size" name="serving_size" min="1" max="10" value="5">
-                    <span id="serving_size_value">5</span>
-                </div>        
+            <div class="input-container category-selection">
+                <h2>Categories:</h2>
+                <div id="categories-list">
+                    <div class="category-row" id="first-category-row">
+                        <select name="categories[]" required>
+                            <option value="">Select Category</option>
+                            {% for category in categories %}
+                                <option value="{{ category.id }}">{{ category.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <button type="button" onclick="addCategory()">Add Category</button>
+            </div>
+
+            <div class="input-container">
+                <label for="serving_size"><h2>Serving Size:</h2></label><br>
+                <input type="range" id="serving_size" name="serving_size" min="1" max="10" value="5">
+                <span id="serving_size_value">5</span>
+            </div>
 
             <div class="rating-container">
                 <div class="rating1"><h2>Difficulty</h2>
@@ -114,47 +104,80 @@
                     <input type="radio" id="star1_2" name="rating2" value="1">
                     <label for="star1_2"></label>
                 </div>
-            </div>           
+            </div>
         </div>
         <input type="submit" value="Submit" class="Submit">
     </form>
 </div>
 <script>
-    // Get the serving size slider element
     var servingSizeSlider = document.getElementById("serving_size");
-
-    // Get the span element to display the serving size value
     var servingSizeValueSpan = document.getElementById("serving_size_value");
 
-    // Update the value of the span element when the slider value changes
     servingSizeSlider.addEventListener("input", function() {
         servingSizeValueSpan.textContent = servingSizeSlider.value;
     });
-</script>
-<script>
+
     function addStep() {
         const stepList = document.getElementById('steps-list');
         const stepRow = document.createElement('div');
         stepRow.className = 'step-row';
-        
+
         const newStep = document.createElement('textarea');
         newStep.className = 'steptext';
         newStep.name = 'steps[]';
         newStep.placeholder = 'Enter the Step';
         newStep.required = true;
-        
+
         const removeButton = document.createElement('button');
         removeButton.type = 'button';
         removeButton.textContent = 'Remove';
         removeButton.onclick = function() {
             stepList.removeChild(stepRow);
         };
-        
+
         stepRow.appendChild(newStep);
         stepRow.appendChild(removeButton);
         stepList.appendChild(stepRow);
     }
-</script>
-</body>
 
+    function addCategory() {
+        const categoryList = document.getElementById('categories-list');
+        const categoryRow = document.createElement('div');
+        categoryRow.className = 'category-row';
+
+        const newCategory = document.createElement('select');
+        newCategory.name = 'categories[]';
+        newCategory.required = true;
+
+        const defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.textContent = 'Select Category';
+        newCategory.appendChild(defaultOption);
+
+        const options = document.getElementById('category-options-template').content.cloneNode(true);
+        newCategory.appendChild(options);
+
+        const removeButton = document.createElement('button');
+        removeButton.type = 'button';
+        removeButton.textContent = 'Remove';
+        removeButton.onclick = function() {
+            categoryList.removeChild(categoryRow);
+        };
+
+        categoryRow.appendChild(newCategory);
+
+        // Only add the remove button if this is not the first category row
+        if (categoryList.children.length > 0) {
+            categoryRow.appendChild(removeButton);
+        }
+
+        categoryList.appendChild(categoryRow);
+    }
+</script>
+<template id="category-options-template">
+    {% for category in categories %}
+        <option value="{{ category.id }}">{{ category.name }}</option>
+    {% endfor %}
+</template>
+</body>
 </html>

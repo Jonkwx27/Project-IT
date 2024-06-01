@@ -1,0 +1,157 @@
+.button {
+  border: none;
+  color: rgb(0, 0, 0);
+  cursor: pointer;
+  background-color: #ffc368;
+  display: inline-block;
+  padding: 10px 20px;
+  text-decoration: none;
+  border: 2px solid #000; 
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
+  font-size: 20px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  bottom: 10px;
+  background-color: #f8aa35;
+  border-top: 10px solid #000;
+  border-bottom: 10px solid #000;
+  margin-bottom: 20px;
+  padding: 5px 10px;
+}
+
+.myfavourite {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 5px 10px;
+    border: 3px solid #000;
+    background-color: #ece3ae;
+}
+
+.input[type="date"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+.image {
+    width: 30%;
+    height: 25%;
+    margin: 0;
+}
+
+.details {
+    flex-grow: 1;
+    margin-left: 20px; 
+    font-size: 25px;
+}
+.logo-container {
+  display: flex;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 55px;
+  color: rgb(0, 0, 0);
+  margin-top: 45px;
+}
+.HomeButton {
+  padding: 5px 10px;
+  border-radius: 5px;
+  background-color: #c28855;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 300;
+  cursor: pointer;
+  text-decoration: none;
+  left: 20px;
+  }
+.HomeButton:hover{
+  background-color: #98714f;
+}
+
+.photos {
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  background-color:#ece3ae;
+  border: 3px solid black;
+  border-right: 3px solid black;
+}
+
+.photo {
+  flex: 0 1 30%;
+  border: 5px solid #ece3ae;
+  padding: 10px;
+  border-right: 3px solid black;
+  align-items: center;
+  justify-content: center;
+}
+
+.photos:last-child {
+  border-right: none;
+}
+
+.photo:last-child {
+  border-right: none;
+}
+
+.photo img {
+  max-width: 100%;
+  height: auto;
+  background-color:#ece3ae;
+  align-items: center;
+  justify-content: center;
+}
+
+.Name {
+  font-size: 28px;
+  font-weight: bold;
+  background-color: #f8aa35;
+  padding-top: 5px;
+  margin-top: 5px;
+}
+
+.Details {
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: 20px;
+  background-color:#ece3ae;
+  padding-top: 10px;
+}
+
+.photos2 {
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  background-color:#ece3ae;
+  border: 3px solid black;
+  border-top: none;
+}
+
+.photo2 {
+  flex: 0 1 30%;
+  border: 5px solid #ece3ae;
+  padding: 10px;
+  border-right: 3px solid black;
+  align-items: center;
+  justify-content: center;
+}
+
+.photo2:last-child {
+  border-right: none;
+}
+
+.photo2 img {
+  max-width: 100%;
+  height: auto;
+  background-color:#ece3ae;
+  
+}
