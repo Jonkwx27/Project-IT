@@ -17,6 +17,8 @@ class User(db.Model):
     recipes = db.relationship('Recipe', backref='author', cascade="all, delete-orphan", lazy=True)
     comments = db.relationship('Comment', backref='commenter', cascade="all, delete-orphan", lazy=True)
     favourite_recipes = db.relationship('FavouriteRecipe', backref='user_fav', cascade="all, delete-orphan", lazy=True)
+    reports = db.relationship('Report', backref='user_rep', cascade="all, delete-orphan", lazy=True)
+    notifications = db.relationship('Notification', backref='user_notif', cascade='all, delete-orphan', lazy=True)
 
     def __repr__(self):
         return f'<User {self.name}>'
@@ -115,15 +117,13 @@ class Report(db.Model):
     notified = db.Column(db.Boolean, default=False)
     timestamp = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone('Asia/Kuala_Lumpur')))
 
-    user = db.relationship('User', backref='reports')
+
     recipe = db.relationship('Recipe', backref='reports')
     comment = db.relationship('Comment', backref='reports')
 
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', name='fk_notification_user'), nullable=False)
     message = db.Column(db.String(255), nullable=False)
     timestamp = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone('Asia/Kuala_Lumpur')))
     read = db.Column(db.Boolean, default=False)
-
-    user = db.relationship('User', backref='notifications')
