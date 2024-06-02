@@ -292,6 +292,7 @@ def recipesubmission(user_id):
         
     return render_template("RecipeSubmission.html", user=user, categories=categories, groups=groups)
 
+################## Submitted Recipes ######################
 @app.route("/user/<int:user_id>/submitted_recipes")
 def submitted_recipes(user_id):
     if "user_id" not in session or session["user_id"] != user_id:
@@ -461,7 +462,7 @@ def mark_notification_as_unread(user_id,notification_id):
     flash('Notification marked as unread.', 'success')
     return redirect(url_for('view_notifications', user_id=user_id, user=user))
 
-
+############ User Profile ##############
 @app.route("/user/<int:user_id>/userprofile")
 def user_profile(user_id):
     if "user_id" not in session or session["user_id"] != user_id:
@@ -744,8 +745,6 @@ def edit_categories(admin_id):
 
     return render_template("edit_categories.html", admin_id=admin_id, admin=admin, categories=categories, groups=groups, selected_group=selected_group, search_query=search_query)
 
-    
-
 @app.route("/admin/<int:admin_id>/add_category", methods=["POST"])
 def add_category(admin_id):
     if "admin_id" not in session:
@@ -856,7 +855,7 @@ def warn_user(admin_id, user_id):
     return redirect(url_for("manage_users", admin_id=admin_id))
 
 
-############## View Reports ###################
+############### View Reports ###################
 @app.route('/admin/<int:admin_id>/view_reports', methods=['GET'])
 def view_reports(admin_id):
     if "admin_id" not in session:
