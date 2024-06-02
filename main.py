@@ -292,6 +292,78 @@ def recipesubmission(user_id):
         
     return render_template("RecipeSubmission.html", user=user, categories=categories, groups=groups)
 
+@app.route("/user/<int:user_id>/submitted_recipes")
+def submitted_recipes(user_id):
+    if "user_id" not in session or session["user_id"] != user_id:
+        return redirect(url_for("login"))
+
+    user = User.query.get_or_404(user_id)
+    recipes = Recipe.query.filter_by(user_id=user_id).all()
+
+    return render_template("submitted_recipes.html", user=user, recipes=recipes)
+
+@app.route("/user/<int:user_id>/edit_recipe/<int:recipe_id>", methods=["GET", "POST"])
+def edit_recipe(user_id, recipe_id):
+    if "user_id" not in session or session["user_id"] != user_id:
+        return redirect(url_for("login"))
+
+    user = User.query.get_or_404(user_id)
+    recipe = Recipe.query.get_or_404(recipe_id)
+    categories = Category.query.all()
+
+    if request.method == "POST":
+        recipe_name = request.form["recipe_name"]
+        description = request.form["description"]
+        ingredients = request.form["ingredients"]
+        steps = request.form.getlist("steps[]")
+        serving_size = int(request.form.get("serving_size", 1))
+        difficulty = int(request.form.get("rating1", 1))
+        time_required = int(request.form.get("rating2", 1))
+        categories_selected = request.form.getlist("categories[]")
+
+        recipe.recipe_name = recipe_name
+        recipe.description = description
+        recipe.ingredients = ingredients
+        recipe.steps = '\n'.join(steps)
+        recipe.serving_size = serving_size
+        recipe.difficulty = difficulty
+        recipe.time_required = time_required
+
+        selected_category_ids = set(int(cat_id) for cat_id in categories_selected)
+        current_category_ids = set(category.id for category in recipe.categories)
+
+        new_category_ids = selected_category_ids - current_category_ids
+        for cat_id in new_category_ids:
+            category = Category.query.get_or_404(cat_id)
+            recipe.categories.append(category)
+
+        removed_category_ids = current_category_ids - selected_category_ids
+        for cat_id in removed_category_ids:
+            category = Category.query.get_or_404(cat_id)
+            recipe.categories.remove(category)
+
+        if "recipe_image" in request.files:
+            recipe_image = request.files["recipe_image"]
+            if recipe_image.filename:
+                if recipe_image and allowed_file(recipe_image.filename):
+                    filename = secure_filename(recipe_image.filename)
+
+                    if recipe.image_path:
+                        old_image_path = os.path.join(app.root_path, 'static', recipe.image_path)
+                        if os.path.exists(old_image_path):
+                            os.remove(old_image_path)
+
+                    image_path = os.path.join(app.root_path, 'static/uploads', filename)
+                    recipe_image.save(image_path)
+
+                    recipe.image_path = 'uploads/' + filename
+
+        db.session.commit()
+
+        return redirect(url_for("recipe", user_id=user_id, recipe_id=recipe_id))
+
+    return render_template("edit_recipe.html", user=user, recipe=recipe, categories=categories)
+
 ############## Favourited Recipes ################
 @app.route("/user/<int:user_id>/favouritedrecipe")
 def favouritedrecipe(user_id):
@@ -388,6 +460,42 @@ def mark_notification_as_unread(user_id,notification_id):
     db.session.commit()
     flash('Notification marked as unread.', 'success')
     return redirect(url_for('view_notifications', user_id=user_id, user=user))
+
+
+@app.route("/user/<int:user_id>/userprofile")
+def user_profile(user_id):
+    if "user_id" not in session or session["user_id"] != user_id:
+        return redirect(url_for("login"))
+    
+    user = User.query.get_or_404(user_id)
+
+    return render_template("user_profile.html", user=user)
+
+@app.route("/edit_profile/<int:user_id>", methods=["GET", "POST"])
+def edit_profile(user_id):
+    user = User.query.get_or_404(user_id)
+    update_message = None
+    password_message = None
+    
+    if request.method == "POST":
+        if request.form.get("action") == "update_profile":
+            user.name = request.form.get("name")
+            user.email = request.form.get("email")
+            user.age = int(request.form.get("age"))
+            db.session.commit()
+            update_message = "Profile updated successfully!"
+        
+        elif request.form.get("action") == "change_password":
+            old_password = request.form.get("old_password")
+            new_password = request.form.get("new_password")
+            if user.check_password(old_password):
+                user.set_password(new_password)
+                db.session.commit()
+                password_message = "Password changed successfully!"
+            else:
+                password_message = "Old password is incorrect!"
+    
+    return render_template("edit_profile.html", user=user, update_message=update_message, password_message=password_message)
 
 ############ Logout #############
 @app.route("/logout")
