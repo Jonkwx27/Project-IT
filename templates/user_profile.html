@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='BrowseRecipe.css') }}">
-    <title>Favourited Recipes</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='userprofile.css') }}">
+    <title>User Profile</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
@@ -14,7 +14,7 @@
         <div class="logo-container">
             <img style="height: 50px; padding-bottom: 30px;" src="{{ url_for('static', filename='Logo_CookiQ.jpeg') }}" alt="Logo_CookiQ">
         </div>
-        <h1 class="title">Favourited Recipes</h1>
+        <h1 class="title">User Profile</h1>
         <a href="{{ url_for('logout') }}" class="LogOutButton">Logout</a>
     </div>
 
@@ -28,25 +28,21 @@
         </ul>
     </div>
 
-    <div class="recipes">
-        <h2>Favourited Recipes</h2>
-        {% if favourited_recipes %}
-        {% for i in range(0, favourited_recipes|length, 4) %}
-        <div class="recipe-row">
-            {% for recipe in favourited_recipes[i:i+4] %}
-            <div class="recipe-card">
-                <img src="/static/{{ recipe.image_path }}" alt="Recipe Image" style="max-width: 100px;">
-                <h3>{{ recipe.recipe_name }}</h3>
-                <p>{{ recipe.description }}</p>
-                <p>Cook On: {{ recipe.cook_on }}</p>              
-                <a href="{{ url_for('recipe', user_id=user.id, recipe_id=recipe.id, source='favouritedrecipe') }}">View Recipe</a>
-            </div>
-            {% endfor %}
+    <div class="profile">
+        <div class="profile-photo-container">
+            {% if user.profile_photo %}
+                <img src="{{ url_for('static', filename=user.profile_photo) }}" alt="Profile Photo">
+            {% else %}
+                <p>NO PHOTO</p>
+            {% endif %}
         </div>
-        {% endfor %}
-        {% else %}
-        <p>No favourited recipes yet.</p>
-        {% endif %}
+        <div class="profile-info">
+            <h1><strong>NAME:</strong> {{ user.name }}</h1>
+            <h1><strong>EMAIL:</strong> {{ user.email }}</h1>
+            <h1><strong>AGE:</strong> {{ user.age }}</h1>
+            <h1><strong>JOINED:</strong> {{ user.created_at }}</h1>
+            <a href="{{ url_for('edit_profile', user_id=user.id) }}" class="EditProfile">Edit Profile</a>
+        </div>
     </div>
 </body>
 </html>
