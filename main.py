@@ -339,6 +339,40 @@ def favorite_recipe(user_id, recipe_id):
     # Redirect back to the recipe page
     return redirect(url_for('recipe', user_id=user_id, recipe_id=recipe_id, source=source))
 
+@app.route("/user/<int:user_id>/userprofile")
+def user_profile(user_id):
+    if "user_id" not in session or session["user_id"] != user_id:
+        return redirect(url_for("login"))
+
+    user = User.query.get_or_404(user_id)
+    return render_template("user_profile.html", user=user)
+
+@app.route("/edit_profile/<int:user_id>", methods=["GET", "POST"])
+def edit_profile(user_id):
+    user = User.query.get_or_404(user_id)
+    update_message = None
+    password_message = None
+    
+    if request.method == "POST":
+        if request.form.get("action") == "update_profile":
+            user.name = request.form.get("name")
+            user.email = request.form.get("email")
+            user.age = int(request.form.get("age"))
+            db.session.commit()
+            update_message = "Profile updated successfully!"
+        
+        elif request.form.get("action") == "change_password":
+            old_password = request.form.get("old_password")
+            new_password = request.form.get("new_password")
+            if user.check_password(old_password):
+                user.set_password(new_password)
+                db.session.commit()
+                password_message = "Password changed successfully!"
+            else:
+                password_message = "Old password is incorrect!"
+    
+    return render_template("edit_profile.html", user=user, update_message=update_message, password_message=password_message)
+
 @app.route("/logout")
 def logout():
 	session.pop("user_id", None)
