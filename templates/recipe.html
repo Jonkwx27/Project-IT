@@ -16,6 +16,8 @@
             <a href="{{ url_for('favouritedrecipe', user_id=user.id, recipe_id=recipe.id) }}" class="Return">Return</a>
         {% elif source == 'browse_recipe' %}
             <a href="{{ url_for('browse_recipes', user_id=user.id, recipe_id=recipe.id) }}" class="Return">Return</a>
+        {% elif source == 'submitted_recipes' %}
+            <a href="{{ url_for('submitted_recipes', user_id=user.id, recipe_id=recipe.id) }}" class="Return">Return</a>
         {% endif %}
     </div>
 
