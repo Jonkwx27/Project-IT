@@ -204,3 +204,59 @@ h2 {
   color: #000;
   cursor: default;
 }
+.alphabet {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #f8aa35;
+  color: #000;
+  text-align: center;
+  text-decoration: none;
+  font-size: 22px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  margin-left: 20px;
+}
+
+.alphabet:hover {
+  background-color: #f1d982;
+}
+
+.sort-selection {
+  margin-bottom: 20px; 
+}
+
+.sort-selection form {
+  display: flex;
+  align-items: center;
+}
+
+.sort-selection label {
+  font-family: 'Bebas Neue', sans-serif; 
+  font-size: 18px;
+  margin-right: 5px; 
+}
+
+.sort-selection select {
+  font-family: 'Bebas Neue', sans-serif; 
+  font-size: 16px; 
+  padding: 5px; 
+  border: 1px solid #000; 
+  border-radius: 5px;
+  margin-right: 5px;
+}
+
+.sort-selection button {
+  padding: 8px 16px; 
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px; 
+  background-color: #c28855; 
+  color: #fff; 
+  transition: background-color 0.3s; 
+}
+
+.sort-selection button:hover {
+  background-color: #98714f; 
+}

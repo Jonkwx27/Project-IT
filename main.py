@@ -299,12 +299,29 @@ def favouritedrecipe(user_id):
         return redirect(url_for("login"))
     
     user = User.query.get_or_404(user_id)
-    # Fetch favorited recipes for the user
-    favourited_recipes = Recipe.query.join(FavouriteRecipe).filter(FavouriteRecipe.user_id == user_id).all()
+    
+    # Fetch favorited recipes for the user and their cook_on dates
+    favourited_recipes_with_cook_on = db.session.query(Recipe, FavouriteRecipe.cook_on)\
+        .join(FavouriteRecipe, Recipe.id == FavouriteRecipe.recipe_id)\
+        .filter(FavouriteRecipe.user_id == user_id).all()
+
+    # Extracting Recipe objects and cook_on dates from the query result
+    favourited_recipes = [recipe_cook_on[0] for recipe_cook_on in favourited_recipes_with_cook_on]
+    cook_on_dates = [recipe_cook_on[1] for recipe_cook_on in favourited_recipes_with_cook_on]
+
+    # Get sorting criteria from the request args
+    sort_by = request.args.get("sort_by", "none")
+
+    if sort_by == "alphabetical":
+        favourited_recipes_with_cook_on = sorted(favourited_recipes_with_cook_on, key=lambda r: r[0].recipe_name)
+    elif sort_by == "cook_on":
+        favourited_recipes_with_cook_on = sorted(favourited_recipes_with_cook_on, key=lambda r: r[1] if r[1] else datetime.min)
+
+
     # Get the IDs of favourited recipes
     favourited_recipe_ids = [recipe.id for recipe in favourited_recipes]
 
-    return render_template("favourited_recipe.html", user=user, favourited_recipes=favourited_recipes, favourited_recipe_ids=favourited_recipe_ids)
+    return render_template("favourited_recipe.html", user=user, favourited_recipes=favourited_recipes_with_cook_on, cook_on_dates=cook_on_dates, favourited_recipe_ids=favourited_recipe_ids, sort_by=sort_by)
 
 @app.route("/user/<int:user_id>/favorite/<int:recipe_id>", methods=['POST'])
 def favorite_recipe(user_id, recipe_id):
