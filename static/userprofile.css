@@ -130,6 +130,13 @@ li:hover {
 .form-container input[type="submit"]:hover {
     background-color: #98714f;
 }
-.form-container p {
+.form-container p.success {
     color: #5cb85c;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+}
+.form-container p.failed {
+    color: #ff0000;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
 }

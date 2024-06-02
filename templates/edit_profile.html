@@ -28,13 +28,13 @@
             <input type="email" id="email" name="email" value="{{ user.email }}" required><br><br>
             
             <label for="age">Age:</label>
-            <input type="number" id="age" name="age" value="{{ user.age }}" required><br><br>
+            <input type="number" id="age" name="age" value="{{ user.age }}" required min="0"><br><br> 
             
             <input type="submit" value="Update Profile">
         </form>
     
         {% if update_message %}
-            <p>{{ update_message }}</p>
+            <p class="success">{{ update_message }}</p>
         {% endif %}
     </div>
 
@@ -52,8 +52,13 @@
         </form>
     
         {% if password_message %}
-            <p>{{ password_message }}</p>
+            {% if 'successfully' in password_message %}
+                <p class="success">{{ password_message }}</p>
+            {% else %}
+                <p class="failed">{{ password_message }}</p>
+            {% endif %}
         {% endif %}
+
     </div>
 </body>
 </html>

@@ -4,118 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Submitted Recipes</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='BrowseRecipe.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
-    <style>
-        .recipe-row {
-            display: flex;
-            justify-content: center; 
-            margin-bottom: 20px; 
-        }
-        .recipe-card {
-            width: 45%; 
-            margin: 0 10px; 
-            padding: 10px;
-            border: 1px solid #000;
-            border-radius: 5px;
-            background-color: #ece3ae; 
-            text-align: center; 
-        }
-        .recipe-card h3 {
-            margin-top: 0;
-            font-family: 'Bebas Neue', sans-serif; 
-            font-size: 20px; 
-        }
-        .recipe-card p {
-            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-            text-align: center; 
-        }
-        .recipe-card img {
-            display: block; 
-            margin: 0 auto 10px; 
-            max-width: 100%;
-            height: auto;
-        }
-        .recipe-card a {
-            display: block;
-            margin-top: 10px;
-            text-decoration: none;
-            color: #007bff; 
-        }
-        .recipe-card a:hover {
-            text-decoration: underline;
-            color: #0056b3; 
-        }
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            bottom: 10px;
-            background-color: #f8aa35;
-            border-top: 10px solid #000;
-            border-bottom: 10px solid #000;
-            margin-bottom: 20px;
-            padding: 5px 10px;
-        }
-        .logo-container {
-            display: flex;
-            align-items: center;
-            margin-top: 30px;
-        }
-        .title {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 55px;
-            color: rgb(0, 0, 0);
-            margin-top: 45px;
-        }      
-        .LogOutButton {
-            padding: 5px 10px;
-            border-radius: 5px;
-            background-color: #c28855;
-            color: #fff;
-            font-size: 22px;
-            font-weight: 300;
-            cursor: pointer;
-            text-decoration: none;
-            left: 20px;
-        }
-        .LogOutButton:hover{
-            background-color: #98714f;
-        }         
-        ul {
-            text-align: center;
-            display: flex;
-            padding-top: 5px;
-            padding-left: 0px;
-        }
-        li {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 28px;
-            font-weight: 300;
-            text-transform: uppercase;
-            display: inline-block;
-            width: 100%; 
-        }
-        li:hover {
-            background-color:rgb(250, 235, 215);
-        }
-        .button {
-            border: none;
-            color: rgb(0, 0, 0);
-        }       
-        .edit_recipe {
-            background-color: #ffffff;
-            color: #ff0000;
-            padding: 5px 10px;
-            text-decoration: none;
-            border: 1px solid #000;
-            cursor: pointer;
-        }
-        .edit_recipe:hover {
-            background-color: #f0f0f0;
-        }
-    </style>
 </head>
 <body>
     <div class="header">
@@ -135,6 +27,8 @@
         </ul>
     </div>
     <div class="recipes">
+    <h2>My Submitted Recipe</h2>
+    {% if recipes %}
         {% for i in range(0, recipes|length, 4) %}
         <div class="recipe-row">
             {% for recipe in recipes[i:i+4] %}
@@ -153,6 +47,9 @@
             {% endfor %}
         </div>
         {% endfor %}
+    {% else %}
+        <p>No submitted recipes yet.</p>
+    {% endif %}
     </div>
 </body>
 </html>
