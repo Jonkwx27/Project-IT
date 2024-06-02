@@ -18,6 +18,9 @@
         <a href="{{ url_for('adminlogout') }}" class="LogOutButton">Logout</a>
     </div>
 
+    <!-- Flash messages -->
+    {% include '_flashes.html' %}
+
     <div class="classification">
         <ul>
             <li><a href="{{ url_for('pending_submissions', admin_id=admin.id) }}" class="button">Review Submitted Recipes</a></li>

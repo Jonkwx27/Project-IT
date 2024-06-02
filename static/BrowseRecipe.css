@@ -190,4 +190,17 @@ h2 {
   border-radius: 5px;
   text-decoration: none;
   font-size: 18px;
+  background-color: #c28855;
+  color: #fff;
+  transition: background-color 0.3s; 
+}
+
+.pagination a:hover {
+  background-color: #98714f;
+}
+
+.pagination span.current-page-number {
+  background-color: #f8aa35;
+  color: #000;
+  cursor: default;
 }

@@ -60,7 +60,7 @@ def signup():
 					password=password)
         db.session.add(user)
         db.session.commit()
-
+        flash("Account created successfully!", "success")
         return redirect(url_for('home'))
 
     return render_template("sign_up.html")
@@ -77,6 +77,7 @@ def login():
 
         if found_user and check_password_hash(found_user.password, password):
             session["user_id"] = found_user.id
+            flash("You have been successfully logged in!", "success")
             return redirect(url_for("browse_recipes", user_id=found_user.id))
         else:
             # Incorrect email/username or password
@@ -123,7 +124,7 @@ def browse_recipes(user_id):
     pagination = query.paginate(page=page, per_page=per_page, error_out=False)
     recipes = pagination.items
 
-    return render_template("browse_recipes.html", recipes=recipes, groups=groups, categories=categories, selected_category=selected_category, search_query=search_query, user=user, user_id=user_id,total_pages=pagination.pages, page=page)
+    return render_template("browse_recipes.html", recipes=recipes, groups=groups, categories=categories, selected_category=selected_category, search_query=search_query, user=user, user_id=user_id,pagination=pagination)
 
 ################### In-Depth Recipe ###################
 @app.route("/user/<int:user_id>/recipe/<int:recipe_id>")
@@ -243,7 +244,7 @@ def recipesubmission(user_id):
         if "recipe_image" in request.files:
             recipe_image = request.files["recipe_image"]
             if recipe_image.filename == '':
-                flash('No selected file')
+                flash('No selected file','error')
                 return redirect(request.url)
             if recipe_image and allowed_file(recipe_image.filename):
                 filename = secure_filename(recipe_image.filename)
@@ -256,7 +257,7 @@ def recipesubmission(user_id):
                 recipe_image.save(image_path)
                 image_path_relative = os.path.join('uploads', unique_filename)
             else:
-                flash('Invalid file type')
+                flash('Invalid file type','error')
                 return redirect(request.url)
         else:
             image_path_relative = None
@@ -279,7 +280,7 @@ def recipesubmission(user_id):
 
         db.session.add(recipe)
         db.session.commit()
-
+        flash('Recipe submitted successfully!','success')
         return redirect(url_for('recipesubmission', user_id=user_id))
     
     user = User.query.get_or_404(user_id)
@@ -374,8 +375,10 @@ def mark_notification_as_unread(user_id,notification_id):
 ############ Logout #############
 @app.route("/logout")
 def logout():
-	session.pop("user_id", None)
-	return redirect(url_for("login"))
+    flash('Log out successfully!','success')
+    session.pop("user_id", None)
+	
+    return redirect(url_for("login"))
 
 
 ##################################################################### Admin Route #########################################################################
@@ -393,6 +396,7 @@ def adminlogin():
 
         if found_admin and check_password_hash(found_admin.password_admin, password_admin_input):
             session["admin_id"] = found_admin.id
+            flash("You have been successfully logged in!","success")
             return redirect(url_for("pending_submissions", admin_id=found_admin.id))
         else:
             flash("Invalid email or password. Please try again.", "error")
@@ -714,7 +718,7 @@ def warn_user(admin_id, user_id):
     if user.number_of_warnings > 3:
         db.session.delete(user)
         db.session.commit()
-        flash("User deleted due to exceeding warnings", "danger")
+        flash("User deleted due to exceeding warnings", "warning")
     else:
         db.session.commit()
         # Create a notification for the user
@@ -805,8 +809,10 @@ def reject_report(admin_id, report_id):
 ############### Logout ##################
 @app.route("/adminlogout")
 def adminlogout():
-	session.pop("admin_id", None)
-	return redirect(url_for("adminlogin"))
+    flash("Log out successfully!","success")
+	
+    session.pop("admin_id", None)
+    return redirect(url_for("adminlogin"))
 
 
 if __name__ == "__main__":

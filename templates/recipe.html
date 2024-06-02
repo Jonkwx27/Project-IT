@@ -19,6 +19,9 @@
         {% endif %}
     </div>
 
+    <!-- Flash messages -->
+    {% include '_flashes.html' %}
+
     <h1 class="recipe-title">{{ recipe.recipe_name }}</h1>
 
     <form action="{{ url_for('favorite_recipe', user_id=user.id, recipe_id=recipe.id, source=source) }}" method="POST">

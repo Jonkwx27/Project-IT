@@ -18,6 +18,9 @@
         <a href="{{ url_for('logout') }}" class="LogOutButton">Logout</a>
     </div>
 
+    <!-- Flash messages -->
+    {% include '_flashes.html' %}
+
     <div class="classification">
         <ul>
             <li><a href="{{ url_for('browse_recipes', user_id=user.id) }}" class="button">Browse Recipes</a></li>
@@ -75,12 +78,32 @@
     </div>
 
     <div class="pagination">
-        {% if page > 1 %}
-            <a href="{{ url_for('browse_recipes', user_id=user.id, page=page-1, category=selected_category, search_query=search_query) }}">&laquo; Previous</a>
+        {% if pagination.has_prev %}
+            <span>
+                <a class='page-number' href="{{ url_for('browse_recipes', user_id=user.id, page=pagination.prev_num, category=selected_category, search_query=search_query) }}">
+                    {{ '<<<' }}
+                </a>
+            </span>
         {% endif %}
-        <span>Page {{ page }} of {{ total_pages }}</span>
-        {% if page < total_pages %}
-            <a href="{{ url_for('browse_recipes', user_id=user.id, page=page+1, category=selected_category, search_query=search_query) }}">Next &raquo;</a>
+
+        {% for number in pagination.iter_pages() %}
+            {% if pagination.page != number %}
+                <span>
+                    <a class='page-number' href="{{ url_for('browse_recipes', user_id=user.id, page=number, category=selected_category, search_query=search_query) }}">
+                        {{ number }}
+                    </a>
+                </span>
+            {% else %}
+                <span class='current-page-number'>{{ number }}</span>
+            {% endif %}
+        {% endfor %}
+
+        {% if pagination.has_next %}
+            <span>
+                <a class='page-number' href="{{ url_for('browse_recipes', user_id=user.id, page=pagination.next_num, category=selected_category, search_query=search_query) }}">
+                    {{ '>>>' }}
+                </a>
+            </span>
         {% endif %}
     </div>
     
