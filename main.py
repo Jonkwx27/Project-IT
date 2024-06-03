@@ -514,7 +514,7 @@ def delete_notification(user_id, notification_id):
     db.session.commit()
     
     flash("Notification deleted successfully", "success")
-    return redirect(url_for("notifications", user_id=user_id))
+    return redirect(url_for("view_notifications", user_id=user_id))
 
 ############ User Profile ##############
 @app.route("/user/<int:user_id>/userprofile")

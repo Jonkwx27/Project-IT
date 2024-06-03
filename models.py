@@ -20,7 +20,6 @@ class User(db.Model):
     notifications = db.relationship('Notification', back_populates='user', cascade="all, delete-orphan", lazy=True, overlaps="user_notifications")
     reports = db.relationship('Report', back_populates='user', cascade="all, delete-orphan", lazy=True, overlaps="user_reports")
 
-
     def __repr__(self):
         return f'<User {self.name}>'
 
@@ -64,6 +63,7 @@ class Recipe(db.Model):
     image_path = db.Column(db.String(255))  # Path to the image file
     submitted_by = db.Column(db.String(100), nullable=False)
     comments = db.relationship('Comment', backref='recipe', cascade="all, delete-orphan", lazy=True)
+    reports = db.relationship('Report', back_populates='recipe', cascade="all, delete-orphan")
     categories = db.relationship('Category', secondary=recipe_category_association, backref=db.backref('recipes', lazy='dynamic'))
 
     def __repr__(self):
@@ -78,6 +78,7 @@ class Comment(db.Model):
     commented_at = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone('Asia/Kuala_Lumpur')))
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id', name='fk_comment_recipe'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', name='fk_comment_user'), nullable=False)
+    reports = db.relationship('Report', back_populates='comment', cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"Comment('{self.comment}', '{self.rating}')"
@@ -119,8 +120,8 @@ class Report(db.Model):
     timestamp = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone('Asia/Kuala_Lumpur')))
 
     user = db.relationship('User', back_populates='reports', overlaps="reports,user_reports")
-    recipe = db.relationship('Recipe', backref='reports')
-    comment = db.relationship('Comment', backref='reports')
+    recipe = db.relationship('Recipe', back_populates='reports', overlaps="reports,recipe_reports")
+    comment = db.relationship('Comment', back_populates='reports', overlaps="reports,comment_reports")
 
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -130,4 +131,3 @@ class Notification(db.Model):
     read = db.Column(db.Boolean, default=False)
 
     user = db.relationship('User', back_populates='notifications', overlaps="notifications,user_notifications")
-

@@ -17,6 +17,10 @@
         <h1 class="title">My Submitted Recipes</h1>
         <a href="{{ url_for('logout') }}" class="LogOutButton">Logout</a>
     </div>
+
+    <!-- Flash messages -->
+    {% include '_flashes.html' %}
+    
     <div class="classification">
         <ul>
             <li><a href="{{ url_for('browse_recipes', user_id=user.id) }}" class="button">Browse Recipes</a></li>
