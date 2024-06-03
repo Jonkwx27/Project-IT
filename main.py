@@ -1008,7 +1008,6 @@ def reject_report(admin_id, report_id):
     return redirect(url_for('view_reports', admin_id=admin_id))
 
 ############# Delete Reports ###############
-########### Delete Notifications #############
 @app.route("/admin/<int:admin_id>/delete_report/<int:report_id>", methods=["POST"])
 def delete_report(admin_id, report_id):
     if "admin_id" not in session or session["admin_id"] != admin_id:

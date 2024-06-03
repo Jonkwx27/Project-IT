@@ -17,8 +17,8 @@ class User(db.Model):
     recipes = db.relationship('Recipe', backref='author', cascade="all, delete-orphan", lazy=True)
     comments = db.relationship('Comment', backref='commenter', cascade="all, delete-orphan", lazy=True)
     favourite_recipes = db.relationship('FavouriteRecipe', backref='user_fav', cascade="all, delete-orphan", lazy=True)
-    notifications = db.relationship('Notification', backref='user_notifications', cascade="all, delete-orphan", lazy=True)
-    reports = db.relationship('Report', backref='user_reports', cascade="all, delete-orphan", lazy=True)
+    notifications = db.relationship('Notification', back_populates='user', cascade="all, delete-orphan", lazy=True)
+    reports = db.relationship('Report', back_populates='user', cascade="all, delete-orphan", lazy=True)
 
 
     def __repr__(self):
@@ -118,7 +118,7 @@ class Report(db.Model):
     notified = db.Column(db.Boolean, default=False)
     timestamp = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone('Asia/Kuala_Lumpur')))
 
-    user = db.relationship('User', backref='user_reports')
+    user = db.relationship('User', back_populates='reports')
     recipe = db.relationship('Recipe', backref='reports')
     comment = db.relationship('Comment', backref='reports')
 
@@ -129,4 +129,5 @@ class Notification(db.Model):
     timestamp = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone('Asia/Kuala_Lumpur')))
     read = db.Column(db.Boolean, default=False)
 
-    user = db.relationship('User', backref='user_notifications')
+    user = db.relationship('User', back_populates='notifications')
+
