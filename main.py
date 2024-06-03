@@ -183,6 +183,22 @@ def submit_comment(user_id, recipe_id):
     user = User.query.get_or_404(user_id)
     return render_template("RecipeSubmission.html", user=user)
 
+############### Delete Comment ################
+@app.route('/user/<int:user_id>/delete_comment/<int:comment_id>', methods=['POST'])
+def user_delete_comment(user_id,comment_id):
+    comment = Comment.query.get_or_404(comment_id)
+
+    # Delete the comment from the database
+    db.session.delete(comment)
+    db.session.commit()
+    # Delete the associated image file
+    if comment.image_url:
+        image_url = os.path.join(app.root_path, 'static', comment.image_url)
+        if os.path.exists(image_url):
+            os.remove(image_url)
+    flash('Comment deleted successfully', 'success')
+    return redirect(url_for('recipe', user_id=user_id, recipe_id=comment.recipe_id))
+
 ############## Report Recipes #############
 @app.route('/user/<int:user_id>/report_recipe/<int:recipe_id>', methods=['GET', 'POST'])
 def report_recipe(user_id,recipe_id):
@@ -304,6 +320,25 @@ def submitted_recipes(user_id):
 
     return render_template("submitted_recipes.html", user=user, recipes=recipes)
 
+############ Delete Recipe ############
+@app.route("/user/<int:user_id>/delete_recipe/<int:recipe_id>", methods=["POST"])
+def user_delete_recipe(user_id, recipe_id):
+    if "user_id" not in session or session["user_id"] != user_id:
+        return redirect(url_for("login"))
+
+    recipe = Recipe.query.get_or_404(recipe_id)
+
+    db.session.delete(recipe)
+    db.session.commit()
+    # Delete the associated image file
+    if recipe.image_path:
+        image_path = os.path.join(app.root_path, 'static', recipe.image_path)
+        if os.path.exists(image_path):
+            os.remove(image_path)
+    
+    flash("Recipe deleted successfully", "success")
+    return redirect(url_for("submitted_recipes", user_id=user_id))
+
 ############### Edit Recipes ##################
 @app.route("/user/<int:user_id>/edit_recipe/<int:recipe_id>", methods=["GET", "POST"])
 def edit_recipe(user_id, recipe_id):
@@ -398,6 +433,7 @@ def favouritedrecipe(user_id):
 
     return render_template("favourited_recipe.html", user=user, favourited_recipes=favourited_recipes_with_cook_on, cook_on_dates=cook_on_dates, favourited_recipe_ids=favourited_recipe_ids, sort_by=sort_by)
 
+############## Favourite a recipe ###############
 @app.route("/user/<int:user_id>/favorite/<int:recipe_id>", methods=['POST'])
 def favorite_recipe(user_id, recipe_id):
     if "user_id" not in session or session["user_id"] != user_id:
@@ -440,6 +476,7 @@ def view_notifications(user_id):
 
     return render_template('notifications.html', user=user, unread_notifications=unread_notifications, read_notifications=read_notifications)
 
+############ Read Notifications ##############
 @app.route('/user/<int:user_id>/notifications/read/<int:notification_id>', methods=['POST'])
 def mark_notification_as_read(user_id,notification_id):
     if "user_id" not in session or session["user_id"] != user_id:
@@ -452,6 +489,7 @@ def mark_notification_as_read(user_id,notification_id):
     flash('Notification marked as read.', 'success')
     return redirect(url_for('view_notifications', user_id=user_id, user=user))
 
+############ Unread Notifications #############
 @app.route('/user/<int:user_id>/notifications/unread/<int:notification_id>', methods=['POST'])
 def mark_notification_as_unread(user_id,notification_id):
     if "user_id" not in session or session["user_id"] != user_id:
@@ -463,6 +501,20 @@ def mark_notification_as_unread(user_id,notification_id):
     db.session.commit()
     flash('Notification marked as unread.', 'success')
     return redirect(url_for('view_notifications', user_id=user_id, user=user))
+
+########### Delete Notifications #############
+@app.route("/user/<int:user_id>/delete_notification/<int:notification_id>", methods=["POST"])
+def delete_notification(user_id, notification_id):
+    if "user_id" not in session or session["user_id"] != user_id:
+        return redirect(url_for("login"))
+
+    notification = Notification.query.get_or_404(notification_id)
+
+    db.session.delete(notification)
+    db.session.commit()
+    
+    flash("Notification deleted successfully", "success")
+    return redirect(url_for("notifications", user_id=user_id))
 
 ############ User Profile ##############
 @app.route("/user/<int:user_id>/userprofile")
@@ -550,6 +602,7 @@ def pending_submissions(admin_id):
     
     return render_template("pending_submissions.html", recipes=pending_recipes, admin_id=admin_id, admin=admin)
 
+########### Approve Recipe ############
 @app.route("/admin/<int:admin_id>/approve_recipe/<int:recipe_id>", methods=["POST"])
 def approve_recipe(admin_id, recipe_id):
     if "admin_id" not in session or session["admin_id"] != admin_id:
@@ -563,7 +616,7 @@ def approve_recipe(admin_id, recipe_id):
     
     return redirect(url_for("pending_submissions", admin_id=admin_id))
 
-
+########### Reject Recipe ############
 @app.route("/admin/<int:admin_id>/reject_recipe/<int:recipe_id>", methods=["POST"])
 def reject_recipe(admin_id, recipe_id):
     if "admin_id" not in session or session["admin_id"] != admin_id:
@@ -618,6 +671,7 @@ def admin_browse_recipes(admin_id):
 
     return render_template("admin_browse_recipes.html", recipes=recipes, groups=groups, categories=categories, selected_category=selected_category, search_query=search_query, admin=admin, admin_id=admin_id, pagination=pagination)
 
+############# Delete Recipe ###############
 @app.route("/admin/<int:admin_id>/delete_recipe/<int:recipe_id>", methods=["POST"])
 def delete_recipe(admin_id, recipe_id):
     if "admin_id" not in session or session["admin_id"] != admin_id:
@@ -654,7 +708,7 @@ def admin_recipe(admin_id, recipe_id):
 
     return render_template('admin_recipe.html',admin=admin, recipe=recipe, comments=comments, source=source)
 
-
+############# Delete Comment ##############
 @app.route('/admin/<int:admin_id>/delete_comment/<int:comment_id>', methods=['POST'])
 def delete_comment(admin_id,comment_id):
     comment = Comment.query.get_or_404(comment_id)
@@ -686,6 +740,7 @@ def edit_category_groups(admin_id):
 
     return render_template("edit_category_groups.html", admin_id=admin_id, admin=admin, groups=groups)
 
+########### Add Categories Groups #############
 @app.route("/admin/<int:admin_id>/add_category_group", methods=["POST"])
 def add_category_group(admin_id):
     if "admin_id" not in session:
@@ -701,6 +756,7 @@ def add_category_group(admin_id):
         flash("Category group added successfully", "success")
         return redirect(url_for("edit_category_groups", admin_id=admin_id))
 
+########### Update Categories Groups #############
 @app.route("/admin/<int:admin_id>/update_category_group/<int:group_id>", methods=["POST"])
 def update_category_group(admin_id, group_id):
     if "admin_id" not in session:
@@ -716,6 +772,7 @@ def update_category_group(admin_id, group_id):
         flash("Category group updated successfully", "success")
     return redirect(url_for("edit_category_groups", admin_id=admin_id))
 
+############ Delete Categories Groups #############
 @app.route("/admin/<int:admin_id>/delete_category_group/<int:group_id>", methods=["POST"])
 def delete_category_group(admin_id, group_id):
     if "admin_id" not in session:
@@ -758,6 +815,7 @@ def edit_categories(admin_id):
 
     return render_template("edit_categories.html", admin_id=admin_id, admin=admin, categories=categories, groups=groups, selected_group=selected_group, search_query=search_query, pagination=pagination)
 
+############## Add Category ###############
 @app.route("/admin/<int:admin_id>/add_category", methods=["POST"])
 def add_category(admin_id):
     if "admin_id" not in session:
@@ -774,6 +832,7 @@ def add_category(admin_id):
         flash("Category added successfully", "success")
         return redirect(url_for("edit_categories",admin=admin, admin_id=admin_id))
 
+############## Delete Category ##############
 @app.route("/admin/<int:admin_id>/delete_category/<int:category_id>", methods=["POST"])
 def delete_category(admin_id,category_id):
     if "admin_id" not in session:
@@ -787,6 +846,7 @@ def delete_category(admin_id,category_id):
     flash("Category deleted successfully", "success")
     return redirect(url_for("edit_categories",admin=admin, admin_id=admin_id))
 
+############## Update Category ################
 @app.route("/admin/<int:admin_id>/update_category/<int:category_id>", methods=["GET", "POST"])
 def update_category(admin_id, category_id):
     if "admin_id" not in session:
@@ -804,6 +864,7 @@ def update_category(admin_id, category_id):
         flash("Category updated successfully", "success")
     return redirect(url_for("edit_categories",admin=admin, admin_id=admin_id))
 
+############## Category Usage #############
 @app.route("/admin/<int:admin_id>/category_usage/<int:category_id>")
 def category_usage(admin_id, category_id):
     if "admin_id" not in session:
@@ -830,6 +891,7 @@ def manage_users(admin_id):
 
     return render_template("manage_users.html", admin_id=admin_id, admin=admin, users=users, search_query=search_query)
 
+############## Delete User ################
 @app.route("/admin/<int:admin_id>/delete_user/<int:user_id>", methods=["POST"])
 def delete_user(admin_id, user_id):
     if "admin_id" not in session or session["admin_id"] != admin_id:
@@ -842,6 +904,7 @@ def delete_user(admin_id, user_id):
     flash("User deleted successfully", "success")
     return redirect(url_for("manage_users", admin_id=admin_id))
 
+############## Warn User #################
 @app.route("/admin/<int:admin_id>/warn_user/<int:user_id>", methods=["POST"])
 def warn_user(admin_id, user_id):
     if "admin_id" not in session or session["admin_id"] != admin_id:
@@ -880,6 +943,7 @@ def view_reports(admin_id):
 
     return render_template('view_reports.html', admin=admin, pending_reports=pending_reports, reviewed_reports=reviewed_reports, Comment=Comment, Recipe=Recipe)
 
+############## Approve Reports ##############
 @app.route('/admin/<int:admin_id>/approve_report/<int:report_id>', methods=['POST'])
 def approve_report(admin_id, report_id):
     if "admin_id" not in session or session["admin_id"] != admin_id:
@@ -911,6 +975,7 @@ def approve_report(admin_id, report_id):
     flash('Report has been approved and the user has been notified.', 'success')
     return redirect(url_for('view_reports', admin_id=admin_id))
 
+############### Reject Reports ##################
 @app.route('/admin/<int:admin_id>/reject_report/<int:report_id>', methods=['POST'])
 def reject_report(admin_id, report_id):
     if "admin_id" not in session or session["admin_id"] != admin_id:
@@ -942,6 +1007,20 @@ def reject_report(admin_id, report_id):
     flash('Report has been rejected and the user has been notified.', 'success')
     return redirect(url_for('view_reports', admin_id=admin_id))
 
+############# Delete Reports ###############
+########### Delete Notifications #############
+@app.route("/admin/<int:admin_id>/delete_report/<int:report_id>", methods=["POST"])
+def delete_report(admin_id, report_id):
+    if "admin_id" not in session or session["admin_id"] != admin_id:
+        return redirect(url_for("login"))
+
+    report = Report.query.get_or_404(report_id)
+
+    db.session.delete(report)
+    db.session.commit()
+    
+    flash("Report deleted successfully", "success")
+    return redirect(url_for("notifications", admin_id=admin_id))
 
 ############### Logout ##################
 @app.route("/adminlogout")

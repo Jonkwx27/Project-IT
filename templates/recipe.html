@@ -151,6 +151,11 @@
                     <img src="/static/{{ comment.image_url }}" alt="Comment Image">
                 {% endif %}
                 <p>{{ comment.comment }}</p>
+                {% if comment.user_id == user.id %}
+                    <form action="{{ url_for('user_delete_comment', user_id=user.id, comment_id=comment.id) }}" method="POST" style="display:inline;">
+                        <button type="submit" class="delete-button" onclick="return confirm('Are you sure you want to delete this comment?')">Delete Comment</button>
+                    </form>
+                {% endif %}
                 {% if comment.user_id != user.id %}
                     <a href="{{ url_for('report_comment', user_id=user.id, comment_id=comment.id, recipe_id=recipe.id) }}" class="report-button">Report Comment</a>
                 {% endif %}

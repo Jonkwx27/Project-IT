@@ -170,10 +170,10 @@
             <td>{{ recipe.submitted_by }}</td>
             <td>
                 <form method="post" action="{{ url_for('approve_recipe', admin_id=admin_id, recipe_id=recipe.id) }}">
-                    <button class='approve-button' type="submit">Approve</button>
+                    <button class='approve-button' type="submit" onclick="return confirm('Are you sure you want to approve this recipe?')">Approve</button>
                 </form>                
                 <form method="post" action="{{ url_for('reject_recipe', admin_id=admin_id, recipe_id=recipe.id) }}">
-                    <button class='reject-button' type="submit">Reject</button>
+                    <button class='reject-button' type="submit" onclick="return confirm('Are you sure you want to reject this recipe?')">Reject</button>
                 </form>
             </td>
         </tr>
