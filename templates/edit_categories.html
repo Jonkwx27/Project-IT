@@ -97,6 +97,35 @@
         {% endfor %}
     </div>
     
+    <div class="pagination">
+        {% if pagination.has_prev %}
+            <span>
+                <a class='page-number' href="{{ url_for('edit_categories', admin_id=admin.id, page=pagination.prev_num, group=selected_group, search_query=search_query) }}">
+                    {{ '<<<' }}
+                </a>
+            </span>
+        {% endif %}
+
+        {% for number in pagination.iter_pages() %}
+            {% if pagination.page != number %}
+                <span>
+                    <a class='page-number' href="{{ url_for('edit_categories', admin_id=admin.id, page=number, group=selected_group, search_query=search_query) }}">
+                        {{ number }}
+                    </a>
+                </span>
+            {% else %}
+                <span class='current-page-number'>{{ number }}</span>
+            {% endif %}
+        {% endfor %}
+
+        {% if pagination.has_next %}
+            <span>
+                <a class='page-number' href="{{ url_for('edit_categories', admin_id=admin.id, page=pagination.next_num, group=selected_group, search_query=search_query) }}">
+                    {{ '>>>' }}
+                </a>
+            </span>
+        {% endif %}
+    </div>
 
     <script>
         function confirmDelete(categoryId, categoryName) {

@@ -142,6 +142,7 @@ def recipe(user_id, recipe_id):
 
     return render_template("recipe.html", user=user, recipe=recipe, favourite_recipe=favourite_recipe, favourited_recipe_ids=favourited_recipe_ids, comments=comments, source=source)
 
+################ Submit Comment #################
 @app.route('/user/<int:user_id>/submit_comment/<int:recipe_id>', methods=['POST'])
 def submit_comment(user_id, recipe_id):
     if "user_id" not in session or session["user_id"] != user_id:
@@ -303,6 +304,7 @@ def submitted_recipes(user_id):
 
     return render_template("submitted_recipes.html", user=user, recipes=recipes)
 
+############### Edit Recipes ##################
 @app.route("/user/<int:user_id>/edit_recipe/<int:recipe_id>", methods=["GET", "POST"])
 def edit_recipe(user_id, recipe_id):
     if "user_id" not in session or session["user_id"] != user_id:
@@ -472,6 +474,7 @@ def user_profile(user_id):
 
     return render_template("user_profile.html", user=user)
 
+############## Edit Profile ################
 @app.route("/edit_profile/<int:user_id>", methods=["GET", "POST"])
 def edit_profile(user_id):
     user = User.query.get_or_404(user_id)
@@ -590,6 +593,8 @@ def admin_browse_recipes(admin_id):
     categories = Category.query.order_by(Category.name).all()
     selected_category = request.args.get("category", "All")
     search_query = request.args.get("search_query", "")
+    page = request.args.get("page", 1, type=int)
+    per_page = 20
 
     query = Recipe.query.filter_by(approved=True)
 
@@ -606,9 +611,11 @@ def admin_browse_recipes(admin_id):
     if search_query:
         query = query.filter(Recipe.recipe_name.ilike(f"%{search_query}%"))
 
-    recipes = query.all()
 
-    return render_template("admin_browse_recipes.html", recipes=recipes, groups=groups, categories=categories, selected_category=selected_category, search_query=search_query, admin=admin, admin_id=admin_id)
+    pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+    recipes = pagination.items
+
+    return render_template("admin_browse_recipes.html", recipes=recipes, groups=groups, categories=categories, selected_category=selected_category, search_query=search_query, admin=admin, admin_id=admin_id, pagination=pagination)
 
 @app.route("/admin/<int:admin_id>/delete_recipe/<int:recipe_id>", methods=["POST"])
 def delete_recipe(admin_id, recipe_id):
@@ -731,6 +738,8 @@ def edit_categories(admin_id):
     groups = CategoryGroup.query.order_by(CategoryGroup.name).all()
     selected_group = request.args.get("group", "All")
     search_query = request.args.get("search_query", "")
+    page = request.args.get("page", 1, type=int)
+    per_page = 32
     query = Category.query
 
     if selected_group != "All":
@@ -741,9 +750,12 @@ def edit_categories(admin_id):
     if search_query:
         query = query.filter(Category.name.ilike(f"%{search_query}%"))
 
-    categories = query.order_by(Category.name).all()  # Sort categories alphabetically
 
-    return render_template("edit_categories.html", admin_id=admin_id, admin=admin, categories=categories, groups=groups, selected_group=selected_group, search_query=search_query)
+    pagination = query.order_by(Category.name).paginate(page=page, per_page=per_page, error_out=False)
+    categories = pagination.items
+
+
+    return render_template("edit_categories.html", admin_id=admin_id, admin=admin, categories=categories, groups=groups, selected_group=selected_group, search_query=search_query, pagination=pagination)
 
 @app.route("/admin/<int:admin_id>/add_category", methods=["POST"])
 def add_category(admin_id):

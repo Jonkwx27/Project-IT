@@ -259,3 +259,31 @@ h2 {
     margin-bottom: 20px; 
     text-align: center; 
   }
+
+/* Pagination styles */
+.pagination {
+    text-align: center;
+    margin-top: 20px;
+    font-family: 'Bebas Neue', sans-serif; 
+  }
+  
+  .pagination a, .pagination span {
+    margin: 0 5px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 18px;
+    background-color: #c28855;
+    color: #fff;
+    transition: background-color 0.3s; 
+  }
+  
+  .pagination a:hover {
+    background-color: #98714f;
+  }
+  
+  .pagination span.current-page-number {
+    background-color: #f8aa35;
+    color: #000;
+    cursor: default;
+  }
