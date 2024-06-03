@@ -483,8 +483,9 @@ def edit_profile(user_id):
     
     if request.method == "POST":
         if request.form.get("action") == "update_profile":
-            user.username = request.form.get("username")
+            user.name = request.form.get("name")
             user.email = request.form.get("email")
+            user.username = request.form.get("username")
             user.age = int(request.form.get("age"))
             db.session.commit()
             update_message = "Profile updated successfully!"
