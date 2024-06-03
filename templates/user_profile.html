@@ -29,15 +29,8 @@
     </div>
 
     <div class="profile">
-        <div class="profile-photo-container">
-            {% if user.profile_photo %}
-                <img src="{{ url_for('static', filename=user.profile_photo) }}" alt="Profile Photo">
-            {% else %}
-                <p>NO PHOTO</p>
-            {% endif %}
-        </div>
         <div class="profile-info">
-            <h1><strong>NAME:</strong> {{ user.name }}</h1>
+            <h1><strong>NAME:</strong> {{ user.username }}</h1>
             <h1><strong>EMAIL:</strong> {{ user.email }}</h1>
             <h1><strong>AGE:</strong> {{ user.age }}</h1>
             <h1><strong>JOINED:</strong> {{ user.created_at }}</h1>
