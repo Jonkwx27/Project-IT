@@ -21,6 +21,9 @@
         {% endif %}
     </div>
 
+    <!-- Flash messages -->
+    {% include '_flashes.html' %}
+
     <h1 class="recipe-title">{{ recipe.recipe_name }}</h1>
 
     <form action="{{ url_for('favorite_recipe', user_id=user.id, recipe_id=recipe.id, source=source) }}" method="POST">
@@ -28,6 +31,10 @@
         <input type="date" id="cook_on" name="cook_on" value="{{ favourite_recipe.cook_on.strftime('%Y-%m-%d') if favourite_recipe and favourite_recipe.cook_on else '' }}">
         <button type="submit" class="submit-button">{{ 'Unfavorite' if recipe.id in favourited_recipe_ids else 'Favorite' }}</button>
     </form>
+
+    {% if recipe.user_id != user.id %}
+        <a href="{{ url_for('report_recipe', user_id=user.id, recipe_id=recipe.id) }}" class="report-button">Report Recipe</a>
+    {% endif %}
 
     <div class="recipe-photo-container">
         <img src="{{ url_for('static', filename=recipe.image_path) }}" class="recipe-photo" alt="Recipe Photo" style="max-width: 200px;">
@@ -131,6 +138,7 @@
         <div class="comment">
             <div class="comment-content">
                 <p>{{ comment.submitted_by }}</p>
+                <p>Commented At: {{ comment.commented_at.strftime('%H:%M:%S') }}</p>
                 <p>Rating: 
                     {% for i in range(comment.rating) %}
                         &#9733; 
@@ -143,6 +151,14 @@
                     <img src="/static/{{ comment.image_url }}" alt="Comment Image">
                 {% endif %}
                 <p>{{ comment.comment }}</p>
+                {% if comment.user_id == user.id %}
+                    <form action="{{ url_for('user_delete_comment', user_id=user.id, comment_id=comment.id) }}" method="POST" style="display:inline;">
+                        <button type="submit" class="delete-button" onclick="return confirm('Are you sure you want to delete this comment?')">Delete Comment</button>
+                    </form>
+                {% endif %}
+                {% if comment.user_id != user.id %}
+                    <a href="{{ url_for('report_comment', user_id=user.id, comment_id=comment.id, recipe_id=recipe.id) }}" class="report-button">Report Comment</a>
+                {% endif %}
             </div>
         </div>
         {% endfor %}

@@ -125,7 +125,7 @@ body {
 .rating > label:hover ~ label:before {
     content: "\2605";
 }
-.submit-button, .delete-button {
+.submit-button, .delete-button, .report-button {
     padding: 10px 20px;
     background-color: #c28855; 
     border: 2px solid #000000; 
@@ -133,12 +133,17 @@ body {
     cursor: pointer;
     text-align: center;
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 15px;
+    font-size: 15px;   
     transition: background-color 0.3s;
     z-index: 1;
 }
-.submit-button:hover, .delete-button:hover {
+.submit-button:hover, .delete-button:hover, .report-button:hover {
     background-color: #98714f;
+}
+
+.report-button {
+    text-decoration: none;
+    color: black;
 }
 .comment-section {
     background-color: #f8aa35; 

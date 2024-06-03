@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.sql import func
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
+from pytz import timezone
 
 db = SQLAlchemy()
 
@@ -11,10 +12,13 @@ class User(db.Model):
     username = db.Column(db.String(100), unique=True, nullable=False)
     age = db.Column(db.Integer)
     password = db.Column(db.String(100), nullable=False)
-    created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
+    created_at = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone('Asia/Kuala_Lumpur')))
+    number_of_warnings = db.Column(db.Integer, default=0)
     recipes = db.relationship('Recipe', backref='author', cascade="all, delete-orphan", lazy=True)
     comments = db.relationship('Comment', backref='commenter', cascade="all, delete-orphan", lazy=True)
     favourite_recipes = db.relationship('FavouriteRecipe', backref='user_fav', cascade="all, delete-orphan", lazy=True)
+    notifications = db.relationship('Notification', back_populates='user', cascade="all, delete-orphan", lazy=True, overlaps="user_notifications")
+    reports = db.relationship('Report', back_populates='user', cascade="all, delete-orphan", lazy=True, overlaps="user_reports")
 
     def __repr__(self):
         return f'<User {self.name}>'
@@ -53,13 +57,13 @@ class Recipe(db.Model):
     difficulty = db.Column(db.Integer, nullable=False)
     time_required = db.Column(db.Integer, nullable=False)
     serving_size = db.Column(db.Integer, nullable=False)
-    submitted_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
+    submitted_at = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone('Asia/Kuala_Lumpur')))
     approved = db.Column(db.Boolean, default=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', name='fk_recipe_user'), nullable=False)
     image_path = db.Column(db.String(255))  # Path to the image file
     submitted_by = db.Column(db.String(100), nullable=False)
-    admin_id = db.Column(db.Integer, db.ForeignKey('admin.id', name='fk_recipe_admin'))
     comments = db.relationship('Comment', backref='recipe', cascade="all, delete-orphan", lazy=True)
+    reports = db.relationship('Report', back_populates='recipe', cascade="all, delete-orphan")
     categories = db.relationship('Category', secondary=recipe_category_association, backref=db.backref('recipes', lazy='dynamic'))
 
     def __repr__(self):
@@ -71,9 +75,10 @@ class Comment(db.Model):
     rating = db.Column(db.Integer, nullable=False)
     image_url = db.Column(db.String(255))
     submitted_by = db.Column(db.String(100), nullable=False)
+    commented_at = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone('Asia/Kuala_Lumpur')))
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id', name='fk_comment_recipe'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', name='fk_comment_user'), nullable=False)
-    admin_id = db.Column(db.Integer, db.ForeignKey('admin.id', name='fk_comment_admin'))
+    reports = db.relationship('Report', back_populates='comment', cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"Comment('{self.comment}', '{self.rating}')"
@@ -81,9 +86,18 @@ class Comment(db.Model):
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
+    group_id = db.Column(db.Integer, db.ForeignKey('category_group.id', name='fk_category_group'), nullable=True)
 
     def __repr__(self):
         return f'<Category {self.name}>'
+
+class CategoryGroup(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False, unique=True)
+    categories = db.relationship('Category', backref='group', lazy=True)
+
+    def __repr__(self):
+        return f'<CategoryGroup {self.name}>'
 
 class FavouriteRecipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -93,3 +107,27 @@ class FavouriteRecipe(db.Model):
 
     def __repr__(self):
         return f"FavouriteRecipe('{self.user_id}', '{self.recipe_id}')"
+
+class Report(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', name='fk_report_user'), nullable=False)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id', name="fk_report_recipe"), nullable=True)
+    comment_id = db.Column(db.Integer, db.ForeignKey('comment.id', name='fk_report_comment'), nullable=True)
+    report_text = db.Column(db.String(500), nullable=False)
+    reviewed = db.Column(db.Boolean, default=False)
+    approved = db.Column(db.Boolean, default=False)
+    notified = db.Column(db.Boolean, default=False)
+    timestamp = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone('Asia/Kuala_Lumpur')))
+
+    user = db.relationship('User', back_populates='reports', overlaps="reports,user_reports")
+    recipe = db.relationship('Recipe', back_populates='reports', overlaps="reports,recipe_reports")
+    comment = db.relationship('Comment', back_populates='reports', overlaps="reports,comment_reports")
+
+class Notification(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', name='fk_notification_user'), nullable=False)
+    message = db.Column(db.String(255), nullable=False)
+    timestamp = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone('Asia/Kuala_Lumpur')))
+    read = db.Column(db.Boolean, default=False)
+
+    user = db.relationship('User', back_populates='notifications', overlaps="notifications,user_notifications")

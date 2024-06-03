@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='BrowseRecipe.css') }}">
+    <title>View Notifications</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+</head>
+<style>
+    .classification li{
+        text-decoration: none;
+        color: black;
+    }
+</style>
+<body>
+    <div class="header">
+        <div class="logo-container">
+            <img style="height: 50px; padding-bottom: 30px;" src="{{ url_for('static', filename='Logo_CookiQ.jpeg') }}" alt="Logo_CookiQ">
+        </div>
+        <h1 class="title">View Notifications</h1>
+        <a href="{{ url_for('logout') }}" class="LogOutButton">Logout</a>
+    </div>
+
+    <!-- Flash messages -->
+    {% include '_flashes.html' %}
+
+    <div class="classification">
+        <ul>
+            <li><a href="{{ url_for('browse_recipes', user_id=user.id) }}" class="button">Browse Recipes</a></li>
+            <li><a href="{{ url_for('favouritedrecipe', user_id=user.id)}}" class="button">Favourited Recipes</a></li>
+            <li><a href="{{ url_for('recipesubmission', user_id=user.id) }}" class="button">Submit Recipes</a></li>
+            <li><a href="{{ url_for('submitted_recipes', user_id=user.id) }}" class="button">My Submitted Recipes</a></li>
+            <li><a href="{{ url_for('view_notifications', user_id=user.id) }}">View Notifications</a></li>
+            <li><a href="{{ url_for('user_profile', user_id=user.id) }}" class="button">User Profile</a></li>
+        </ul>
+    </div>
+
+    <h1>Unread Notifications</h1>
+    <ul>
+        {% for notification in unread_notifications %}
+        <li>
+            <p>{{ notification.message }}</p>
+            <p>Date: {{ notification.timestamp.strftime('%d-%m-%Y %H:%M:%S') }}</p>
+            <form action="{{ url_for('mark_notification_as_read', notification_id=notification.id, user_id=user.id) }}" method="POST" style="display:inline;">
+                <button type="submit">Mark as Read</button>
+            </form>
+            <form action="{{ url_for('delete_notification', user_id=user.id, notification_id=notification.id) }}" method="POST" style="display:inline;">
+                <button type="submit" class="delete-button" onclick="return confirm('Are you sure you want to delete this notification?')">Delete Notification</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <h1>Read Notifications</h1>
+    <ul>
+        {% for notification in read_notifications %}
+        <li>
+            <p>{{ notification.message }}</p>
+            <p>Date: {{ notification.timestamp.strftime('%d-%m-%Y %H:%M:%S') }}</p>
+            <form action="{{ url_for('mark_notification_as_unread', notification_id=notification.id, user_id=user.id) }}" method="POST" style="display:inline;">
+                <button type="submit">Mark as Unread</button>
+            </form>
+            <form action="{{ url_for('delete_notification', user_id=user.id, notification_id=notification.id) }}" method="POST" style="display:inline;">
+                <button type="submit" class="delete-button" onclick="return confirm('Are you sure you want to delete this notification?')">Delete Notification</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

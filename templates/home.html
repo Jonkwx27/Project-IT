@@ -104,6 +104,10 @@
             <img style="height: 50px;" src="{{ url_for('static', filename='Logo_CookiQ.jpeg') }}" alt="Logo_CookiQ">
             <a href="adminlogin" class="Admin_Log">Log In For Admin</a>
         </div>
+
+        <!-- Flash messages -->
+        {% include '_flashes.html' %}
+
         <div class="text1">
             <h1>Make Cooking Easier with CookiQ!</h1>
             <h1>"Cooking is the ultimate giving." - Jamie Oliver</h1>

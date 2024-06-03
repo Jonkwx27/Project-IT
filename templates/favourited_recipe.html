@@ -20,26 +20,39 @@
 
     <div class="classification">
         <ul>
-            <li><a href="browse_recipes" class="button">Browse Recipes</a></li>
-            <li><a href="favouritedrecipe" class="button">Favourited Recipes</a></li>
-            <li><a href="recipesubmission" class="button">Submit Recipes</a></li>
-            <li><a href="submitted_recipes" class="button">My Submitted Recipes</a></li>
-            <li><a href="userprofile" class="button">User Profile</a></li>
+            <li><a href="{{ url_for('browse_recipes', user_id=user.id) }}" class="button">Browse Recipes</a></li>
+            <li><a href="{{ url_for('favouritedrecipe', user_id=user.id)}}" class="button">Favourited Recipes</a></li>
+            <li><a href="{{ url_for('recipesubmission', user_id=user.id) }}" class="button">Submit Recipes</a></li>
+            <li><a href="{{ url_for('submitted_recipes', user_id=user.id) }}" class="button">My Submitted Recipes</a></li>
+            <li><a href="{{ url_for('view_notifications', user_id=user.id) }}">View Notifications</a></li>
+            <li><a href="{{ url_for('user_profile', user_id=user.id) }}" class="button">User Profile</a></li>
         </ul>
     </div>
 
     <div class="recipes">
         <h2>Favourited Recipes</h2>
+        <div class="sort-selection">
+            <form method="GET" action="{{ url_for('favouritedrecipe', user_id=user.id) }}">
+                <label for="sort_by">Sort By:</label>
+                <select name="sort_by" id="sort_by">
+                    <option value="none" {% if sort_by == "none" %}selected{% endif %}>Unsorted</option>
+                    <option value="alphabetical" {% if sort_by == "alphabetical" %}selected{% endif %}>Alphabetical</option>
+                    <option value="cook_on" {% if sort_by == "cook_on" %}selected{% endif %}>Cook On Date</option>
+                </select>
+                <button type="submit">Sort</button>
+            </form>
+        </div>
+
         {% if favourited_recipes %}
         {% for i in range(0, favourited_recipes|length, 4) %}
         <div class="recipe-row">
             {% for recipe in favourited_recipes[i:i+4] %}
             <div class="recipe-card">
-                <img src="/static/{{ recipe.image_path }}" alt="Recipe Image" style="max-width: 100px;">
-                <h3>{{ recipe.recipe_name }}</h3>
-                <p>{{ recipe.description }}</p>
-                <p>Cook On: {{ recipe.cook_on }}</p>              
-                <a href="{{ url_for('recipe', user_id=user.id, recipe_id=recipe.id, source='favouritedrecipe') }}">View Recipe</a>
+                <img src="/static/{{ recipe[0].image_path }}" alt="Recipe Image" style="max-width: 100px;">
+                <h3>{{ recipe[0].recipe_name }}</h3>
+                <p>{{ recipe[0].description }}</p>
+                <p>Cook On: {{ recipe[1] }}</p>              
+                <a href="{{ url_for('recipe', user_id=user.id, recipe_id=recipe[0].id, source='favouritedrecipe') }}">View Recipe</a>
             </div>
             {% endfor %}
         </div>

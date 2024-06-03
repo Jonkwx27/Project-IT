@@ -1,0 +1,289 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f8aa35;
+    border-top: 10px solid #000;
+    border-bottom: 10px solid #000;
+    margin-bottom: 20px;
+    padding: 5px 10px;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    margin-top: 30px;
+}
+
+.logo {
+    height: 50px;
+    padding-bottom: 30px;
+}
+
+.title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 55px;
+    color: rgb(0, 0, 0);
+    margin-top: 45px;
+}
+
+.LogOutButton {
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #c28855;
+    color: #fff;
+    font-size: 22px;
+    font-weight: 300;
+    cursor: pointer;
+    text-decoration: none;
+    left: 20px;
+}
+
+.LogOutButton:hover {
+    background-color: #98714f;
+}
+
+/* Classification */
+.classification ul {
+    text-align: center;
+    display: flex;
+    padding-top: 5px;
+    padding-left: 0px;
+}
+
+.classification li {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    font-weight: 300;
+    text-transform: uppercase;
+    display: inline-block;
+    width: 100%; 
+}
+
+.classification li:hover {
+background-color:rgb(250, 235, 215);
+}
+
+.button {
+    border: none;
+    color: rgb(0, 0, 0);
+}
+
+/* Add Category Form */
+.category-form {
+    margin: 0 auto 20px;
+    width: 300px; /* Adjust the width as needed */
+}
+
+.category-form label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+.category-form input[type="text"] {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    padding: 5px;
+    border: 1px solid #000;
+    border-radius: 5px;
+}
+
+.group-selection {
+    margin-bottom: 20px; 
+}
+  
+.group-selection form {
+    display: flex;
+    align-items: center;
+}
+  
+.group-selection label {
+    font-family: 'Bebas Neue', sans-serif; 
+    font-size: 18px;
+    margin-right: 5px; 
+}
+  
+.group-selection select {
+    font-family: 'Bebas Neue', sans-serif; 
+    font-size: 16px; 
+    padding: 5px; 
+    border: 1px solid #000; 
+    border-radius: 5px;
+    margin-right: 5px;
+}
+  
+.group-selection button {
+    padding: 8px 16px; 
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px; 
+    background-color: #c28855; 
+    color: #fff; 
+    transition: background-color 0.3s; 
+}
+  
+.group-selection button:hover{
+    background-color: #98714f; 
+}
+
+.submit-button {
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    background-color: #c28855;
+    color: #fff;
+    transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+    background-color: #98714f;
+}
+
+
+.category-row {
+    display: flex;
+    justify-content: center; 
+    margin-bottom: 20px; 
+}
+
+.category-card {
+    width: 45%; 
+    margin: 0 10px; 
+    padding: 10px;
+    border: 1px solid #000;
+    border-radius: 5px;
+    background-color: #ece3ae; 
+    text-align: center; 
+}
+
+.category-card p {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    text-align: center; 
+}
+
+.update-button,
+.delete-button {
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    margin-top: 5px;
+}
+
+.update-button {
+    background-color: #4CAF50; /* Green */
+    color: white;
+}
+
+.update-button:hover {
+    background-color: #45a049;
+}
+
+.delete-button {
+    background-color: #f44336; /* Red */
+    color: white;
+}
+
+.delete-button:hover {
+    background-color: #da190b;
+}
+
+.add-category-form {
+    text-align: center; /* Center the form contents */
+    margin-bottom: 20px;
+}
+
+.category-input {
+    display: inline-block; /* Display input and button in the same line */
+}
+
+.add-category-button {
+    margin-top: 10px; /* Add margin on top to separate from the input */
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    background-color: #c28855;
+    color: #fff;
+    transition: background-color 0.3s;
+}
+
+.add-category-button:hover {
+    background-color: #98714f;
+}
+.category-selection {
+    font-family: 'Bebas Neue', sans-serif;  
+}
+
+.search-bar {
+    margin-bottom: 20px; 
+}
+.search-bar button {
+    padding: 8px 16px; 
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px; 
+    background-color: #c28855; 
+    color: #fff; 
+    transition: background-color 0.3s; 
+}
+
+.search-bar button:hover {
+    background-color: #98714f; 
+}
+.search-bar input[type="text"] {
+    font-family: 'Bebas Neue', sans-serif; 
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+h2 {
+    font-family: 'Bebas Neue', sans-serif; 
+    font-size: 32px; 
+    color: #000; 
+    text-transform: uppercase; 
+    margin-bottom: 20px; 
+    text-align: center; 
+  }
+
+/* Pagination styles */
+.pagination {
+    text-align: center;
+    margin-top: 20px;
+    font-family: 'Bebas Neue', sans-serif; 
+  }
+  
+  .pagination a, .pagination span {
+    margin: 0 5px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 18px;
+    background-color: #c28855;
+    color: #fff;
+    transition: background-color 0.3s; 
+  }
+  
+  .pagination a:hover {
+    background-color: #98714f;
+  }
+  
+  .pagination span.current-page-number {
+    background-color: #f8aa35;
+    color: #000;
+    cursor: default;
+  }

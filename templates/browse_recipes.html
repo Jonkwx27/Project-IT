@@ -18,13 +18,17 @@
         <a href="{{ url_for('logout') }}" class="LogOutButton">Logout</a>
     </div>
 
+    <!-- Flash messages -->
+    {% include '_flashes.html' %}
+
     <div class="classification">
         <ul>
-            <li><a href="browse_recipes" class="button">Browse Recipes</a></li>
-            <li><a href="favouritedrecipe" class="button">Favourited Recipes</a></li>
-            <li><a href="recipesubmission" class="button">Submit Recipes</a></li>
-            <li><a href="submitted_recipes" class="button">My Submitted Recipes</a></li>
-            <li><a href="userprofile" class="button">User Profile</a></li>
+            <li><a href="{{ url_for('browse_recipes', user_id=user.id) }}" class="button">Browse Recipes</a></li>
+            <li><a href="{{ url_for('favouritedrecipe', user_id=user.id)}}" class="button">Favourited Recipes</a></li>
+            <li><a href="{{ url_for('recipesubmission', user_id=user.id) }}" class="button">Submit Recipes</a></li>
+            <li><a href="{{ url_for('submitted_recipes', user_id=user.id) }}" class="button">My Submitted Recipes</a></li>
+            <li><a href="{{ url_for('view_notifications', user_id=user.id) }}">View Notifications</a></li>
+            <li><a href="{{ url_for('user_profile', user_id=user.id) }}" class="button">User Profile</a></li>
         </ul>
     </div>
 
@@ -40,8 +44,12 @@
             <label for="category">Select Category:</label>
             <select name="category" id="category">
                 <option value="All">All</option>
-                {% for category in categories %}
-                <option value="{{ category.name }}" {% if category.name == selected_category %}selected{% endif %}>{{ category.name }}</option>
+                {% for group in groups %}
+                    <optgroup label="{{ group.name }}">
+                        {% for category in group.categories %}
+                            <option value="{{ category.name }}" {% if category.name == selected_category %}selected{% endif %}>{{ category.name }}</option>
+                        {% endfor %}
+                    </optgroup>
                 {% endfor %}
             </select>
             <button type="submit">Browse</button>
@@ -69,5 +77,36 @@
         </div>
         {% endfor %}
     </div>
+
+    <div class="pagination">
+        {% if pagination.has_prev %}
+            <span>
+                <a class='page-number' href="{{ url_for('browse_recipes', user_id=user.id, page=pagination.prev_num, category=selected_category, search_query=search_query) }}">
+                    {{ '<<<' }}
+                </a>
+            </span>
+        {% endif %}
+
+        {% for number in pagination.iter_pages() %}
+            {% if pagination.page != number %}
+                <span>
+                    <a class='page-number' href="{{ url_for('browse_recipes', user_id=user.id, page=number, category=selected_category, search_query=search_query) }}">
+                        {{ number }}
+                    </a>
+                </span>
+            {% else %}
+                <span class='current-page-number'>{{ number }}</span>
+            {% endif %}
+        {% endfor %}
+
+        {% if pagination.has_next %}
+            <span>
+                <a class='page-number' href="{{ url_for('browse_recipes', user_id=user.id, page=pagination.next_num, category=selected_category, search_query=search_query) }}">
+                    {{ '>>>' }}
+                </a>
+            </span>
+        {% endif %}
+    </div>
+    
 </body>
 </html>

@@ -97,6 +97,9 @@
         <a href="/" class="MainButton">Return to Main</a>
     </div>
 
+    <!-- Flash messages -->
+    {% include '_flashes.html' %}
+
     <div class="form-container">
         <form method="post" action="{{ url_for('adminlogin') }}">
             <label for="email_admin">Email</label>
