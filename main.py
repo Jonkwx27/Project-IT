@@ -5,7 +5,7 @@ from flask_migrate import Migrate
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import Recipe, db, User, Admin, Comment, Category, CategoryGroup, FavouriteRecipe, Report, Notification
-from datetime import datetime
+from datetime import datetime, date
 
 
 
@@ -425,7 +425,7 @@ def favouritedrecipe(user_id):
     if sort_by == "alphabetical":
         favourited_recipes_with_cook_on = sorted(favourited_recipes_with_cook_on, key=lambda r: r[0].recipe_name)
     elif sort_by == "cook_on":
-        favourited_recipes_with_cook_on = sorted(favourited_recipes_with_cook_on, key=lambda r: r[1] if r[1] else datetime.min)
+        favourited_recipes_with_cook_on = sorted(favourited_recipes_with_cook_on, key=lambda r: r[1] if r[1] else date.min)
 
 
     # Get the IDs of favourited recipes
