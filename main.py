@@ -545,7 +545,11 @@ def edit_profile(user_id):
         elif request.form.get("action") == "change_password":
             old_password = request.form.get("old_password")
             new_password = request.form.get("new_password")
-            if user.check_password(old_password):
+            confirm_new_password = request.form.get("confirm_new_password")
+
+            if new_password != confirm_new_password:
+                password_message = "New passwords do not match!"
+            elif user.check_password(old_password):
                 user.set_password(new_password)
                 db.session.commit()
                 password_message = "Password changed successfully!"

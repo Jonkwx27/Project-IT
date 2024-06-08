@@ -50,6 +50,9 @@
             
             <label for="new_password">New Password:</label>
             <input type="password" id="new_password" name="new_password" required><br><br>
+
+            <label for="confirm_new_password">Confirm New Password:</label>
+            <input type="password" id="confirm_new_password" name="confirm_new_password" required><br><br>
             
             <input type="submit" value="Change Password">
         </form>
@@ -57,7 +60,7 @@
         {% if password_message %}
             {% if 'successfully' in password_message %}
                 <p class="success">{{ password_message }}</p>
-            {% else %}
+            {% elif 'match' in password_message or 'incorrect' in password_message %}
                 <p class="failed">{{ password_message }}</p>
             {% endif %}
         {% endif %}
