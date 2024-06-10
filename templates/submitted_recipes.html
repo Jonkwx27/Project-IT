@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Submitted Recipes</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='BrowseRecipe.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
@@ -23,16 +23,16 @@
     
     <div class="classification">
         <ul>
-            <li><a href="{{ url_for('browse_recipes', user_id=user.id) }}" class="button">Browse Recipes</a></li>
-            <li><a href="{{ url_for('favouritedrecipe', user_id=user.id)}}" class="button">Favourited Recipes</a></li>
-            <li><a href="{{ url_for('recipesubmission', user_id=user.id) }}" class="button">Submit Recipes</a></li>
-            <li><a href="{{ url_for('submitted_recipes', user_id=user.id) }}" class="button">My Submitted Recipes</a></li>
-            <li><a href="{{ url_for('view_notifications', user_id=user.id) }}">View Notifications</a></li>
-            <li><a href="{{ url_for('user_profile', user_id=user.id) }}" class="button">User Profile</a></li>
+            <li><a href="{{ url_for('browse_recipes', user_id=user.id) }}" class="nav-button">Browse Recipes</a></li>
+            <li><a href="{{ url_for('favouritedrecipe', user_id=user.id)}}" class="nav-button">Favourited Recipes</a></li>
+            <li><a href="{{ url_for('recipesubmission', user_id=user.id) }}" class="nav-button">Submit Recipes</a></li>
+            <li><a href="{{ url_for('submitted_recipes', user_id=user.id) }}" class="nav-button">My Submitted Recipes</a></li>
+            <li><a href="{{ url_for('view_notifications', user_id=user.id) }}" class="nav-button">View Notifications</a></li>
+            <li><a href="{{ url_for('user_profile', user_id=user.id) }}" class="nav-button">User Profile</a></li>
         </ul>
     </div>
     <div class="recipes">
-        <h2>My Submitted Recipes</h2>
+        <h2 class="centertext">My Submitted Recipes</h2>
         {% if recipes %}
             {% for i in range(0, recipes|length, 4) %}
             <div class="recipe-row">
@@ -58,6 +58,36 @@
         {% else %}
             <p>No submitted recipes yet.</p>
         {% endif %}
+        </div>
+
+        <div class="pagination">
+            {% if pagination.has_prev %}
+                <span>
+                    <a class='page-number' href="{{ url_for('submitted_recipes', user_id=user.id, page=pagination.prev_num) }}">
+                        {{ '<<<' }}
+                    </a>
+                </span>
+            {% endif %}
+    
+            {% for number in pagination.iter_pages() %}
+                {% if pagination.page != number %}
+                    <span>
+                        <a class='page-number' href="{{ url_for('submitted_recipes', user_id=user.id, page=number) }}">
+                            {{ number }}
+                        </a>
+                    </span>
+                {% else %}
+                    <span class='current-page-number'>{{ number }}</span>
+                {% endif %}
+            {% endfor %}
+    
+            {% if pagination.has_next %}
+                <span>
+                    <a class='page-number' href="{{ url_for('submitted_recipes', user_id=user.id, page=pagination.next_num) }}">
+                        {{ '>>>' }}
+                    </a>
+                </span>
+            {% endif %}
         </div>
 </body>
 </html>

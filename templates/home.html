@@ -3,123 +3,33 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
         <title>HomePage - CookiQ </title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
-        <style>
-            body {
-            background-color: #ece3ae; 
-            }
-            .header {
-            padding: 10px;
-            background-color: #f8aa35; 
-            border-top: 10px solid #000; 
-            border-bottom: 10px solid #000; 
-            margin-bottom: 20px;
-            position:relative
-            }
-            .Admin_Log {
-            color: #fff;
-            position: absolute;
-            top: 20px; 
-            right: 30px; 
-            padding: 5px 10px; 
-            border-radius: 5px;
-            text-align: center;
-            background: #c28855;; 
-            text-decoration: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            z-index: 1;
-            }
-            .Admin_Log:hover{
-            background-color: #98714f;
-            }
-
-            .text1 h1 {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 40px;
-            color: #1b1b1b; 
-            text-align: center;
-            background-color: #f8aa35;  
-            margin: 0%;
-            }
-            .photos {
-            display: flex; 
-            justify-content: space-between; 
-            padding: 20px;
-            }
-            .photo {
-            flex: 0 1 30%; 
-            border: 2px solid #000;
-            padding: 10px; 
-            }
-            .photo img {
-            max-width: 100%;
-            height: auto; 
-            }
-            .why-choose-cookiq {
-            text-align: center;
-            margin-top: 50px;
-            }
-            .why-choose-cookiq h2{
-            font-size: 40px;
-            color: #1b1b1b;
-            margin-bottom: 20px;
-            font-family: 'Bebas Neue', sans-serif;
-            background-color: #f8aa35; 
-            }
-            .reasons {
-            font-size: 30px;
-            color: #1b1b1b;
-            margin-bottom: 10px;
-            font-family: 'Bebas Neue', sans-serif;
-            }
-            .buttons {
-            text-align: center;
-            margin-top: 30px;
-            font-family: 'Bebas Neue', sans-serif;
-            margin-bottom: 50px;
-            }
-            .button {
-            padding:10px 20px;
-            background-color: #f8aa35;
-            border: none;
-            border-radius: 5px;
-            color: #010101;
-            font-size: 20px;
-            margin: 10px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            text-decoration: none;
-            }
-            .button:hover {
-            background-color: #e08b00;
-            }
-        </style>
     </head>
-    <body>
+    <body class="body">
         <div class="header">
             <img style="height: 50px;" src="{{ url_for('static', filename='Logo_CookiQ.jpeg') }}" alt="Logo_CookiQ">
-            <a href="adminlogin" class="Admin_Log">Log In For Admin</a>
+            <a href="adminlogin" class="Admin-Login-button">Log In For Admin</a>
         </div>
 
         <!-- Flash messages -->
         {% include '_flashes.html' %}
 
-        <div class="text1">
+        <div class="home-text">
             <h1>Make Cooking Easier with CookiQ!</h1>
             <h1>"Cooking is the ultimate giving." - Jamie Oliver</h1>
         </div>
-        <div class="photos">
-            <div class="photo">
+        <div class="home-page-photos">
+            <div class="home-page-photo">
                 <img src="https://static.vecteezy.com/system/resources/previews/027/703/478/non_2x/brazilian-food-background-photo.jpg" alt="Photo 1">
             </div>
-            <div class="photo">
+            <div class="home-page-photo">
                 <img src="https://img.freepik.com/premium-photo/lamb-chops-prepared-with-pesto-sauce-illustration-ai-generative_118124-13584.jpg" alt="Photo 2">
             </div>
-            <div class="photo">
+            <div class="home-page-photo">
                 <img src="https://miro.medium.com/v2/resize:fit:1400/1*RI0bai67MzVylRfiEuQ6ZA.png" alt="Photo 3">
             </div>
         </div>
@@ -131,9 +41,9 @@
                 <p>☑ User-friendly</p>
             </div>
         </div>
-        <div class="buttons">
-            <a href="signup" class="button">Sign Up</a>
-            <a href = "login" class="button">Log In</a>
+        <div class="home-buttons">
+            <a href="signup" class="signup-button">Sign Up</a>
+            <a href = "login" class="login-button">Log In</a>
         </div>
     </body>
 </html>

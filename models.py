@@ -118,6 +118,7 @@ class Report(db.Model):
     approved = db.Column(db.Boolean, default=False)
     notified = db.Column(db.Boolean, default=False)
     timestamp = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone('Asia/Kuala_Lumpur')))
+    reviewed_at = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone('Asia/Kuala_Lumpur')), nullable=True)
 
     user = db.relationship('User', back_populates='reports', overlaps="reports,user_reports")
     recipe = db.relationship('Recipe', back_populates='reports', overlaps="reports,recipe_reports")

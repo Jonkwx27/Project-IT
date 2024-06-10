@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='EditCategories.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <title>Edit Categories Groups</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,37 +23,37 @@
 
     <div class="classification">
         <ul>
-            <li><a href="{{ url_for('pending_submissions', admin_id=admin.id) }}" class="button">Review Submitted Recipes</a></li>
-            <li><a href="{{ url_for('admin_browse_recipes', admin_id=admin.id)}}" class="button">Browse Recipes</a></li>         
-            <li><a href="{{ url_for('manage_users', admin_id=admin.id) }}" class="button">Manage Users</a></li>
-            <li><a href="{{ url_for('edit_category_groups', admin_id=admin.id)}}" class="button">Edit Categories Groups</a></li>
-            <li><a href="{{ url_for('edit_categories', admin_id=admin.id) }}" class="button">Edit Categories</a></li>
-            <li><a href="{{ url_for('view_reports', admin_id=admin.id) }}" class="button">View Reports</a></li>  
+            <li><a href="{{ url_for('pending_submissions', admin_id=admin.id) }}" class="nav-button">Review Submitted Recipes</a></li>
+            <li><a href="{{ url_for('admin_browse_recipes', admin_id=admin.id)}}" class="nav-button">Browse Recipes</a></li>         
+            <li><a href="{{ url_for('manage_users', admin_id=admin.id) }}" class="nav-button">Manage Users</a></li>
+            <li><a href="{{ url_for('edit_category_groups', admin_id=admin.id)}}" class="nav-button">Edit Categories Groups</a></li>
+            <li><a href="{{ url_for('edit_categories', admin_id=admin.id) }}" class="nav-button">Edit Categories</a></li>
+            <li><a href="{{ url_for('view_reports', admin_id=admin.id) }}" class="nav-button">View Reports</a></li>  
         </ul>
     </div>
 
-    <div class="category-selection">
-        <form method="POST" action="{{ url_for('add_category_group', admin_id=admin.id) }}" class="add-category-form">
-            <label for="category">Group Name:</label>
-            <div class="category-input">
+    <div class="category-group-form">
+        <form method="POST" action="{{ url_for('add_category_group', admin_id=admin.id) }}" class="add-category-group-form">
+            <label for="category-group">Group Name:</label>
+            <div class="category-group-input">
                 <input type="text" id="group" name="name" required>
-                <button type="submit" class="add-category-button">Add Group</button>
+                <button type="submit" class="add-category-group-button">Add Group</button>
             </div>
         </form>
     </div>
 
-    <div class="categories">
+    <div class="categories-group">
         {% for i in range(0, groups | length, 4) %}
-        <div class="category-row">
+        <div class="category-group-row">
             {% for group in groups[i:i+4] %}
-                <div class="category-card">
+                <div class="category-group-card">
                     <p>{{ group.name }}</p>
                     <form action="{{ url_for('update_category_group', admin_id=admin.id, group_id=group.id) }}" method="post">
                         <input type="text" name="new_name" value="{{ group.name }}" required>
-                        <button type="submit" class="update-button">Update</button>
+                        <button type="submit" class="update-category-group-button">Update</button>
                     </form>
                     <form action="{{ url_for('delete_category_group', admin_id=admin.id, group_id=group.id) }}" method="post">
-                        <button type="button" class="delete-button" onclick="confirmDelete('{{ group.id }}', '{{ group.name }}')">Delete</button>
+                        <button type="button" class="delete-category-group-button" onclick="confirmDelete('{{ group.id }}', '{{ group.name }}')">Delete</button>
                     </form>
                 </div>
             {% endfor %}
