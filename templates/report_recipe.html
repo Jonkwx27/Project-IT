@@ -3,12 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Report Recipe</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="body">
+    <div class="header">
+        <img style="height: 50px;" src="{{ url_for('static', filename='Logo_CookiQ.jpeg') }}" alt="Logo_CookiQ">
+        <a href="{{ url_for('recipe', user_id=user.id, recipe_id=recipe.id)}}" class="Return-button">Return</a>
+    </div>
     <h1>Report Recipe</h1>
     <form method="POST">
         <textarea name="report_text" rows="4" cols="50" placeholder="Describe the issue..." required></textarea><br>
-        <button type="submit">Submit Report</button>
+        <button type="submit" class="submit-report-button">Submit Report</button>
     </form>
 </body>
 </html>

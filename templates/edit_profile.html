@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='userprofile.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
     <title>Edit Profile</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,11 +14,12 @@
         <div class="logo-container">
             <img style="height: 50px; padding-bottom: 30px;" src="{{ url_for('static', filename='Logo_CookiQ.jpeg') }}" alt="Logo_CookiQ">
         </div>
+        <h1 class="title">Edit Profile</h1>
         <a href="{{ url_for('user_profile', user_id=user.id) }}" class="LogOutButton">Return</a>
     </div>
 
-    <h1 class="form-container">Edit Profile</h1>
-    <div class="form-container">
+    <h1 class="form-container-edit-profile">Edit Profile</h1>
+    <div class="form-container-edit-profile">
         <form method="POST" action="{{ url_for('edit_profile', user_id=user.id) }}">
             <input type="hidden" name="action" value="update_profile">
             <label for="name">Name:</label>
@@ -41,8 +42,8 @@
         {% endif %}
     </div>
 
-    <h1 class="form-container">Change Password</h1>
-    <div class="form-container">
+    <h1 class="form-container-edit-profile">Change Password</h1>
+    <div class="form-container-edit-profile">
         <form method="POST" action="{{ url_for('edit_profile', user_id=user.id) }}">
             <input type="hidden" name="action" value="change_password">
             <label for="old_password">Old Password:</label>

@@ -206,6 +206,7 @@ def report_recipe(user_id,recipe_id):
     if "user_id" not in session or session["user_id"] != user_id:
         return redirect(url_for("login"))
     user = User.query.get_or_404(user_id)
+    recipe = Recipe.query.get_or_404(recipe_id)
 
     if request.method == 'POST':
         report_text = request.form.get('report_text')
@@ -215,7 +216,7 @@ def report_recipe(user_id,recipe_id):
         flash('Your report has been submitted.', 'success')
         return redirect(url_for('recipe', user_id=user_id, recipe_id=recipe_id))
 
-    return render_template('report_recipe.html', recipe_id=recipe_id, user_id=user_id, user=user)
+    return render_template('report_recipe.html', recipe_id=recipe_id, user_id=user_id, user=user, recipe=recipe)
 
 ############# Report Comments ##############
 @app.route('/user/<int:user_id>/report_comment/<int:recipe_id>/<int:comment_id>', methods=['GET', 'POST'])
@@ -224,6 +225,7 @@ def report_comment(user_id,comment_id, recipe_id):
     if "user_id" not in session or session["user_id"] != user_id:
         return redirect(url_for("login"))
     user = User.query.get_or_404(user_id)
+    recipe = Recipe.query.get_or_404(recipe_id)
 
     if request.method == 'POST':
         report_text = request.form.get('report_text')
@@ -233,7 +235,7 @@ def report_comment(user_id,comment_id, recipe_id):
         flash('Your report has been submitted.', 'success')
         return redirect(url_for('recipe', recipe_id=recipe_id, user_id=user_id))
 
-    return render_template('report_comment.html', comment_id=comment_id, user_id=user_id, user=user, recipe_id=recipe_id)
+    return render_template('report_comment.html', comment_id=comment_id, user_id=user_id, user=user, recipe=recipe)
 
 
 ############## Recipe Submission ################
@@ -316,9 +318,13 @@ def submitted_recipes(user_id):
         return redirect(url_for("login"))
 
     user = User.query.get_or_404(user_id)
-    recipes = Recipe.query.filter_by(user_id=user_id).all()
+    page = request.args.get('page', 1, type=int)
+    per_page = 20
 
-    return render_template("submitted_recipes.html", user=user, recipes=recipes)
+    pagination = Recipe.query.filter_by(user_id=user_id,approved=True).paginate(page=page, per_page=per_page, error_out=False)
+    recipes = pagination.items
+
+    return render_template("submitted_recipes.html", user=user, recipes=recipes, pagination=pagination)
 
 ############ Delete Recipe ############
 @app.route("/user/<int:user_id>/delete_recipe/<int:recipe_id>", methods=["POST"])
@@ -409,29 +415,26 @@ def favouritedrecipe(user_id):
         return redirect(url_for("login"))
     
     user = User.query.get_or_404(user_id)
-    
+    page = request.args.get('page', 1, type=int)
+    per_page = 20
+
     # Fetch favorited recipes for the user and their cook_on dates
     favourited_recipes_with_cook_on = db.session.query(Recipe, FavouriteRecipe.cook_on)\
         .join(FavouriteRecipe, Recipe.id == FavouriteRecipe.recipe_id)\
-        .filter(FavouriteRecipe.user_id == user_id).all()
-
-    # Extracting Recipe objects and cook_on dates from the query result
-    favourited_recipes = [recipe_cook_on[0] for recipe_cook_on in favourited_recipes_with_cook_on]
-    cook_on_dates = [recipe_cook_on[1] for recipe_cook_on in favourited_recipes_with_cook_on]
+        .filter(FavouriteRecipe.user_id == user_id)\
+        .paginate(page=page, per_page=per_page, error_out=False)
+    
+    recipes_with_cook_on = favourited_recipes_with_cook_on.items
 
     # Get sorting criteria from the request args
     sort_by = request.args.get("sort_by", "none")
 
     if sort_by == "alphabetical":
-        favourited_recipes_with_cook_on = sorted(favourited_recipes_with_cook_on, key=lambda r: r[0].recipe_name)
+        recipes_with_cook_on = sorted(recipes_with_cook_on, key=lambda r: r[0].recipe_name)
     elif sort_by == "cook_on":
-        favourited_recipes_with_cook_on = sorted(favourited_recipes_with_cook_on, key=lambda r: r[1] if r[1] else date.min)
+        recipes_with_cook_on = sorted(recipes_with_cook_on, key=lambda r: r[1] if r[1] else date.min)
 
-
-    # Get the IDs of favourited recipes
-    favourited_recipe_ids = [recipe.id for recipe in favourited_recipes]
-
-    return render_template("favourited_recipe.html", user=user, favourited_recipes=favourited_recipes_with_cook_on, cook_on_dates=cook_on_dates, favourited_recipe_ids=favourited_recipe_ids, sort_by=sort_by)
+    return render_template("favourited_recipe.html", user=user, recipes=recipes_with_cook_on, pagination=favourited_recipes_with_cook_on, sort_by=sort_by)
 
 ############## Favourite a recipe ###############
 @app.route("/user/<int:user_id>/favorite/<int:recipe_id>", methods=['POST'])
@@ -611,10 +614,15 @@ def pending_submissions(admin_id):
 def approve_recipe(admin_id, recipe_id):
     if "admin_id" not in session or session["admin_id"] != admin_id:
         return redirect(url_for("adminlogin"))
-    
+     
     # Find the recipe by ID
     recipe = Recipe.query.get_or_404(recipe_id)
   
+    # Create a notification for the user who submitted the recipe
+    notification_message = f"The recipe that you submitted: '{recipe.recipe_name}' on '{recipe.submitted_at.strftime('%d-%m-%Y %H:%M:%S')}' has been approved by the admin."
+    notification = Notification(user_id=recipe.user_id, message=notification_message)
+    db.session.add(notification)
+
     recipe.approved = True
     db.session.commit()
     
@@ -630,6 +638,12 @@ def reject_recipe(admin_id, recipe_id):
 
     # Find the recipe by ID
     recipe = Recipe.query.get_or_404(recipe_id)
+
+    # Create a notification for the user who submitted the recipe
+    notification_message = f"The recipe that you submitted: '{recipe.recipe_name}' on '{recipe.submitted_at.strftime('%d-%m-%Y %H:%M:%S')}' has been rejected by the admin."
+    notification = Notification(user_id=recipe.user_id, message=notification_message)
+    db.session.add(notification)
+
     db.session.delete(recipe)
     db.session.commit()
     # Delete the associated image file
@@ -887,13 +901,18 @@ def manage_users(admin_id):
     admin = Admin.query.get_or_404(admin_id)
 
     search_query = request.args.get('search_query', '').strip()
+    page = request.args.get('page', 1, type=int)
+    per_page = 20
     
     if search_query:
-        users = User.query.filter(User.username.contains(search_query)).all()
+        users_query = User.query.filter(User.username.contains(search_query))
     else:
-        users = User.query.all()
+        users_query = User.query
 
-    return render_template("manage_users.html", admin_id=admin_id, admin=admin, users=users, search_query=search_query)
+    pagination = users_query.paginate(page=page, per_page=per_page, error_out=False)
+    users = pagination.items
+
+    return render_template("manage_users.html", admin_id=admin_id, admin=admin, users=users, search_query=search_query, pagination=pagination)
 
 ############## Delete User ################
 @app.route("/admin/<int:admin_id>/delete_user/<int:user_id>", methods=["POST"])
@@ -957,6 +976,7 @@ def approve_report(admin_id, report_id):
     report.reviewed = True
     report.approved = True
     report.notified = True
+    report.reviewed_at = datetime.now()
     db.session.commit()
 
     # Fetch related recipe or comment and user details
@@ -988,7 +1008,8 @@ def reject_report(admin_id, report_id):
     report = Report.query.get_or_404(report_id)
     report.reviewed = True
     report.approved = False
-    report.notified = True  # Assuming you want to notify the user even if the report is rejected
+    report.notified = True 
+    report.reviewed_at = datetime.now()
     db.session.commit()
 
     # Fetch related recipe or comment and user details

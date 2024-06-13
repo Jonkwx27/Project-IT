@@ -1,0 +1,1307 @@
+/*********************************************************************** Base *****************************************************************/
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f8aa35;
+    border-top: 10px solid #000;
+    border-bottom: 10px solid #000;
+    margin-bottom: 20px;
+    padding: 5px 10px;
+}
+.body {
+    background-color: #ece3ae; 
+}
+.logo-container {
+    display: flex;
+    align-items: center;
+    margin-top: 30px;
+}
+.centertext {
+    text-align: center;
+}
+.title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 55px;
+    color: rgb(0, 0, 0);
+    margin-top: 45px;
+}
+.nav-button {
+    border: none;
+    color: rgb(0, 0, 0);
+}
+
+.MainButton, .HomeButton, .LogOutButton {
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #c28855;
+    color: #fff;
+    font-size: 22px;
+    font-weight: 300;
+    cursor: pointer;
+    text-decoration: none;
+    left: 20px;
+}
+.MainButton:hover, .HomeButton:hover, .LogOutButton:hover {
+    background-color: #98714f;
+}
+
+/****************** Classification *****************/
+.classification ul {
+    text-align: center;
+    display: flex;
+    padding-top: 5px;
+    padding-left: 0px;
+}
+
+.classification li {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    font-weight: 300;
+    text-transform: uppercase;
+    display: inline-block;
+    width: 100%; 
+}
+
+.classification li:hover {
+background-color:rgb(250, 235, 215);
+}
+
+/********************** Flash message styles *********************/
+.flashes {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+    margin-top: 10px;
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    text-align: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    border: 1px solid transparent;
+    position: relative;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border-color: #c3e6cb;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-color: #f5c6cb;
+}
+
+.alert-warning {
+    background-color: #edea6a;
+    color: #a19b25;
+    border-color: #ece565;
+}
+
+.alert .close {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    padding: 20px; 
+    background: transparent; 
+    border: none; 
+    cursor: pointer;
+    font-size: 24px;
+}
+
+/***************************************************************** Home Page *************************************************************/
+.Admin-Login-button {
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #c28855;
+    color: #fff;
+    font-size: 22px;
+    font-weight: 300;
+    cursor: pointer;
+    text-decoration: none;
+    left: 20px;
+    }
+    .Admin-Login-button:hover{
+    background-color: #98714f;
+    }
+
+    .home-text h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 40px;
+    color: #1b1b1b; 
+    text-align: center;
+    background-color: #f8aa35;  
+    margin: 0%;
+    }
+    .home-page-photos {
+    display: flex; 
+    justify-content: space-between; 
+    padding: 20px;
+    }
+    .home-page-photo {
+    flex: 0 1 30%; 
+    border: 2px solid #000;
+    padding: 10px; 
+    }
+    .home-page-photo img {
+    max-width: 100%;
+    height: auto; 
+    }
+    .why-choose-cookiq {
+    text-align: center;
+    margin-top: 50px;
+    }
+    .why-choose-cookiq h2{
+    font-size: 40px;
+    color: #1b1b1b;
+    margin-bottom: 20px;
+    font-family: 'Bebas Neue', sans-serif;
+    background-color: #f8aa35; 
+    }
+    .reasons {
+    font-size: 30px;
+    color: #1b1b1b;
+    margin-bottom: 10px;
+    font-family: 'Bebas Neue', sans-serif;
+    }
+    .home-buttons {
+    text-align: center;
+    margin-top: 30px;
+    font-family: 'Bebas Neue', sans-serif;
+    margin-bottom: 50px;
+    }
+    .login-button, .signup-button {
+    padding:10px 20px;
+    background-color: #f8aa35;
+    border: none;
+    border-radius: 5px;
+    color: #010101;
+    font-size: 20px;
+    margin: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    }
+    .login-button:hover, .signup-button:hover {
+    background-color: #e08b00;
+    }
+
+/********************************************************* Sign Up and Login *********************************************************/
+.form-container-login, .form-container-signup {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.form-container-login label, .form-container-signup label {
+    display: block;
+    margin-bottom: 5px;
+}
+.form-container-login input, .form-container-signup input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+.form-container-login button, .form-container-signup button {
+    width: 100%;
+    padding: 10px;
+    background-color: #f8aa35;
+    border: none;
+    border-radius: 5px;
+    color: #010101;
+    font-size: 20px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.form-container-login button:hover, .form-container-signup button:hover {
+    background-color: #e08b00;
+}
+
+/******************************** Browse Recipes, Favourited Recipes, My Submitted Recipes and Manage Users and abit for Recipe Submission **********************************/
+.recipe-row, .user-row {
+    display: flex;
+    justify-content: center; 
+    margin-bottom: 20px; 
+}
+
+.recipe-card, .user-card {
+    width: 45%; 
+    margin: 0 10px; 
+    padding: 10px;
+    border: 1px solid #000;
+    border-radius: 5px;
+    background-color: #ece3ae; 
+    text-align: center; 
+}
+
+.recipe-card h3, .user-card h3 {
+    margin-top: 0;
+    font-family: 'Bebas Neue', sans-serif; 
+    font-size: 20px; 
+}
+
+.recipe-card p, .user-card p {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    text-align: center; 
+}
+
+.recipe-card img {
+    display: block; 
+    margin: 0 auto 10px; 
+    max-width: 100%;
+    height: auto;
+}
+
+.recipe-card a {
+    display: block;
+    margin-top: 10px; 
+}
+
+/*********** Category Selection for Browse Recipes and Recipe Submission ***********/
+.category-selection, .search-bar {
+  margin-bottom: 20px; 
+}
+
+.category-selection form {
+  display: flex;
+  align-items: center;
+}
+
+.category-selection label {
+  font-family: 'Bebas Neue', sans-serif; 
+  font-size: 18px;
+  margin-right: 5px; 
+}
+
+.category-selection select {
+  font-family: 'Bebas Neue', sans-serif; 
+  font-size: 16px; 
+  padding: 5px; 
+  border: 1px solid #000; 
+  border-radius: 5px;
+  margin-right: 5px;
+}
+
+/*********** Buttons ************/
+.category-selection button, .search-bar button, .users button, .recipe-card a, .delete-button {
+  padding: 8px 16px; 
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px; 
+  background-color: #c28855; 
+  color: #fff; 
+  transition: background-color 0.3s; 
+}
+
+.category-selection button:hover, .search-bar button:hover, .users button:hover, .recipe-card a:hover, .delete-button:hover {
+  background-color: #98714f; 
+}
+
+.delete-button {
+    margin-top: 5px;
+  }
+
+/*********** Search Bar *************/
+.search-bar input[type="text"] {
+    font-family: 'Bebas Neue', sans-serif; 
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+
+/********* Sort Selection for Favourited Recipes **************/
+.sort-selection {
+    margin-bottom: 20px; 
+  }
+  
+  .sort-selection form {
+    display: flex;
+    align-items: center;
+  }
+  
+  .sort-selection label {
+    font-family: 'Bebas Neue', sans-serif; 
+    font-size: 18px;
+    margin-right: 5px; 
+  }
+  
+  .sort-selection select {
+    font-family: 'Bebas Neue', sans-serif; 
+    font-size: 16px; 
+    padding: 5px; 
+    border: 1px solid #000; 
+    border-radius: 5px;
+    margin-right: 5px;
+  }
+  
+  .sort-selection button {
+    padding: 8px 16px; 
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px; 
+    background-color: #c28855; 
+    color: #fff; 
+    transition: background-color 0.3s; 
+  }
+  
+  .sort-selection button:hover {
+    background-color: #98714f; 
+  }
+
+/*********************** Pagination styles *********************/
+.pagination {
+    text-align: center;
+    margin-top: 20px;
+    font-family: 'Bebas Neue', sans-serif; 
+  }
+  
+  .pagination a, .pagination span {
+    margin: 0 5px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 18px;
+    background-color: #c28855;
+    color: #fff;
+    transition: background-color 0.3s; 
+  }
+  
+  .pagination a:hover {
+    background-color: #98714f;
+  }
+  
+  .pagination span.current-page-number {
+    background-color: #f8aa35;
+    color: #000;
+    cursor: default;
+  }
+  .alphabet {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #f8aa35;
+    color: #000;
+    text-align: center;
+    text-decoration: none;
+    font-size: 22px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    margin-left: 20px;
+  }
+  
+  .alphabet:hover {
+    background-color: #f1d982;
+  }
+
+/************************************************************** In-Depth Recipe ************************************************************/
+/*********** Buttons ***********/
+.ReturnButton {
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #c28855;
+    color: #fff;
+    font-size: 22px;
+    font-weight: 300;
+    cursor: pointer;
+    text-decoration: none;
+    left: 20px;
+}
+.ReturnButton:hover{
+    background-color: #98714f;
+    }
+.submit-button, .delete-indepth-button, .report-button {
+    padding: 10px 20px;
+    background-color: #c28855; 
+    border: 2px solid #000000; 
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 15px;   
+    transition: background-color 0.3s;
+    z-index: 1;
+}
+.submit-button:hover, .delete-indepth-button:hover, .report-button:hover {
+        background-color: #98714f;
+}
+    
+.report-button {
+        text-decoration: none;
+        color: black;
+}
+
+/************* Recipe Details ************/
+.indepth-recipe-title {
+    text-align: center; 
+    margin-top: 30px;
+}
+.indepth-recipe-photo-container {
+    text-align: center; 
+    margin-bottom: 20px; 
+}
+.indepth-recipe-photo {
+    display: block;
+    margin: 0 auto; 
+    border: 2px solid #000; 
+    padding: 10px; 
+    max-width: 100%; 
+    height: auto; 
+}
+.submitted-by-date {
+    font-weight: bold;
+    font-size: 15px; 
+}
+.indepth-recipe-details {
+    font-family: 'Bebas Neue', sans-serif;
+    border: 2px solid #000;
+    padding: 10px;
+    margin-bottom: 20px; 
+    font-size: 20px;
+}
+.indepth-recipe-details h2 {
+    color: rgb(88, 88, 158);
+    font-size: 30px;
+}
+/************ Comment Box and Rating **************/
+.comment-box {
+    background-color: #f8aa35; 
+    border: 2px solid #000;
+    border-radius: 5px;
+    padding: 20px;
+    margin-top: 20px;
+}
+.comment-box h2 {
+    text-align: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 35px;
+}
+.comment-box p { 
+    text-align: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+}
+.input-field {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+.rating {
+    unicode-bidi: bidi-override;
+    direction: rtl;
+    text-align: center;
+}
+
+.rating > input {
+    display: none;
+}
+
+.rating > label {
+    display: inline-block;
+    padding: 5px;
+    font-size: 40px;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.rating > label:before {
+    content: "\2605";
+}
+
+.rating > input:checked ~ label {
+    color: #fffb00;
+}
+
+.rating > input:checked ~ label:before {
+    content: "\2605";
+}
+
+.rating > label:hover,
+.rating > label:hover ~ label {
+    color: #fffb00;
+}
+
+.rating > label:hover:before,
+.rating > label:hover ~ label:before {
+    content: "\2605";
+}
+/*************** Comment Section ****************/
+.comment-section {
+    background-color: #f8aa35; 
+    border: 2px solid #000;
+    border-radius: 5px;
+    padding: 20px;
+    margin-top: 20px;
+}
+.comment-section h2 {
+    text-align: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 35px;
+}
+.comment {
+    border: 2px solid #000000; 
+    padding: 10px; 
+    margin-bottom: 10px; 
+}
+.comment-section img {
+    max-width: 200px; 
+    height: auto; 
+    border: 2px solid #000;
+    padding: 5px;
+}
+/***************** Timer ***************/
+.timer-container {
+    border: 2px solid #333;
+    padding: 10px;
+    text-align: center;
+    font-family: 'Bebas Neue', sans-serif;
+}
+.timer-container p {
+    font-size: 40px;
+    margin-top: 5px;
+    margin-bottom: 5px; 
+}
+.timer-container h2{
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+.timer-container button {
+    width: 80px; 
+    height: 30px;
+    background-color: #f8aa35; 
+    transition: background-color 0.3s;
+    font-size: 15px;
+}
+.timer-container button:hover{
+    background-color: #d67f7f;
+}
+.timer-container input{
+    margin-top: 3px;
+    margin-bottom: 15px;
+    width: 100px; 
+    font-size: 16px;
+    border-radius: 5px; 
+    text-align: center;
+}
+
+/************************************************************** Recipe Submission and Edit Recipe *********************************************************/
+.input-container {
+    display: flex;
+    align-items: flex-start;
+    background-color: #ece1ae;
+    border-top: 3px solid #000;
+    font-family: 'Bebas Neue', sans-serif; 
+    flex-direction: column;
+    align-items: center; 
+    margin-top: 20px; 
+}
+
+.rating-container {
+    background-color: #ece1ae;
+    border-top: 3px solid #000;
+}
+
+.input-container.description {
+    border-bottom: 3px solid #000;
+}
+
+.circle {
+    height: 200px;
+    width: 200px;
+    border: 4px solid #ffd18d;
+    border-radius: 50%;
+    margin: 20px;
+    margin-left: 35px;
+    background-color: #ffffff;
+    font-size: 22px;
+    text-align: center;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    line-height: 150px;
+    justify-content: center;
+}
+
+.form-container {
+    border: 3px solid black;
+    padding: 10px;
+    background-color: #ece1ae; 
+}
+
+.form-container input[type="text"],
+.form-container textarea,
+.input-container .input-fields input[type="text"],
+.input-container .input-fields input[type="textarea"].description,
+.input-container .input-fields input[type="textarea"].ingredient {
+    border: 2px solid #ffd18d;
+    border-radius: 5px; 
+    margin-top: 10px;
+    width: 100%; 
+    box-sizing: border-box; 
+}
+
+.form-container h2,
+.form-container label {
+    color: black; 
+}
+
+.input-fields {
+    display: flex;
+    flex-direction: column;
+    margin-left: 40px;
+    margin-top: 30px;
+}
+
+.input-container .input-fields input[type="text"] {
+    height: 50px !important;
+    width: 300px;
+    font-size: 16px;
+    padding-left: 15px;
+}
+
+.input-container .input-fields input[type="textarea"].description,
+.input-container .input-fields input[type="textarea"].ingredient {
+    height: 90px;
+    width: 800px;
+    font-size: 16px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.ingredient {
+    padding-left: 20px;
+    padding-right: 15px;
+    padding-top: 20px;
+}
+
+.ingredienttext, .steptext {
+    margin-top: 35px;
+    width: 80%;
+    height: 300px;
+    border: 2px solid #ffd18d;
+    margin-bottom: 40px;
+}
+
+.input-container .ingredienttext {
+    width: 88%;
+}
+
+.input-container .steptext {
+    width: 321px;
+    height: 70px;
+}
+
+.Step {
+    padding-left: 20px;
+    padding-right: 15px;
+    padding-top: 20px;
+}
+
+.step-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    margin-left: 70px;
+}
+
+.step-row button {
+    padding: 8px 16px; 
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px; 
+    background-color: #c28855; 
+    color: #fff; 
+    transition: background-color 0.3s; 
+}
+
+.rating1, .rating2 {
+    font-family: 'Bebas Neue', sans-serif; 
+    unicode-bidi: bidi-override;
+    direction: rtl;
+    text-align: center;
+    background-color: #ece1ae;
+    border-bottom: none;
+    padding: 10px;
+    padding-top: 50px;
+}
+
+.rating1 > input, .rating2 > input {
+    display: none;
+}
+
+.rating1 > label, .rating2 > label {
+    display: inline-block;
+    padding: 5px;
+    font-size: 40px;
+    color: #ffffff;
+}
+
+.rating1 > label:before, .rating2 > label:before {
+    content: "\2605";
+}
+
+.rating1 > input:checked ~ label, .rating2 > input:checked ~ label {
+    color: #fffb00;
+}
+
+.rating1 > label:hover, .rating1 > label:hover ~ label,
+.rating2 > label:hover, .rating2 > label:hover ~ label {
+    color: #fffb00;
+}
+
+.Submit {
+    display: block;
+    width: 120px;
+    margin: auto auto;
+    text-align: center;
+    background-color: #ffc368;
+    color: black;
+    font-size: 15px;
+    font-weight: 200;
+    cursor: pointer;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-top: 30px;
+    border: 2px solid #000;
+    margin-bottom: 20px;
+    font-family: 'Bebas Neue', sans-serif;
+}
+
+#recipe_name {
+    width: 450px; 
+    height: 35px;
+}
+
+#description {
+    width: 900px;
+}
+
+.image-upload {
+    margin-bottom: 20px;
+}
+
+#recipe_image {
+    border: 3px solid #ffd18d;
+    padding: 10px;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+#preview-image {
+    display: none;
+    max-width: 100%;
+    margin-top: 10px;
+}
+
+.image-upload label {
+    font-size: 18px;
+    color: black;
+}
+
+.image-upload label,
+.image-upload input[type="file"] {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.image-upload input[type="file"] {
+    cursor: pointer;
+}
+
+#recipe_image:focus + #preview-image {
+    display: block;
+}
+
+.input-container input[type="range"] {
+    -webkit-appearance: none;
+    width: 40%; 
+    height: 10px; 
+    background: #fff; 
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.input-container input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px; 
+    height: 16px;
+    background: #c28855; 
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.input-container input[type="range"]::-moz-range-thumb {
+    width: 16px; 
+    height: 16px; 
+    background: #c28855; 
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+#serving_size_value {
+    font-family: 'Bebas Neue', sans-serif; 
+    font-size: 18px; 
+    color: #000; 
+    margin-top: 5px; 
+}
+
+.recipe-photo-container {
+    text-align: center; 
+    margin-top: 20px; 
+    margin-bottom: 20px; 
+}
+
+.recipe-photo-container img {
+    max-width: 50%; 
+    height: auto; 
+    border: 2px solid #ffd18d;
+}
+
+button.edit, button.delete {
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: 'Bebas Neue', sans-serif; 
+    font-size: 16px; 
+    transition: background-color 0.3s; 
+}
+
+button.edit {
+    background-color: #c28855; 
+    color: #fff; 
+}
+
+button.edit:hover {
+    background-color: #98714f; 
+}
+
+button.delete {
+    background-color: #e74c3c; 
+    color: #fff; 
+}
+
+button.delete:hover {
+    background-color: #c0392b; 
+}
+
+/************************************************************ Notifications ******************************************************************/
+.notifications-container {
+    padding: 20px;
+}
+.notification-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.notification-item {
+    background-color: white;
+    margin: 10px 0;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: box-shadow 0.3s;
+}
+
+.notification-item:hover {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.notification-item.unread {
+    border-left: 5px solid #ff6600;
+}
+
+.notification-item.read {
+    border-left: 5px solid #ccc;
+}
+
+.timestamp {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.notification-actions {
+    margin-top: 10px;
+}
+.btn-mark-read, .btn-mark-unread, .btn-delete-notif {
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 1em;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.btn-mark-read {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-mark-read:hover {
+    background-color: #218838;
+}
+
+.btn-mark-unread {
+    background-color: #ffc107;
+    color: black;
+}
+
+.btn-mark-unread:hover {
+    background-color: #e0a800;
+}
+
+.btn-delete-notif {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-delete-notif:hover {
+    background-color: #c82333;
+}
+
+/**************************************************** Pending Submissions and View Reports ***************************************************************/
+.pending-recipes, .report-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.pending-recipes th, .pending-recipes td, .report-table th, .report-table td {
+    border: 1px solid #ffd18d;
+    padding: 8px;
+    text-align: left;
+}
+
+.pending-recipes th, .report-table th {
+    background-color: #f8aa35;
+    color: black;
+    font-weight: bold;
+}
+
+.pending-recipes tr:nth-child(even), .report-table tr:nth-child(even) {
+    background-color: #ece1ae;
+}
+
+.pending-recipes tr:hover, .report-table tr:hover {
+    background-color: #ffd18d;
+}
+
+.recipe-image {
+    max-width: 100px;
+}
+
+.approve-recipe-button, .reject-recipe-button, .approve-report-button, .reject-report-button, .view-report-button, .delete-report-button {
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.view-report-button {
+    background-color: #c28855;
+    text-decoration: none;
+    color:#fff;
+}
+
+.view-report-button:hover {
+    background-color: #98714f;
+}
+.approve-recipe-button, .approve-report-button {
+    background-color: #64a361;
+    color: #fff;
+}
+
+.approve-recipe-button:hover, .approve-report-button:hover {
+    background-color: #4b834b;
+}
+
+.reject-recipe-button, .reject-report-button, .delete-report-button {
+    background-color: #d44949;
+    color: #fff;
+}
+
+.reject-recipe-button:hover, .reject-report-button:hover, .delete-report-button:hover {
+    background-color: #a33939;
+}
+
+/****************************************************** Report Recipe and Report Comment ****************************************************/
+.Return-button {
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #c28855;
+    color: #fff;
+    font-size: 22px;
+    font-weight: 300;
+    cursor: pointer;
+    text-decoration: none;
+    left: 20px;
+    }
+.Return-button:hover{
+    background-color: #98714f;
+    }
+.submit-report-button {
+    padding: 10px 20px;
+    background-color: #c28855; 
+    border: 2px solid #000000; 
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 15px;   
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+.submit-report-button:hover {
+    background-color: #98714f;
+}
+
+/************************************************************** User Profile and Edit Profile ******************************************************/
+.profile-photo-container {
+    text-align: center; 
+    margin-bottom: 20px; 
+    display: block;
+    margin: 0 auto; 
+    border: 2px solid #000; 
+    padding: 10px; 
+    max-width: 50%; 
+    height: auto; 
+}
+.profile-info {
+    text-align: center; 
+    margin-bottom: 20px; 
+    font-family: 'Bebas Neue', sans-serif;
+}
+.profile-info h1 {
+    color: #a56300;
+}
+.profile-info strong {
+    color: #000;
+}
+.EditProfile {
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: #c28855;
+    color: #fff;
+    font-size: 22px;
+    font-weight: 300;
+    text-decoration: none;
+    margin-top: 20px;
+    display: inline-block;
+}
+.EditProfile:hover {
+    background-color: #98714f;
+}
+
+.form-container-edit-profile {
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: 'Bebas Neue', sans-serif;
+}
+.form-container-edit-profile label {
+    font-size: 18px;
+    color: #333;
+}
+.form-container-edit-profile input {
+    font-size: 16px;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+}
+.form-container-edit-profile input[type="submit"] {
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: #c28855;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 300;
+    cursor: pointer;
+    border: none;
+}
+.form-container-edit-profile input[type="submit"]:hover {
+    background-color: #98714f;
+}
+.form-container-edit-profile p.success {
+    color: #5cb85c;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+}
+.form-container-edit-profile p.failed {
+    color: #ff0000;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+}
+
+/************************************************* Edit Categories and Edit Categories Group *********************************************/
+
+.category-group-selection {
+    margin-bottom: 20px; 
+}
+  
+.category-group-selection form {
+    display: flex;
+    align-items: center;
+}
+  
+.category-group-selection label {
+    font-family: 'Bebas Neue', sans-serif; 
+    font-size: 18px;
+    margin-right: 5px; 
+}
+  
+.category-group-selection select {
+    font-family: 'Bebas Neue', sans-serif; 
+    font-size: 16px; 
+    padding: 5px; 
+    border: 1px solid #000; 
+    border-radius: 5px;
+    margin-right: 5px;
+}
+  
+.category-group-selection button {
+    padding: 8px 16px; 
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px; 
+    background-color: #c28855; 
+    color: #fff; 
+    transition: background-color 0.3s; 
+}
+  
+.category-group-selection button:hover{
+    background-color: #98714f; 
+}
+
+.add-category-button, .add-category-group-button {
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    background-color: #c28855;
+    color: #fff;
+    transition: background-color 0.3s;
+}
+
+.add-category-button:hover, .add-category-group-button:hover {
+    background-color: #98714f;
+}
+
+
+.category-row, .category-group-row {
+    display: flex;
+    justify-content: center; 
+    margin-bottom: 20px; 
+}
+
+.category-card, .category-group-card {
+    width: 45%; 
+    margin: 0 10px; 
+    padding: 10px;
+    border: 1px solid #000;
+    border-radius: 5px;
+    background-color: #ece3ae; 
+    text-align: center; 
+}
+
+.category-card p, .category-group-card p {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    text-align: center; 
+}
+
+.update-category-button, .delete-category-button, .update-category-group-button, .delete-category-group-button {
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    margin-top: 5px;
+}
+
+.update-category-button, .update-category-group-button {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.update-category-button:hover, .update-category-group-button:hover {
+    background-color: #45a049;
+}
+
+.delete-category-button, .delete-category-group-button {
+    background-color: #f44336;
+    color: white;
+}
+
+.delete-category-button:hover, .delete-category-group-button:hover {
+    background-color: #da190b;
+}
+
+.add-category-form, .add-category-group-form {
+    text-align: center; 
+    margin-bottom: 20px;
+}
+
+.category-input, .category-group-input {
+    display: inline-block; 
+}
+
+.add-category-button, .add-category-group-button {
+    margin-top: 10px; 
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    background-color: #c28855;
+    color: #fff;
+    transition: background-color 0.3s;
+}
+
+.add-category-button:hover, .add-category-group-button:hover {
+    background-color: #98714f;
+}
+.category-selection, .category-group-selection {
+    font-family: 'Bebas Neue', sans-serif;  
+}

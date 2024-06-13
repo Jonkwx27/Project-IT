@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='EditRecipe.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
         <title>Edit Recipe</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,7 +27,7 @@
                     <div class="recipe-photo-container">
                         <label for="recipe_image"><h2>Current Image:</h2></label>
                         {% if recipe.image_path %}
-                            <img src="{{ url_for('static', filename=recipe.image_path) }}" alt="Current Recipe Image" style="max-width: 200px;">
+                            <img src="/static/{{ recipe.image_path }}" alt="Current Recipe Image" style="max-width: 200px;">
                         {% endif %}
                     </div>
                     <div class="image-upload">

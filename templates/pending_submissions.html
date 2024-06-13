@@ -3,111 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='RecipeSubmission.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
     <title>Pending Recipe Submissions</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
-    <style>
-        .pending-recipes {
-            border-collapse: collapse;
-            width: 100%;
-            margin-top: 20px;
-        }
 
-        .pending-recipes th, .pending-recipes td {
-            border: 1px solid #ffd18d;
-            padding: 8px;
-            text-align: left;
-        }
-
-        .pending-recipes th {
-            background-color: #f8aa35;
-            color: black;
-            font-weight: bold;
-        }
-
-        .pending-recipes tr:nth-child(even) {
-            background-color: #ece1ae;
-        }
-
-        .pending-recipes tr:hover {
-            background-color: #ffd18d;
-        }
-
-        .recipe-image {
-            max-width: 100px;
-        }
-
-        .approve-button, .reject-button {
-            padding: 8px 16px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 16px;
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
-
-        .approve-button {
-            background-color: #64a361;
-            color: #fff;
-        }
-
-        .approve-button:hover {
-            background-color: #4b834b;
-        }
-
-        .reject-button {
-            background-color: #d44949;
-            color: #fff;
-        }
-
-        .reject-button:hover {
-            background-color: #a33939;
-        }
-
-        ul {
-            text-align: center;
-            display: flex;
-            padding-top: 5px;
-            padding-left: 0px;
-        }
-
-        li {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 28px;
-            font-weight: 300;
-            text-transform: uppercase;
-            display: inline-block;
-            width: 100%; 
-        }
-
-        li:hover {
-            background-color:rgb(250, 235, 215);
-        }
-
-        .button {
-            border: none;
-            color: rgb(0, 0, 0);
-        }
-
-        .LogOutButton {
-            padding: 5px 10px;
-            border-radius: 5px;
-            background-color: #c28855;
-            color: #fff;
-            font-size: 22px;
-            font-weight: 300;
-            cursor: pointer;
-            text-decoration: none;
-            left: 20px;
-        }
-
-        .LogOutButton:hover {
-            background-color: #98714f;
-        }
-    </style>
 </head>
 <body>
     <div class="header">
@@ -123,12 +24,12 @@
 
     <div class="classification">
         <ul>
-            <li><a href="{{ url_for('pending_submissions', admin_id=admin.id) }}" class="button">Review Submitted Recipes</a></li>
-            <li><a href="{{ url_for('admin_browse_recipes', admin_id=admin.id)}}" class="button">Browse Recipes</a></li>         
-            <li><a href="{{ url_for('manage_users', admin_id=admin.id) }}" class="button">Manage Users</a></li>
-            <li><a href="{{ url_for('edit_category_groups', admin_id=admin.id)}}" class="button">Edit Categories Groups</a></li>
-            <li><a href="{{ url_for('edit_categories', admin_id=admin.id) }}" class="button">Edit Categories</a></li>
-            <li><a href="{{ url_for('view_reports', admin_id=admin.id) }}" class="button">View Reports</a></li>
+            <li><a href="{{ url_for('pending_submissions', admin_id=admin.id) }}" class="nav-button">Review Submitted Recipes</a></li>
+            <li><a href="{{ url_for('admin_browse_recipes', admin_id=admin.id)}}" class="nav-button">Browse Recipes</a></li>         
+            <li><a href="{{ url_for('manage_users', admin_id=admin.id) }}" class="nav-button">Manage Users</a></li>
+            <li><a href="{{ url_for('edit_category_groups', admin_id=admin.id)}}" class="nav-button">Edit Categories Groups</a></li>
+            <li><a href="{{ url_for('edit_categories', admin_id=admin.id) }}" class="nav-button">Edit Categories</a></li>
+            <li><a href="{{ url_for('view_reports', admin_id=admin.id) }}" class="nav-button">View Reports</a></li>
         </ul>
     </div>
 
@@ -170,10 +71,10 @@
             <td>{{ recipe.submitted_by }}</td>
             <td>
                 <form method="post" action="{{ url_for('approve_recipe', admin_id=admin_id, recipe_id=recipe.id) }}">
-                    <button class='approve-button' type="submit" onclick="return confirm('Are you sure you want to approve this recipe?')">Approve</button>
+                    <button class='approve-recipe-button' type="submit" onclick="return confirm('Are you sure you want to approve this recipe?')">Approve</button>
                 </form>                
                 <form method="post" action="{{ url_for('reject_recipe', admin_id=admin_id, recipe_id=recipe.id) }}">
-                    <button class='reject-button' type="submit" onclick="return confirm('Are you sure you want to reject this recipe?')">Reject</button>
+                    <button class='reject-recipe-button' type="submit" onclick="return confirm('Are you sure you want to reject this recipe?')">Reject</button>
                 </form>
             </td>
         </tr>
