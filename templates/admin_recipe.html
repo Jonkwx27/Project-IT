@@ -29,7 +29,7 @@
     </form>
 
     <div class="indepth-recipe-photo-container">
-        <img src="{{ url_for('static', filename=recipe.image_path) }}" class="indepth-recipe-photo" alt="Recipe Photo" style="max-width: 200px;">
+        <img src="/static/{{ recipe.image_path }}" class="indepth-recipe-photo" alt="Recipe Photo" style="max-width: 200px;">
         <div  class="submitted-by-date">
             <p>Submitted by: {{ recipe.submitted_by }}</p>
             <p>Submitted at: {{ recipe.submitted_at }}</p>

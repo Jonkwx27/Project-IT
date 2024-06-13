@@ -27,7 +27,7 @@
                     <div class="recipe-photo-container">
                         <label for="recipe_image"><h2>Current Image:</h2></label>
                         {% if recipe.image_path %}
-                            <img src="{{ url_for('static', filename=recipe.image_path) }}" alt="Current Recipe Image" style="max-width: 200px;">
+                            <img src="/static/{{ recipe.image_path }}" alt="Current Recipe Image" style="max-width: 200px;">
                         {% endif %}
                     </div>
                     <div class="image-upload">

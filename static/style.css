@@ -726,7 +726,15 @@ background-color:rgb(250, 235, 215);
 }
 
 .step-row button {
-    margin-bottom: 30px;
+    padding: 8px 16px; 
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px; 
+    background-color: #c28855; 
+    color: #fff; 
+    transition: background-color 0.3s; 
 }
 
 .rating1, .rating2 {

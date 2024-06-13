@@ -60,20 +60,12 @@
                     <td>
                         {% if report.comment_id %}
                             {% set comment = Comment.query.get(report.comment_id) %}
-                            {% if comment %}
-                                {{ comment.comment[:50] }}...<br>
-                                <em>Submitted by: {{ comment.submitted_by }}</em>
-                            {% else %}
-                                N/A
-                            {% endif %}
+                            {{ comment.comment[:50] }}...<br>
+                            <em>Submitted by: {{ comment.submitted_by }}</em>
                         {% elif report.recipe_id %}
                             {% set recipe = Recipe.query.get(report.recipe_id) %}
-                            {% if recipe %}
-                                {{ recipe.recipe_name }}<br>
-                                <em>Submitted by: {{ recipe.submitted_by }}</em>
-                            {% else %}
-                                N/A
-                            {% endif %}
+                            {{ recipe.recipe_name }}<br>
+                            <em>Submitted by: {{ recipe.submitted_by }}</em>
                         {% endif %}
                     </td>
                     <td>{{ report.report_text }}</td>
@@ -122,20 +114,12 @@
                     <td>
                         {% if report.comment_id %}
                             {% set comment = Comment.query.get(report.comment_id) %}
-                            {% if comment %}
-                                {{ comment.comment[:50] }}...<br>
-                                <em>Submitted by: {{ comment.submitted_by }}</em>
-                            {% else %}
-                                N/A
-                            {% endif %}
+                            {{ comment.comment[:50] }}...<br>
+                            <em>Submitted by: {{ comment.submitted_by }}</em>
                         {% elif report.recipe_id %}
                             {% set recipe = Recipe.query.get(report.recipe_id) %}
-                            {% if recipe %}
-                                {{ recipe.recipe_name }}<br>
-                                <em>Submitted by: {{ recipe.submitted_by }}</em>
-                            {% else %}
-                                N/A
-                            {% endif %}
+                            {{ recipe.recipe_name }}<br>
+                            <em>Submitted by: {{ recipe.submitted_by }}</em>
                         {% endif %}
                     </td>
                     <td>{{ report.report_text }}</td>
