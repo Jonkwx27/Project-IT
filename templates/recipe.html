@@ -163,7 +163,7 @@
         </div>
         {% endfor %}
     </div>
-    <script>
+    <script> // Timer Javascript
         var timerElement = document.getElementById("timer");
         var hoursInput = document.getElementById("hours");
         var minutesInput = document.getElementById("minutes");
@@ -176,7 +176,7 @@
             var hours = parseInt(hoursInput.value) || 0;
             var minutes = parseInt(minutesInput.value) || 0;
             var seconds = parseInt(secondsInput.value) || 0;
-            totalSeconds = hours * 3600 + minutes * 60 + seconds;
+            totalSeconds = hours * 3600 + minutes * 60 + seconds; //Calculate total secs
             countdownInterval = setInterval(function () {
                 totalSeconds--;
                 if (totalSeconds <= 0) {
@@ -193,7 +193,7 @@
                         (minutes < 10 ? "0" + minutes : minutes) + ":" +
                         (seconds < 10 ? "0" + seconds : seconds);
                 }
-            }, 1000);
+            }, 1000); //execute every one second
         }
         function stopCountdown() {
             clearInterval(countdownInterval);

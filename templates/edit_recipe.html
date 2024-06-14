@@ -63,14 +63,14 @@
                 <div class="input-container category-selection">
                     <h2>Categories:</h2>
                     <div id="categories-list">
-                        <div class="category-row" id="first-category-row">
-                            <select name="categories[]" required>
+                        <div class="category-row" id="first-category-row"> <!--FIRST CATEGORY-->
+                            <select name="categories[]" required> 
                                 {% for cat in categories %}
                                     <option value="{{ cat.id }}" {% if cat.id == recipe.categories[0].id %}selected{% endif %}>{{ cat.name }}</option>
                                 {% endfor %}
                             </select>
                         </div>
-                        {% for category in recipe.categories[1:] %}
+                        {% for category in recipe.categories[1:] %} <!--Remaining Categories-->
                             <div class="category-row">
                                 <select name="categories[]" required>
                                     <option value="">Select Category</option>
@@ -78,11 +78,11 @@
                                         <option value="{{ cat.id }}" {% if cat.id == category.id %}selected{% endif %}>{{ cat.name }}</option>
                                     {% endfor %}
                                 </select>
-                                <button type="button" onclick="removeCategory(this)">Remove</button>
+                                <button type="button" onclick="removeCategory(this)">Remove</button> <!--Remove Category-->
                             </div>
                         {% endfor %}
                     </div>
-                    <button type="button" onclick="addCategory()">Add Category</button>
+                    <button type="button" onclick="addCategory()">Add Category</button> <!--Add Category-->
                 </div>                
                     
                 <div class="input-container">
