@@ -32,6 +32,7 @@
         </ul>
     </div>
 
+    <!-- Search bar for finding recipes -->
     <div class="search-bar">
         <form method="GET" action="{{ url_for('browse_recipes', user_id=user.id) }}">
             <input type="text" name="search_query" placeholder="Search for a recipe..." value="{{ request.args.get('search_query', '') }}">
@@ -43,7 +44,9 @@
         <form method="GET" action="{{ url_for('browse_recipes', user_id=user.id) }}">
             <label for="category">Select Category:</label>
             <select name="category" id="category">
+                <!-- Default option to select all categories -->
                 <option value="All">All</option>
+                <!-- Loop through each group of categories -->
                 {% for group in groups %}
                     <optgroup label="{{ group.name }}">
                         {% for category in group.categories %}
@@ -56,6 +59,7 @@
         </form>
     </div>
 
+    <!-- Display recipes -->
     <div class="recipes">
         <h2 class="centertext">{{ selected_category.capitalize() }} Recipes</h2>
         {% for i in range(0, recipes|length, 4) %}
@@ -71,6 +75,7 @@
                     {% endfor %}
                 </p>
                 <p>Submitted by: {{ recipe.submitted_by }}</p>
+                <!-- Link to view the recipe -->
                 <a href="{{ url_for('recipe', user_id=user.id, recipe_id=recipe.id, source='browse_recipe') }}">View Recipe</a>
             </div>
             {% endfor %}
@@ -79,6 +84,7 @@
     </div>
 
     <div class="pagination">
+        <!-- Link to the previous page -->
         {% if pagination.has_prev %}
             <span>
                 <a class='page-number' href="{{ url_for('browse_recipes', user_id=user.id, page=pagination.prev_num, category=selected_category, search_query=search_query) }}">

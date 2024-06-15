@@ -96,6 +96,7 @@ def browse_recipes(user_id):
     if "user_id" not in session or session["user_id"] != user_id:
         return redirect(url_for("login"))
     
+    #Retrieve users object from database
     user = User.query.get_or_404(user_id)
 
     # Fetch all categories from the database
@@ -260,6 +261,7 @@ def recipesubmission(user_id):
         category_ids = request.form.getlist('categories[]')
         categories = Category.query.filter(Category.id.in_(category_ids)).all()
 
+        # Get the recipe image upload
         if "recipe_image" in request.files:
             recipe_image = request.files["recipe_image"]
             if recipe_image.filename == '':
@@ -283,6 +285,7 @@ def recipesubmission(user_id):
 
         steps_str = '\n'.join(steps)
 
+        # Create new recipe
         recipe = Recipe(
             recipe_name=recipe_name,
             description=description,
@@ -298,6 +301,7 @@ def recipesubmission(user_id):
         )
 
         flash('Recipe submitted successfully!','success')
+        # Add new recipe to database
         db.session.add(recipe)
         db.session.commit()
         
@@ -430,6 +434,7 @@ def favouritedrecipe(user_id):
     # Get sorting criteria from the request args
     sort_by = request.args.get("sort_by", "none")
 
+    # Sort favourited recipes based on sorting criteria
     if sort_by == "alphabetical":
         recipes_with_cook_on = sorted(recipes_with_cook_on, key=lambda r: r[0].recipe_name)
     elif sort_by == "cook_on":
@@ -454,7 +459,7 @@ def favorite_recipe(user_id, recipe_id):
         flash('Recipe unfavorited successfully!', 'success')
     else:
         if request.method == "POST":
-            # Extract pinned_date from the form data
+            # Extract cook_on date from the form data
             cook_on_str = request.form.get("cook_on", None)
             cook_on = datetime.strptime(cook_on_str, "%Y-%m-%d").date() if cook_on_str else None
             # If the recipe is not favorited, favorite it
