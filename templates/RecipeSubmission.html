@@ -32,25 +32,31 @@
         </ul>
     </div>
 
+    <!--Form for submitting a recipe-->
     <div class="form-container">
         <form action="#" method="post" enctype="multipart/form-data">
             <div class="input-container">
                 <h2>Submit Your Recipe</h2>
+                <!-- Image upload input -->
                 <div class="image-upload">
                     <label for="recipe_image">Upload Image:</label>
                     <input type="file" id="recipe_image" name="recipe_image" accept="image/*" required>
                 </div>
+                <!-- Input for recipe name -->
                 <label for="recipe_name"><h2>Recipe Name:</h2></label><br>
                 <input type="text" id="recipe_name" name="recipe_name" required><br><br>
+                <!-- Textarea for description -->
                 <label for="description"><h2>Description:</h2></label><br>
                 <textarea id="description" name="description" required></textarea><br><br>
             </div>
 
+            <!-- ingredients input -->
             <div class="input-container">
                 <label for="ingredients" class="ingredients"><h2>Ingredients:</h2></label><br><br>
                 <textarea class="ingredienttext" name="ingredients" placeholder="Enter the Ingredients" required></textarea><br><br>
             </div>
 
+            <!-- Container for steps input -->
             <div class="input-container">
                 <h2>Steps:</h2>
                 <div id="steps-list">
@@ -58,9 +64,11 @@
                         <textarea class="steptext" name="steps[]" placeholder="Enter the Step" required></textarea>
                     </div>
                 </div>
+                 <!-- Button to add more steps -->
                 <button type="steps-button" onclick="addStep()">Add Step</button>
             </div>
 
+            <!-- Container for category selection -->
             <div class="input-container category-selection">
                 <h2>Categories:</h2>
                 <div id="categories-list">
@@ -80,13 +88,15 @@
                 <button type="button" onclick="addCategory()">Add Category</button>
             </div>
 
-            <div class="input-container">
+            <!-- Container for selecting the serving size -->
+             <div class="input-container">
                 <label for="serving_size"><h2>Serving Size:</h2></label><br>
                 <input type="range" id="serving_size" name="serving_size" min="1" max="10" value="5">
                 <span id="serving_size_value">5</span>
             </div>
 
             <div class="rating-container">
+                 <!-- Difficulty rating -->
                 <div class="rating1"><h2>Difficulty</h2>
                     <input type="radio" id="star5_1" name="rating1" value="5">
                     <label for="star5_1"></label>
@@ -100,6 +110,7 @@
                     <label for="star1_1"></label>
                 </div>
 
+                <!-- Time required rating -->
                 <div class="rating2"><h2>Time Required</h2>
                     <input type="radio" id="star5_2" name="rating2" value="5">
                     <label for="star5_2"></label>

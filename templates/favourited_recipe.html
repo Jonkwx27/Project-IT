@@ -34,15 +34,20 @@
         <div class="sort-selection">
             <form method="GET" action="{{ url_for('favouritedrecipe', user_id=user.id) }}">
                 <label for="sort_by">Sort By:</label>
+                 <!-- Dropdown for sorting options -->
                 <select name="sort_by" id="sort_by">
+                    <!-- Default option for no sorting -->
                     <option value="none" {% if sort_by == "none" %}selected{% endif %}>Unsorted</option>
+                    <!-- Option to sort alphabetically -->
                     <option value="alphabetical" {% if sort_by == "alphabetical" %}selected{% endif %}>Alphabetical</option>
+                    <!-- Option to sort by cook-on date -->
                     <option value="cook_on" {% if sort_by == "cook_on" %}selected{% endif %}>Cook On Date</option>
                 </select>
                 <button type="submit">Sort</button>
             </form>
         </div>
 
+        <!-- Check if favourited recipes exist -->
         {% if recipes %}
         {% for i in range(0, recipes|length, 4) %}
         <div class="recipe-row">
@@ -57,6 +62,7 @@
             {% endfor %}
         </div>
         {% endfor %}
+        <!-- Message if no favourited recipes -->
         {% else %}
         <p>No favourited recipes yet.</p>
         {% endif %}
