@@ -770,8 +770,6 @@ def edit_category_groups(admin_id):
 def add_category_group(admin_id):
     if "admin_id" not in session:
         return redirect(url_for("adminlogin"))
-    
-    admin = Admin.query.get_or_404(admin_id)
 
     if request.method == "POST":
         name = request.form["name"]
@@ -786,8 +784,7 @@ def add_category_group(admin_id):
 def update_category_group(admin_id, group_id):
     if "admin_id" not in session:
         return redirect(url_for("adminlogin"))
-    
-    admin = Admin.query.get_or_404(admin_id)
+
     group = CategoryGroup.query.get_or_404(group_id)
 
     if request.method == "POST":
@@ -803,7 +800,6 @@ def delete_category_group(admin_id, group_id):
     if "admin_id" not in session:
         return redirect(url_for("adminlogin"))
     
-    admin = Admin.query.get_or_404(admin_id)
     group = CategoryGroup.query.get_or_404(group_id)
 
     db.session.delete(group)
@@ -895,7 +891,6 @@ def category_usage(admin_id, category_id):
     if "admin_id" not in session:
         return redirect(url_for("adminlogin"))
 
-    category = Category.query.get_or_404(category_id)
     recipe_count = Recipe.query.filter(Recipe.categories.any(id=category_id)).count()
     return jsonify({"recipe_count": recipe_count})
 
@@ -927,7 +922,6 @@ def delete_user(admin_id, user_id):
     if "admin_id" not in session or session["admin_id"] != admin_id:
         return redirect(url_for("adminlogin"))
 
-    admin = Admin.query.get_or_404(admin_id)
     user = User.query.get_or_404(user_id)
     db.session.delete(user)
     db.session.commit()
@@ -940,7 +934,6 @@ def warn_user(admin_id, user_id):
     if "admin_id" not in session or session["admin_id"] != admin_id:
         return redirect(url_for("adminlogin"))
 
-    admin = Admin.query.get_or_404(admin_id)
     user = User.query.get_or_404(user_id)
 
     user.number_of_warnings += 1
