@@ -48,12 +48,14 @@ def home():
 ######### Signup And Login ##########
 @app.route('/signup', methods=('GET', 'POST'))
 def signup():
+    # If the request method is POST, it means the form has been submitted
     if request.method == 'POST':
         name = request.form['name']
         email = request.form['email']
         username = request.form['username']
         age = int(request.form['age'])
         password = generate_password_hash(request.form['password'])
+        # Create a new User object with the form data
         user = User(name=name,
 					email=email,
 					username=username,
@@ -62,12 +64,14 @@ def signup():
         db.session.add(user)
         db.session.commit()
         flash("Account created successfully!", "success")
+        # Redirect the user to the login page after successful signup
         return redirect(url_for('login'))
-
+    # If the request method is GET, render the sign_up.html template
     return render_template("sign_up.html")
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
+    # Handle POST requests when the login form is submitted
     if request.method == "POST":
         session.permanent = True
         email = request.form["email"]
@@ -76,18 +80,23 @@ def login():
         # Check if the user exists in the database
         found_user = User.query.filter_by(email=email, username=username).first()
 
+        # If user exists and password matches (using check_password_hash), log them in
         if found_user and check_password_hash(found_user.password, password):
             session["user_id"] = found_user.id
             flash("You have been successfully logged in!", "success")
-            return redirect(url_for("browse_recipes", user_id=found_user.id))
+            return redirect(url_for("browse_recipes", user_id=found_user.id))  # Redirect to recipe browsing page
+        # If email/username or password is incorrect, redirect to login page
         else:
             # Incorrect email/username or password
             flash("Invalid email/username or password. Please try again.", "error")
             return redirect(url_for("login"))
     else:
+        # Handle GET requests (when user navigates to the login page)
         if "user_id" in session:
+            # If user is already logged in (session exists), redirect to recipe browsing page
             return redirect(url_for("browse_recipes", user_id=session["user_id"]))
 
+        # Render the login.html template for users who are not logged in
         return render_template("login.html")
 
 
@@ -103,12 +112,13 @@ def browse_recipes(user_id):
     # Fetch all categories from the database
     categories = Category.query.order_by(Category.name).all()  # Sort categories alphabetically
 
+    # Retrieve selected category and search query from request arguments
     selected_category = request.args.get("category", "All")
     search_query = request.args.get("search_query", "")
     page = request.args.get("page", 1, type=int)
     per_page = 20
 
-    query = Recipe.query.filter_by(approved=True)
+    query = Recipe.query.filter_by(approved=True) # Start query for recipes with 'approved' status
 
     # Retrieve all groups and their associated categories
     groups = CategoryGroup.query.order_by(CategoryGroup.name).all()
@@ -116,16 +126,19 @@ def browse_recipes(user_id):
         group.categories = Category.query.filter_by(group_id=group.id).order_by(Category.name).all()
 
     if selected_category != "All":
+        # Filter recipes by selected category
         category = Category.query.filter_by(name=selected_category).first()
         if category:
             query = query.filter(Recipe.categories.contains(category))
     
     if search_query:
+        # Perform case-insensitive search for recipes by name containing the search query
         query = query.filter(Recipe.recipe_name.ilike(f"%{search_query}%"))
 
     pagination = query.paginate(page=page, per_page=per_page, error_out=False)
     recipes = pagination.items
 
+    # Render the browse_recipes.html template with necessary data
     return render_template("browse_recipes.html", recipes=recipes, groups=groups, categories=categories, selected_category=selected_category, search_query=search_query, user=user, user_id=user_id,pagination=pagination)
 
 ################### In-Depth Recipe ###################
@@ -137,11 +150,16 @@ def recipe(user_id, recipe_id):
     user = User.query.get_or_404(user_id)
     recipe = Recipe.query.get_or_404(recipe_id)
     comments = Comment.query.filter_by(recipe_id=recipe_id).all()
+
+    # Check if the current recipe is favorited by the logged-in user
     favourite_recipe = FavouriteRecipe.query.filter_by(user_id=user_id, recipe_id=recipe_id).first()
+
+    # Retrieve all recipe IDs favorited by the logged-in user
     favourited_recipe_ids = [fr.recipe_id for fr in FavouriteRecipe.query.filter_by(user_id=user_id).all()]
     # Get the source from the query parameter, default to 'browse_recipe' if not provided
     source = request.args.get('source', 'browse_recipe')
 
+    # Render the recipe.html template with necessary data
     return render_template("recipe.html", user=user, recipe=recipe, favourite_recipe=favourite_recipe, favourited_recipe_ids=favourited_recipe_ids, comments=comments, source=source)
 
 ################ Submit Comment #################
@@ -583,6 +601,7 @@ def logout():
 ############ Login ###############
 @app.route("/adminlogin", methods=["POST", "GET"])
 def adminlogin():
+    # Handle POST requests when the admin login form is submitted
     if request.method == "POST":
         session.permanent = True
         email_admin = request.form["email_admin"]
@@ -591,17 +610,24 @@ def adminlogin():
         # Check if the admin exists in the database
         found_admin = Admin.query.filter_by(email_admin=email_admin).first()
 
+        # Validate admin credentials
         if found_admin and check_password_hash(found_admin.password_admin, password_admin_input):
+            # If credentials are correct, log in the admin
             session["admin_id"] = found_admin.id
             flash("You have been successfully logged in!","success")
             return redirect(url_for("pending_submissions", admin_id=found_admin.id))
+        # If credentials are incorrect, redirect to login page with error message
         else:
             flash("Invalid email or password. Please try again.", "error")
             return redirect(url_for("adminlogin"))
+        
     else:
+        # Handle GET requests (when admin navigates to the admin login page)
         if "admin_id" in session:
+             # If admin is already logged in (session exists), redirect to admin panel
             return redirect(url_for("pending_submissions", admin_id=session["admin_id"]))
-
+        
+        # Render the admin_login.html template for admins who are not logged in
         return render_template("admin_login.html")
 
 ########### Pending Submissions ###########
@@ -668,15 +694,17 @@ def admin_browse_recipes(admin_id):
     if "admin_id" not in session or session["admin_id"] != admin_id:
         return redirect(url_for("adminlogin"))
 
+    # Retrieve admin object from the database based on admin_id
     admin = Admin.query.get_or_404(admin_id)
 
+    # Retrieve selected category and search query from request arguments
     categories = Category.query.order_by(Category.name).all()
     selected_category = request.args.get("category", "All")
     search_query = request.args.get("search_query", "")
     page = request.args.get("page", 1, type=int)
     per_page = 20
 
-    query = Recipe.query.filter_by(approved=True)
+    query = Recipe.query.filter_by(approved=True) # Start query for recipes with 'approved' status
 
     # Retrieve all groups and their associated categories
     groups = CategoryGroup.query.order_by(CategoryGroup.name).all()
@@ -684,17 +712,20 @@ def admin_browse_recipes(admin_id):
         group.categories = Category.query.filter_by(group_id=group.id).order_by(Category.name).all()
 
     if selected_category != "All":
+        # Filter recipes by selected category
         category = Category.query.filter_by(name=selected_category).first()
         if category:
             query = query.filter(Recipe.categories.contains(category))
 
     if search_query:
+        # Perform case-insensitive search for recipes by name containing the search query
         query = query.filter(Recipe.recipe_name.ilike(f"%{search_query}%"))
 
 
     pagination = query.paginate(page=page, per_page=per_page, error_out=False)
     recipes = pagination.items
 
+    # Render the admin_browse_recipes.html template with necessary data
     return render_template("admin_browse_recipes.html", recipes=recipes, groups=groups, categories=categories, selected_category=selected_category, search_query=search_query, admin=admin, admin_id=admin_id, pagination=pagination)
 
 ############# Delete Recipe ###############
@@ -891,8 +922,13 @@ def update_category(admin_id, category_id):
 def category_usage(admin_id, category_id):
     if "admin_id" not in session:
         return redirect(url_for("adminlogin"))
+    
+    admin = Admin.query.get_or_404(admin_id)
 
+    # Count the number of recipes that have the specified category_id
     recipe_count = Recipe.query.filter(Recipe.categories.any(id=category_id)).count()
+
+    # Return JSON response with recipe_count
     return jsonify({"recipe_count": recipe_count})
 
 ############### Manage Users ################
