@@ -1,5 +1,5 @@
 import os
-from flask import Flask, redirect, url_for, render_template, request, session, flash, jsonify, request
+from flask import Flask, redirect, url_for, render_template, request, session, flash, jsonify
 from datetime import timedelta
 from flask_migrate import Migrate
 from werkzeug.utils import secure_filename
