@@ -27,6 +27,7 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+#To generate a unique filename if the file name uploaded already existed in the folder
 def generate_unique_filename(directory, filename):
     base, extension = os.path.splitext(filename)
     counter = 1
