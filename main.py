@@ -61,7 +61,7 @@ def signup():
         db.session.add(user)
         db.session.commit()
         flash("Account created successfully!", "success")
-        return redirect(url_for('home'))
+        return redirect(url_for('login'))
 
     return render_template("sign_up.html")
 
@@ -297,9 +297,10 @@ def recipesubmission(user_id):
             categories=categories
         )
 
+        flash('Recipe submitted successfully!','success')
         db.session.add(recipe)
         db.session.commit()
-        flash('Recipe submitted successfully!','success')
+        
         return redirect(url_for('recipesubmission', user_id=user_id))
     
     user = User.query.get_or_404(user_id)
@@ -458,9 +459,10 @@ def favorite_recipe(user_id, recipe_id):
             cook_on = datetime.strptime(cook_on_str, "%Y-%m-%d").date() if cook_on_str else None
             # If the recipe is not favorited, favorite it
             new_favorite = FavouriteRecipe(user_id=user_id, recipe_id=recipe_id, cook_on=cook_on)
+        flash('Recipe favorited successfully!', 'success')
         db.session.add(new_favorite)
         db.session.commit()
-        flash('Recipe favorited successfully!', 'success')
+        
 
     source = request.args.get('source', 'browse_recipe')
 
