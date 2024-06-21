@@ -138,16 +138,16 @@
 
     function addStep() {
         const stepList = document.getElementById('steps-list');
-        const stepRow = document.createElement('div');
-        stepRow.className = 'step-row';
+        const stepRow = document.createElement('div'); /*Create a new div for container*/
+        stepRow.className = 'step-row'; /*css*/
 
-        const newStep = document.createElement('textarea');
-        newStep.className = 'steptext';
+        const newStep = document.createElement('textarea'); /*Create textarea*/
+        newStep.className = 'steptext'; /*css*/
         newStep.name = 'steps[]';
         newStep.placeholder = 'Enter the Step';
         newStep.required = true;
 
-        const removeButton = document.createElement('button');
+        const removeButton = document.createElement('button'); /*Remove button*/
         removeButton.type = 'button';
         removeButton.textContent = 'Remove';
         removeButton.onclick = function() {
