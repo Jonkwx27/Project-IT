@@ -155,21 +155,26 @@
             const categoryList = document.getElementById('categories-list');
             const categoryRow = document.createElement('div');
             categoryRow.className = 'category-row';
+
             const newCategory = document.createElement('select');
             newCategory.name = 'categories[]';
             newCategory.required = true;
+
             const defaultOption = document.createElement('option');
             defaultOption.value = '';
             defaultOption.textContent = 'Select Category';
             newCategory.appendChild(defaultOption);
+
             const options = document.getElementById('category-options-template').content.cloneNode(true);
             newCategory.appendChild(options);
+
             const removeButton = document.createElement('button');
             removeButton.type = 'button';
             removeButton.textContent = 'Remove';
             removeButton.onclick = function() {
                 categoryList.removeChild(categoryRow);
             };
+            
             categoryRow.appendChild(newCategory);
             categoryRow.appendChild(removeButton);
             categoryList.appendChild(categoryRow);

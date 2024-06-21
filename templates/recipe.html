@@ -164,7 +164,7 @@
         {% endfor %}
     </div>
     <script> // Timer Javascript
-        var timerElement = document.getElementById("timer");
+        var timerElement = document.getElementById("timer"); //Input 
         var hoursInput = document.getElementById("hours");
         var minutesInput = document.getElementById("minutes");
         var secondsInput = document.getElementById("seconds");
@@ -172,28 +172,29 @@
         var countdownInterval;
 
         function startCountdown() {
-            stopCountdown();
+            stopCountdown(); // Stops any existing countdown
             var hours = parseInt(hoursInput.value) || 0;
             var minutes = parseInt(minutesInput.value) || 0;
             var seconds = parseInt(secondsInput.value) || 0;
             totalSeconds = hours * 3600 + minutes * 60 + seconds; //Calculate total secs
             countdownInterval = setInterval(function () {
-                totalSeconds--;
+                totalSeconds--; // Decrement total seconds every second
+
                 if (totalSeconds <= 0) {
                     clearInterval(countdownInterval);
                     timerElement.textContent = "Time's up!";
                     timeupAudio.play();
                 } else {
-                    var hours = Math.floor(totalSeconds / 3600);
+                    var hours = Math.floor(totalSeconds / 3600); //Calculate 
                     var remainingSeconds = totalSeconds % 3600;
                     var minutes = Math.floor(remainingSeconds / 60);
                     var seconds = remainingSeconds % 60;
-                    timerElement.textContent =
+                    timerElement.textContent = //Format and Display
                         (hours < 10 ? "0" + hours : hours) + ":" +
                         (minutes < 10 ? "0" + minutes : minutes) + ":" +
                         (seconds < 10 ? "0" + seconds : seconds);
                 }
-            }, 1000); //execute every one second
+            }, 1000); //Update every one second
         }
         function stopCountdown() {
             clearInterval(countdownInterval);

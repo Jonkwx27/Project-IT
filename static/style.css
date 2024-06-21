@@ -512,12 +512,12 @@ background-color:rgb(250, 235, 215);
 }
 .rating {
     unicode-bidi: bidi-override;
-    direction: rtl;
+    direction: rtl; /*display right to left*/
     text-align: center;
 }
 
 .rating > input {
-    display: none;
+    display: none; /*Hide Radio Button show star only*/
 }
 
 .rating > label {
@@ -528,24 +528,24 @@ background-color:rgb(250, 235, 215);
     cursor: pointer;
 }
 
-.rating > label:before {
+.rating > label:before { /*Adding star*/
     content: "\2605";
 }
 
-.rating > input:checked ~ label {
+.rating > input:checked ~ label { /*Change colour when checked*/
     color: #fffb00;
 }
 
-.rating > input:checked ~ label:before {
+.rating > input:checked ~ label:before { /*ensure coreect star show before checked*/
     content: "\2605";
 }
 
-.rating > label:hover,
+.rating > label:hover, /*hovering change colour*/
 .rating > label:hover ~ label {
     color: #fffb00;
 }
 
-.rating > label:hover:before,
+.rating > label:hover:before, /*ensure coreect star show before hover*/
 .rating > label:hover ~ label:before {
     content: "\2605";
 }

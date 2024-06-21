@@ -397,15 +397,15 @@ def edit_recipe(user_id, recipe_id):
         recipe.difficulty = difficulty
         recipe.time_required = time_required
 
-        selected_category_ids = set(int(cat_id) for cat_id in categories_selected)
-        current_category_ids = set(category.id for category in recipe.categories)
+        selected_category_ids = set(int(cat_id) for cat_id in categories_selected) # Existing cat
+        current_category_ids = set(category.id for category in recipe.categories) # Determine add or remove
 
-        new_category_ids = selected_category_ids - current_category_ids
+        new_category_ids = selected_category_ids - current_category_ids #check new cat
         for cat_id in new_category_ids:
             category = Category.query.get_or_404(cat_id)
             recipe.categories.append(category)
 
-        removed_category_ids = current_category_ids - selected_category_ids
+        removed_category_ids = current_category_ids - selected_category_ids #check removed cat
         for cat_id in removed_category_ids:
             category = Category.query.get_or_404(cat_id)
             recipe.categories.remove(category)
