@@ -1,7 +1,7 @@
 import os
 from flask import Flask
 from models import db, User  # Adjust the import according to your actual structure
-from werkzeug.security import generate_password_hash
+from flask_bcrypt import Bcrypt
 from datetime import datetime
 from pytz import timezone
 
@@ -10,12 +10,13 @@ app.secret_key = "hello"
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db.init_app(app)  
+db.init_app(app)
+bcrypt = Bcrypt(app)
 
 def create_users(users_data):
     with app.app_context():
         for user_data in users_data:
-            hashed_password = generate_password_hash(user_data['password'])
+            hashed_password = bcrypt.generate_password_hash(user_data['password']).decode('utf-8')
             new_user = User(
                 name=user_data['name'],
                 email=user_data['email'],

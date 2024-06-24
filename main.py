@@ -3,7 +3,7 @@ from flask import Flask, redirect, url_for, render_template, request, session, f
 from datetime import timedelta
 from flask_migrate import Migrate
 from werkzeug.utils import secure_filename
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask_bcrypt import Bcrypt
 from models import Recipe, db, User, Admin, Comment, Category, CategoryGroup, FavouriteRecipe, Report, Notification
 from datetime import datetime, date
 
@@ -17,6 +17,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = os.path.join(basedir, 'static', 'uploads')
 db.init_app(app)
 migrate = Migrate(app, db)
+bcrypt = Bcrypt(app)
 app.permanent_session_lifetime = timedelta(minutes=100)
 
 UPLOAD_FOLDER = 'uploads'
@@ -54,13 +55,13 @@ def signup():
         email = request.form['email']
         username = request.form['username']
         age = int(request.form['age'])
-        password = generate_password_hash(request.form['password'])
+        password = bcrypt.generate_password_hash(request.form['password']).decode('utf-8')
         # Create a new User object with the form data
         user = User(name=name,
-					email=email,
-					username=username,
-					age=age,
-					password=password)
+                    email=email,
+                    username=username,
+                    age=age,
+                    password=password)
         db.session.add(user)
         db.session.commit()
         flash("Account created successfully!", "success")
@@ -80,8 +81,8 @@ def login():
         # Check if the user exists in the database
         found_user = User.query.filter_by(email=email, username=username).first()
 
-        # If user exists and password matches (using check_password_hash), log them in
-        if found_user and check_password_hash(found_user.password, password):
+        # If user exists and password matches (using bcrypt), log them in
+        if found_user and bcrypt.check_password_hash(found_user.password, password):
             session["user_id"] = found_user.id
             flash("You have been successfully logged in!", "success")
             return redirect(url_for("browse_recipes", user_id=found_user.id))  # Redirect to recipe browsing page
@@ -610,11 +611,11 @@ def adminlogin():
         # Check if the admin exists in the database
         found_admin = Admin.query.filter_by(email_admin=email_admin).first()
 
-        # Validate admin credentials
-        if found_admin and check_password_hash(found_admin.password_admin, password_admin_input):
+        # Validate admin credentials using bcrypt
+        if found_admin and bcrypt.check_password_hash(found_admin.password_admin, password_admin_input):
             # If credentials are correct, log in the admin
             session["admin_id"] = found_admin.id
-            flash("You have been successfully logged in!","success")
+            flash("You have been successfully logged in!", "success")
             return redirect(url_for("pending_submissions", admin_id=found_admin.id))
         # If credentials are incorrect, redirect to login page with error message
         else:
@@ -624,11 +625,12 @@ def adminlogin():
     else:
         # Handle GET requests (when admin navigates to the admin login page)
         if "admin_id" in session:
-             # If admin is already logged in (session exists), redirect to admin panel
+            # If admin is already logged in (session exists), redirect to admin panel
             return redirect(url_for("pending_submissions", admin_id=session["admin_id"]))
         
         # Render the admin_login.html template for admins who are not logged in
         return render_template("admin_login.html")
+
 
 ########### Pending Submissions ###########
 @app.route("/admin/<int:admin_id>/pending_submissions")
