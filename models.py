@@ -1,9 +1,10 @@
 from flask_sqlalchemy import SQLAlchemy
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask_bcrypt import Bcrypt
 from datetime import datetime
 from pytz import timezone
 
 db = SQLAlchemy()
+bcrypt = Bcrypt()
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -24,10 +25,10 @@ class User(db.Model):
         return f'<User {self.name}>'
 
     def set_password(self, password):
-        self.password = generate_password_hash(password)
+        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
 
     def check_password(self, password):
-        return check_password_hash(self.password, password)
+        return bcrypt.check_password_hash(self.password, password)
 
 class Admin(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -38,10 +39,10 @@ class Admin(db.Model):
         return f'<Admin {self.email_admin}>'
     
     def set_password_admin(self, password_admin):
-        self.password_admin = generate_password_hash(password_admin)
+        self.password_admin = bcrypt.generate_password_hash(password_admin).decode('utf-8')
 
     def check_password_admin(self, password_admin):
-        return check_password_hash(self.password_admin, password_admin)
+        return bcrypt.check_password_hash(self.password_admin, password_admin)
 
 recipe_category_association = db.Table('recipe_category_association',
     db.Column('recipe_id', db.Integer, db.ForeignKey('recipe.id'), primary_key=True),
